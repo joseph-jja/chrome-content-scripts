@@ -36,6 +36,10 @@ if ( table ) {
             img = e.target.parentNode.querySelector('img[alt="PIC "]');
             if ( img ) {
                 url = img.parentNode.href;
+                if ( ! url ) {
+                  // search pages
+                  url = img.parentNode.querySelector('a').href;
+                }
 
                 request = new XMLHttpRequest();
                 request.open( "GET", url, true );
