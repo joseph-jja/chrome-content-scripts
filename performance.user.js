@@ -1,16 +1,8 @@
 // ==UserScript==
 // @name           PerformanceTimings
-// @namespace      http://ldhostmacys.fds.com/
+// @namespace      http://localhost.com/
 // @description    Show Performance Timings Of Site
-// @include        http://*.fds.com/*
-// @include        http://*.*.fds.com/*
-// @include        http://*.macys.com/*
-// @include        https://*.macys.com/*
-// @include        http://*.bloomingdales.com/*
-// @include        https://*.bloomingdales.com/*
-// @include        http://ldhostmacys.fds.com:2001/*
-// @include        https://ldhostmacys.fds.com:9443/*
-// @include        https://ldhostmacys.fds.com/*
+// @include        http://*.com/*
 // ==/UserScript==
 
 function renderContent() {
