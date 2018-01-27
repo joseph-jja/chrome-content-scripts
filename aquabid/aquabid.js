@@ -59,7 +59,7 @@ if ( table ) {
                     overlay.style.overflow = "hidden";
                     overlay.style.position = "absolute";
                     overlay.style.top = ( 50 + (+window.pageYOffset) ) + "px";
-                    overlay.style.left = "500px";
+                    overlay.style.left = ( window.innerWidth > 800 ? (window.innerWidth - 800)+"px" : "500px");
 
                     content = this.responseText;
                     content = content.replace(/center/ig, 'b');
