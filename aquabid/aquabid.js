@@ -54,7 +54,7 @@ if ( table ) {
                 request.addEventListener( "load", function () {
                     var content, ele, i;
                     
-                    overlay.style.height = "500px";
+                    overlay.style.height = ( window.innerHeight - 100 ) + "px"; 
                     overlay.style.width = "750px";
                     overlay.style.overflow = "hidden";
                     overlay.style.position = "absolute";
