@@ -3,7 +3,7 @@
     "name": "aquabid",
     "short_name": "aquabid",
     "description": "aquabid extension",
-    "version": "0.0.1",
+    "version": "0.0.4",
     "minimum_chrome_version": "59",
     
     "content_scripts": [{
