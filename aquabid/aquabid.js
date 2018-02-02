@@ -5,11 +5,13 @@ if ( ! table ) {
   let selectedCell;
   cells = document.querySelectorAll('center table tr:first-child td:first-child font b');
   cells.forEach(function(x) { 
-    if ( x.innerHTML === 'Item' ) {
+    if ( x.innerHTML === 'Item' && x.parentNode ) {
       selectedCell = x.parentNode.parentNode;
     }
   });
-  table = selectedCell.parentNode.parentNode.parentNode;
+  if ( selectedCell && selectedCell.parentNode && selectedCell.parentNode.parentNode ) {
+    table = selectedCell.parentNode.parentNode.parentNode;
+  }
 }
 if ( table ) {
     var overlay = document.getElementById( "overlay-api" ),
@@ -53,8 +55,9 @@ if ( table ) {
                 request.open( "GET", url, true );
                 request.addEventListener( "load", function () {
                     var content, ele, i;
-                    
-                    overlay.style.height = ( window.innerHeight - 200 ) + "px"; 
+                    let winHeight = window.innerHeight - 200; 
+
+                    overlay.style.height =  winHeight + "px"; 
                     overlay.style.width = "750px";
                     overlay.style.overflow = "hidden";
                     overlay.style.position = "absolute";
@@ -67,7 +70,7 @@ if ( table ) {
                     content = content.substring( 0, content.lastIndexOf( "</blockquote>" ) );
                     content = content.replace( /  /g, ' ' );
 
-                    content = '<div id="closeModal">close</div><div style="height: 470px; width: 730px; overflow: scroll;">' + content + '</div>';
+                    content = `<div id="closeModal">close</div><div style="height: ${winHeight - 30}px; width: 730px; overflow: scroll;">` + content + '</div>';
                     overlay.innerHTML = content;
                     
                     x = document.querySelectorAll("#overlay-api *");
