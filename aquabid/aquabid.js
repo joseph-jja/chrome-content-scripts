@@ -36,7 +36,7 @@ if (table) {
     };
 
     table.onclick = function(e) {
-        var img, url, i, x, y;
+        var img, url, x, y;
 
         if (e.target.nodeName.toLowerCase() === 'td') {
             let row = e.target.parentNode;
@@ -76,11 +76,20 @@ if (table) {
                     x = document.querySelectorAll("#overlay-api *");
                     y = document.querySelectorAll("#overlay-api div");
                     y = y[1];
-                    for (i = 0; i < x.length; i++) {
-                        if (x[i].nodeName.toLowerCase() !== 'img' && x[i].nodeName.toLowerCase() !== 'div') {
-                            x[i].style.display = 'none';
-                        } else if (x[i].nodeName.toLowerCase() === 'img') {
-                            y.appendChild(x[i]);
+                    for (let i = 0; i < x.length; i++) {
+                        let node = x[i];
+                        let nodeName = node.nodeName.toLowerCase();
+                        if (nodeName !== 'img' && nodeName !== 'div') {
+                            node.style.display = 'none';
+                        } else if (nodeName === 'img') {
+                            let url = node.src,
+                                show = true;
+                            if (url.indexOf('logo') > -1 || url.indexOf('banner') > -1) {
+                                show = false;
+                            }
+                            if (show) {
+                                y.appendChild(node);
+                            }
                         }
                     }
                     overlay.style.display = "block";
