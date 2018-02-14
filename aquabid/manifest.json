@@ -3,17 +3,17 @@
     "name": "aquabid",
     "short_name": "aquabid",
     "description": "aquabid extension",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "minimum_chrome_version": "59",
     "update_url": "http://github.com/joseph-jja/chrome-content-scripts/tree/master/aquabid/update.xml",
-    
+
     "content_scripts": [{
-      "matches": ["http://www.aquabid.com/*"],
-      "all_frames": true,
-      "css": ["styles.css"],
-      "js": ["aquabid.js"]
+        "matches": ["http://www.aquabid.com/*"],
+        "all_frames": true,
+        "css": ["styles.css"],
+        "js": ["aquabid.js"]
     }],
-    
+
     "permissions": [
         "tabs"
     ]
