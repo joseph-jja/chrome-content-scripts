@@ -92,6 +92,13 @@ if (table) {
                             }
                         }
                     }
+                    let childImages = y.querySelectorAll('img');
+                    childImages.forEach(i => {
+                        let iWidth = getComputedStyle(i).getPropertyValue('width');
+                        if (iWidth && parseInt(iWidth) !== 0 && parseInt(iWidth) <= 50) {
+                            i.style.display = 'none';
+                        }
+                    });
                     overlay.style.display = "block";
                 });
                 request.send();
