@@ -92,8 +92,7 @@ if (table) {
                             }
                         }
                     }
-                    let childImages = y.querySelectorAll('img');
-                    childImages.reverse();
+                    let childImages = Array.prototype.slice.call(y.querySelectorAll('img'), 0).reverse();
                     childImages.forEach(i => {
                         let iWidth = getComputedStyle(i).getPropertyValue('width');
                         if (iWidth && parseInt(iWidth) !== 0 && parseInt(iWidth) <= 50) {
