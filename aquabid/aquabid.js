@@ -76,6 +76,7 @@ if (table) {
                     x = document.querySelectorAll("#overlay-api *");
                     y = document.querySelectorAll("#overlay-api div");
                     y = y[1];
+                    x = Array.prototype.slice.call(x, 0).reverse();
                     for (let i = 0; i < x.length; i++) {
                         let node = x[i];
                         let nodeName = node.nodeName.toLowerCase();
@@ -92,7 +93,7 @@ if (table) {
                             }
                         }
                     }
-                    let childImages = Array.prototype.slice.call(y.querySelectorAll('img'), 0).reverse();
+                    let childImages = y.querySelectorAll('img');
                     childImages.forEach(i => {
                         let iWidth = getComputedStyle(i).getPropertyValue('width');
                         if (iWidth && parseInt(iWidth) !== 0 && parseInt(iWidth) <= 50) {
