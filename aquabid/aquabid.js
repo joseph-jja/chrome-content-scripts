@@ -76,14 +76,29 @@ if (table) {
                     x = document.querySelectorAll("#overlay-api *");
                     y = document.querySelectorAll("#overlay-api div");
                     y = y[1];
-                    x = Array.prototype.slice.call(x, 0).reverse();
-                    for (let i = 0; i < x.length; i++) {
-                        let node = x[i];
+                    x = Array.prototype.slice.call(x, 0);
+                    let isWetspot = false;
+                    // loop de loop de loop
+                    // find out if this is w-spot they show fish image first
+                    x.forEach(node => {
+                        let nodeName = node.nodeName.toLowerCase();
+                        if (nodeName === 'img') {
+                            let url = node.src.toLowerCase();
+                            if (url.indexOf('wetspot') > -1) {
+                                isWetspot = true;
+                            }
+                        }
+                    });
+                    // no? reverse 
+                    if (!isWetspot) {
+                        x.reverse();
+                    }
+                    x.forEach(node => {
                         let nodeName = node.nodeName.toLowerCase();
                         if (nodeName !== 'img' && nodeName !== 'div') {
                             node.style.display = 'none';
                         } else if (nodeName === 'img') {
-                            let url = node.src,
+                            let url = node.src.toLowerCase(),
                                 show = true;
                             if (url.indexOf('logo') > -1 || url.indexOf('banner') > -1) {
                                 show = false;
@@ -92,7 +107,7 @@ if (table) {
                                 y.appendChild(node);
                             }
                         }
-                    }
+                    });
                     let childImages = y.querySelectorAll('img');
                     childImages.forEach(i => {
                         let iWidth = getComputedStyle(i).getPropertyValue('width');
