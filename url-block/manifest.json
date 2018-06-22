@@ -1,0 +1,26 @@
+{
+    "name": "URL Blocker",
+    "manifest_version": 2,
+    "version": "0.0.1",
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "all_frames": true,
+        "js": ["index.js"]
+    }],
+    "browser_action": {
+        "default_icon": {
+            "32": "images/go32.png"
+        },
+        "default_title": "URL Blocker"
+    },
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "permissions": [
+        "tabs",
+        "webNavigation",
+        "webRequest",
+        "webRequestBlocking",
+        "<all_urls>"
+    ]
+}
