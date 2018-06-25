@@ -1,0 +1,17 @@
+{
+    "manifest_version": 2,
+    "name": "system-info",
+    "short_name": "system-info",
+    "description": "",
+    "version": "0.0.5",
+    "minimum_chrome_version": "50",
+
+    "app": {
+        "background": {
+            "scripts": ["background.js"]
+        }
+    },
+    "permissions": [{
+        "system": [ "cpu", "display", "memory", "storage" ]
+    }]
+}
