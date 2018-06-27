@@ -5,7 +5,8 @@ const requests = chrome.webRequest,
     STOP_ICON = 'images/stop32.png',
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
-    };
+    },
+    allowedAlways = [];
 
 let pageUrl,
     icon = GO_ICON;
@@ -14,22 +15,38 @@ function parseHostProtocol(inUrl) {
     if (!inUrl) {
         return {};
     }
+
     let host = inUrl.split(PROTOCOL_SEP),
         protocol;
-    if (host && host.length > 1) {
-        protocol = host[0];
-        host = host[1];
-        const idx = host.indexOf('/')
-        if (idx > 0) {
-            host = host.substring(0, idx);
+    if (!host) {
+        return {};
+    }
+
+    if (Array.isArray(host)) {
+        if (host.length > 1) {
+            protocol = host[0];
+            host = host[1];
+        } else {
+            host = host[0];
         }
-        const hostParts = host.split('.');
+    }
+
+    // by here we have host
+    const idx = host.indexOf('/');
+    if (idx > 0) {
+        // remove everything after the first remaining /
+        // ie foo.com/ becomes foo.com
+        host = host.substring(0, idx);
+    }
+
+    const hostParts = host.split('.');
+    if (hostParts.length > 2) {
         host = hostParts[hostParts.length - 2] + '.' + hostParts[hostParts.length - 1];
     }
     return {
         host,
         protocol
-    }
+    };f
 }
 
 function getFilter(url) {
@@ -55,7 +72,7 @@ chrome.tabs.onUpdated.addListener((id, data, tab) => {
     let url = getFilter(tab.url);
 });
 
-navRequests.onCreatedNavigationTarget.addListener((details) => {
+function checkDetails(details) {
 
     if (icon === STOP_ICON || !details) {
         return {
@@ -69,39 +86,34 @@ navRequests.onCreatedNavigationTarget.addListener((details) => {
 
     let stop = false;
     if (pageUrl && requestedHost && pageUrl !== requestedHost) {
-        console.log(`Trying to cancel request to: ${details.url}`);
-        stop = true;
+        const isAllowed = allowedAlways.filter(host => {
+            const filteredHostParts = host.split(/\./),
+                flen = filteredHostParts.length,
+                filteredHost = filteredHostParts[flen - 2] + '.' + filteredHostParts[flen - 1];
+            if (filteredHost === requestedHost) {
+                return true;
+            }
+            return false;
+        }).length;
+        if (!isAllowed) {
+            console.log(`Cancelling request to: ${details.url}`);
+            stop = true;
+        }
     }
 
     return {
         cancel: stop
     };
+}
 
+navRequests.onCreatedNavigationTarget.addListener((details) => {
+    checkDetails(details);
+    return {
+        cancel: false
+    };
 }, URL_FILTER);
 
-requests.onBeforeRequest.addListener((details) => {
-
-    if (icon === STOP_ICON || !details) {
-        return {
-            cancel: false
-        }
-    }
-
-    pageUrl = getFilter(details.initiator);
-
-    const requestedHost = getFilter(details.url);
-
-    let stop = false;
-    if (pageUrl && requestedHost && pageUrl !== requestedHost) {
-        console.log(`Cancelling request to: ${details.url}`);
-        stop = true;
-    }
-
-    return {
-        cancel: stop
-    };
-
-}, URL_FILTER, ['blocking']);
+requests.onBeforeRequest.addListener(checkDetails, URL_FILTER, (icon === GO_ICON ? ['blocking'] : undefined));
 
 chrome.browserAction.onClicked.addListener((tabs) => {
 
