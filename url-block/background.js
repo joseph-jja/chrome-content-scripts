@@ -6,7 +6,12 @@ const requests = chrome.webRequest,
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
     },
-    allowedAlways = [];
+    allowedAlways = [
+        's.btstatic.com',
+        'thebrighttag.com',
+        'go-mpulse.net',
+        'akstat.io'
+    ];
 
 let pageUrl,
     icon = GO_ICON;
@@ -46,7 +51,8 @@ function parseHostProtocol(inUrl) {
     return {
         host,
         protocol
-    };f
+    };
+    f
 }
 
 function getFilter(url) {
@@ -86,18 +92,21 @@ function checkDetails(details) {
 
     let stop = false;
     if (pageUrl && requestedHost && pageUrl !== requestedHost) {
-        const isAllowed = allowedAlways.filter(host => {
-            const filteredHostParts = host.split(/\./),
-                flen = filteredHostParts.length,
-                filteredHost = filteredHostParts[flen - 2] + '.' + filteredHostParts[flen - 1];
-            if (filteredHost === requestedHost) {
-                return true;
+        if (requestedHost.indexOf(pageUrl) === -1) {
+            //console.log(pageUrl + ' ' + requestedHost + ' ' + requestedHost.indexOf(pageUrl));
+            const isAllowed = allowedAlways.filter(host => {
+                const filteredHostParts = host.split(/\./),
+                    flen = filteredHostParts.length,
+                    filteredHost = filteredHostParts[flen - 2] + '.' + filteredHostParts[flen - 1];
+                if (filteredHost === requestedHost) {
+                    return true;
+                }
+                return false;
+            }).length;
+            if (!isAllowed) {
+                console.log(`Cancelling request to: ${details.url}`);
+                stop = true;
             }
-            return false;
-        }).length;
-        if (!isAllowed) {
-            console.log(`Cancelling request to: ${details.url}`);
-            stop = true;
         }
     }
 
@@ -125,6 +134,5 @@ chrome.browserAction.onClicked.addListener((tabs) => {
     chrome.browserAction.setIcon({
         'path': icon
     });
-    console.log(icon);
-
+    //console.log(icon);
 });
