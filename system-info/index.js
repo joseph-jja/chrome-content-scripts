@@ -71,24 +71,28 @@ result += `<div${idStr}>${displayName}: ${JSON.stringify(value)}</div>`;
     return result;
 }
 
+let lastProcessorData;
+
 function manageWorker() {
+    if ( !lastProcessorData ) { 
+        const processors = document.getElementById('processors');
+        const last = JSON.parse(processors.innerHTML.replace('processors: ', ''));
+        lastProcessorData = last;
+    }
     workerThread.postMessage({ 
         'callMeBack': 1000 
     });    
 }
 
-let lastProcessorData;
-
 workerThread.onmessage = (e) => {
     chrome.system.cpu.getInfo( data => {
         const processors = document.getElementById('processors');
-        const last = JSON.parse(processors.innerHTML.replace('processors: ', ''));
         let results = [];
-        for ( let i = 0, end = last.length; i<end; i++ ) {
-            const idle = (data.processors[i].usage.idle - last[i].usage.idle),
-                  total = (data.processors[i].usage.total - last[i].usage.total),
-                  user = (data.processors[i].usage.user - last[i].usage.user),
-                  kernel = (data.processors[i].usage.kernel - last[i].usage.kernel); 
+        for ( let i = 0, end = lastProcessorData.length; i<end; i++ ) {
+            const idle = (data.processors[i].usage.idle - lastProcessorData[i].usage.idle),
+                  total = (data.processors[i].usage.total - lastProcessorData[i].usage.total),
+                  user = (data.processors[i].usage.user - lastProcessorData[i].usage.user),
+                  kernel = (data.processors[i].usage.kernel - lastProcessorData[i].usage.kernel); 
             results.push({usage: {
                 idle: Math.ceil(idle/total),
                 total: total,
@@ -96,6 +100,7 @@ workerThread.onmessage = (e) => {
                 kernel: Math.ceil(kernel/total)
             }});
         }
+        lastProcessorData = data.processors;
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
         manageWorker();
     });
