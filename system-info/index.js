@@ -13,7 +13,7 @@ const NAME_LIST = {
 };
 
 const workerPath = chrome.runtime.getURL('timer.js');
-console.log(workerPath);
+//console.log(workerPath);
 const workerThread = new Worker(workerPath);
 
 function createContainer(name) {
@@ -76,6 +76,8 @@ function manageWorker() {
         'callMeBack': 1000 
     });    
 }
+
+let lastProcessorData;
 
 workerThread.onmessage = (e) => {
     chrome.system.cpu.getInfo( data => {
