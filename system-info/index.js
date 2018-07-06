@@ -12,6 +12,10 @@ const NAME_LIST = {
     'type': 'Type'
 };
 
+const workerPath = chrome.runtime.getURL('timer.js');
+console.log(workerPath);
+const workerThread = new Worker(workerPath);
+
 function createContainer(name) {
     const container = document.getElementById('system-info');
     container.style.padding = '0.4em';
@@ -57,10 +61,28 @@ function iterateOverObject( obj ) {
         if ( !Array.isArray( value )  && isFinite(value) ) {
             value = formatNum(value);
         }
+        let idStr = ''
+        if (keyName === 'processors' ) {
+            idStr = ' id="' + keyName + '"';
+        }
         const displayName = ( NAME_LIST[keyName] ? NAME_LIST[keyName] : keyName );
-        result += `<div>${displayName}: ${JSON.stringify(value)}</div>`;
+result += `<div${idStr}>${displayName}: ${JSON.stringify(value)}</div>`;
     }
     return result;
+}
+
+function manageWorker() {
+    workerThread.postMessage({ 
+        'callMeBack': 1000 
+    });    
+}
+
+workerThread.onmessage = (e) => {
+    chrome.system.cpu.getInfo( data => {
+        const processors = document.getElementById('processors');
+        processors.innerHTML = JSON.stringify(data.processors);
+        manageWorker();
+    });
 }
 
 function updateDisplay(name, data) {
@@ -84,7 +106,7 @@ function updateDisplay(name, data) {
         result = iterateOverObject(data);
     }
     
-    container.innerHTML = result;    
+    container.innerHTML = result; 
 }
 
 function getStats() {
@@ -92,6 +114,9 @@ function getStats() {
 
         chrome.system[component].getInfo( data => { 
             updateDisplay(component, data);
+            if ( component === 'cpu' ) {
+                manageWorker();
+            }
         });
     });
 }
