@@ -80,7 +80,21 @@ function manageWorker() {
 workerThread.onmessage = (e) => {
     chrome.system.cpu.getInfo( data => {
         const processors = document.getElementById('processors');
-        processors.innerHTML = JSON.stringify(data.processors);
+        const last = JSON.parse(processors.innerHTML.replace('processors: ', ''));
+        let results = [];
+        for ( let i = 0, end = last.length; i<end; i++ ) {
+            const idle = (data.processors[i].usage.idle - last[i].usage.idle),
+                  total = (data.processors[i].usage.total - last[i].usage.total),
+                  user = (data.processors[i].usage.user - last[i].usage.user),
+                  kernel = (data.processors[i].usage.kernel - last[i].usage.kernel); 
+            results.push({usage: {
+                idle: Math.ceil(idle/total),
+                total: total,
+                user: Math.ceil(user/total),
+                kernel: Math.ceil(kernel/total)
+            }});
+        }
+        processors.innerHTML = 'processors: ' + JSON.stringify(results);
         manageWorker();
     });
 }
