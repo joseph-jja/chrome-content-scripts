@@ -94,14 +94,14 @@ workerThread.onmessage = (e) => {
                   user = (data.processors[i].usage.user - lastProcessorData[i].usage.user),
                   kernel = (data.processors[i].usage.kernel - lastProcessorData[i].usage.kernel); 
             results.push({usage: {
-                idle: Math.ceil(idle/total),
+                idle: Math.ceil(idle),
                 total: total,
-                user: Math.ceil(user/total),
-                kernel: Math.ceil(kernel/total)
+                user: Math.ceil(user),
+                kernel: Math.ceil(kernel)
             }});
         }
-        lastProcessorData = data.processors;
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
+        lastProcessorData = data.processors;
         manageWorker();
     });
 }
