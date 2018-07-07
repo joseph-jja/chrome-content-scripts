@@ -64,6 +64,11 @@ function iterateOverObject( obj ) {
         let idStr = ''
         if (keyName === 'processors' ) {
             idStr = ' id="' + keyName + '"';
+        } else if ( keyName === 'temperatures' ) {
+            idStr = ' id="' + keyName + '"';
+            for ( let j = 0, jend = value.length; j<jend; j++ ) { 
+                value[j] = Math.floor( ( value[j] * 1.8 ) + 32 );
+            }
         }
         const displayName = ( NAME_LIST[keyName] ? NAME_LIST[keyName] : keyName );
 result += `<div${idStr}>${displayName}: ${JSON.stringify(value)}</div>`;
@@ -71,7 +76,7 @@ result += `<div${idStr}>${displayName}: ${JSON.stringify(value)}</div>`;
     return result;
 }
 
-let lastProcessorData;
+let lastProcessorData
 
 function manageWorker() {
     if ( !lastProcessorData ) { 
@@ -86,7 +91,8 @@ function manageWorker() {
 
 workerThread.onmessage = (e) => {
     chrome.system.cpu.getInfo( data => {
-        const processors = document.getElementById('processors');
+        const processors = document.getElementById('processors'), 
+              temperatures = document.getElementById('temperatures');
         let results = [];
         for ( let i = 0, end = lastProcessorData.length; i<end; i++ ) {
             const idle = (data.processors[i].usage.idle - lastProcessorData[i].usage.idle),
@@ -102,6 +108,12 @@ workerThread.onmessage = (e) => {
         }
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
         lastProcessorData = data.processors;
+        
+        results = [];
+        for ( let j = 0, jend = data.temperatures.length; j<jend; j++ ) { 
+            results.push(Math.floor( ( data.temperatures[j] * 1.8 ) + 32 ));
+        }
+        temperatures.innerHTML = 'temperatures: ' + JSON.stringify(results);
         manageWorker();
     });
 }
