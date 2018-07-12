@@ -8,6 +8,7 @@ const requests = chrome.webRequest,
     },
     allowedURLs = {},
     blockedUrls = {},
+    alwaysBlockedUrls = [],
     useFQDN = false,
     DEFAULT_TAB_URL = 'chrome://newtab/';
 
@@ -99,8 +100,8 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 
 chrome.tabs.onUpdated.addListener((id, data, tab) => {
     const tabID = id;
-    console.log(data);
-    console.log(tab);
+    //console.log(data);
+    //console.log(tab);
     setActiveTab(tabID, 'Updated:');
 });
 
@@ -139,21 +140,29 @@ function checkDetails(details) {
             allowedURLList = [],
             blockedURLList = [];
 
+        // so here you can say for site x always allow these domains
         if (allowedURLs[pageUrl]) {
             allowedURLList = allowedURLs[pageUrl];
             isAllowed = (allowedURLList.filter(filteredHostsList).length > 0);
         }
 
+        // here you can specify for site x always block these domains
+        // so if a url is already in the allowedURLs this code will be run
+        // AND override the isAllowed, see below
         if (blockedUrls[pageUrl]) {
             blockedURLList = blockedUrls[pageUrl];
             isBlocked = (blockedURLList.filter(filteredHostsList).length > 0);
 
         }
 
-        // BE AFRAID, be very afraid
-        // using the allowedURLList means that only domains in this list will be accessible by the browser
-        // this is ONLY useful when testing your site for SPOF and you want to intentionally block all third 
-        // parties but are not sure what all the third parties are.
+        // putting a url in alwaysBlocekedUrls, means that this url will ALWAYS be blocked
+        // so site x would never be loaded
+        // for example, if you put google.com in this list, you would not be able to access
+        // ANY of google.com domains 
+        if (alwaysBlockedUrls.length > 0) {
+            isBlocked = (alwaysBlockedUrls.filter(filteredHostsList).length > 0);
+        }
+
         if (allowedURLList.length > 0 && !isAllowed) {
             console.log(`NOT ALLOWED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
             stop = true;
