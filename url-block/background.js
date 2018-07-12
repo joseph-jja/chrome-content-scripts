@@ -6,12 +6,13 @@ const requests = chrome.webRequest,
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
     },
-    allowedURLList = [],
-    blockedURLList = [],
-    useFQDN = false;
+    allowedURLs = {},
+    blockedUrls = {},
+    useFQDN = false,
+    DEFAULT_TAB_URL = 'chrome://newtab/';
 
-let pageUrl,
-    icon = GO_ICON;
+let icon = GO_ICON,
+    activeTabsList = {};
 
 function parseHostProtocol(inUrl) {
     if (!inUrl) {
@@ -76,14 +77,36 @@ function getFilter(url) {
     return pageUrl;
 }
 
-chrome.tabs.onActivated.addListener((data) => {
-    chrome.tabs.get(data.tabId, (tab) => {
-        let url = getFilter(tab.url);
+// generic function to get the active tab and the url
+function setActiveTab(tabId, key) {
+    chrome.tabs.get(tabId, (tab) => {
+        if (tab.url && tab.url !== DEFAULT_TAB_URL) {
+            let url = getFilter(tab.url);
+            activeTabsList[tab.id] = url;
+        }
     });
+}
+
+chrome.tabs.onCreated.addListener((tab) => {
+    const tabID = tab.id;
+    setActiveTab(tabID, 'Created:');
+});
+
+chrome.tabs.onActivated.addListener((activeInfo) => {
+    const tabID = activeInfo.tabId;
+    setActiveTab(tabID, 'Activated:');
 });
 
 chrome.tabs.onUpdated.addListener((id, data, tab) => {
-    let url = getFilter(tab.url);
+    const tabID = id;
+    console.log(data);
+    console.log(tab);
+    setActiveTab(tabID, 'Updated:');
+});
+
+chrome.tabs.onRemoved.addListener((tabID, removeInfo) => {
+    delete activeTabsList[tabID];
+    //chrome.tabs.query({}, (allTabs) => { });
 });
 
 function checkDetails(details) {
@@ -94,12 +117,13 @@ function checkDetails(details) {
         }
     }
 
-    pageUrl = getFilter(details.initiator);
-
-    const requestedHost = getFilter(details.url);
+    const pageUrl = getFilter(details.initiator),
+        requestedHost = getFilter(details.url),
+        tabID = details.tabId;
 
     let stop = false;
-    if (pageUrl && requestedHost && pageUrl !== requestedHost) {
+    if (pageUrl && requestedHost && pageUrl !== requestedHost && activeTabsList[tabID]) {
+
         //console.log(pageUrl + ' ' + requestedHost + ' ' + requestedHost.indexOf(pageUrl));
         const filteredHostsList = host => {
             const filteredHost = getFilter(host);
@@ -109,18 +133,32 @@ function checkDetails(details) {
             }
             return false;
         };
-        const isAllowed = allowedURLList.filter(filteredHostsList).length,
-            isBlocked = blockedURLList.filter(filteredHostsList).length;
+
+        let isAllowed = true,
+            isBlocked = false,
+            allowedURLList = [],
+            blockedURLList = [];
+
+        if (allowedURLs[pageUrl]) {
+            allowedURLList = allowedURLs[pageUrl];
+            isAllowed = (allowedURLList.filter(filteredHostsList).length > 0);
+        }
+
+        if (blockedUrls[pageUrl]) {
+            blockedURLList = blockedUrls[pageUrl];
+            isBlocked = (blockedURLList.filter(filteredHostsList).length > 0);
+
+        }
 
         // BE AFRAID, be very afraid
         // using the allowedURLList means that only domains in this list will be accessible by the browser
         // this is ONLY useful when testing your site for SPOF and you want to intentionally block all third 
         // parties but are not sure what all the third parties are.
-        if (allowedURLList.length > 0 && isAllowed === 0) {
+        if (allowedURLList.length > 0 && !isAllowed) {
             console.log(`NOT ALLOWED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
             stop = true;
         }
-        if (blockedURLList.length > 0 && isBlocked > 0) {
+        if (blockedURLList.length > 0 && isBlocked) {
             console.log(`BLOCKED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
             stop = true;
         }
