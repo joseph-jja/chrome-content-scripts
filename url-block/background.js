@@ -84,14 +84,14 @@ function checkDetails(details) {
     let stop = false;
     if (pageUrl && requestedHost && pageUrl !== requestedHost) {
         //console.log(pageUrl + ' ' + requestedHost + ' ' + requestedHost.indexOf(pageUrl));
-        const isNotAllowed = urlAllowBlockList.filter(host => {
+        const isInList = urlAllowBlockList.filter(host => {
             const filteredHost = getFilter(host);
             if (filteredHost === requestedHost) {
                 return true;
             }
             return false;
         }).length;
-        if (!isNotAllowed) {
+        if (!isInList) {
             console.log(`Cancelling request to: ${details.url}`);
             stop = true;
         }
