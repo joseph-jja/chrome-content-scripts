@@ -167,7 +167,7 @@ function checkDetails(details) {
             console.log(`NOT ALLOWED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
             stop = true;
         }
-        if (blockedURLList.length > 0 && isBlocked) {
+        if ((alwaysBlockedUrls.length > 0 || blockedURLList.length > 0) && isBlocked) {
             console.log(`BLOCKED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
             stop = true;
         }
