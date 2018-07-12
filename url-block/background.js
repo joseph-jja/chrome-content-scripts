@@ -6,8 +6,8 @@ const requests = chrome.webRequest,
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
     },
-    urlAllowBlockList = [],
-    isAllowMode = true,
+    allowedURLList = [],
+    blockedURLList = [],
     useFQDN = false;
 
 let pageUrl,
@@ -18,10 +18,16 @@ function parseHostProtocol(inUrl) {
         return {};
     }
 
-    let host = inUrl.split(PROTOCOL_SEP),
-        protocol;
-    if (!host) {
-        return {};
+    let host, protocol;
+
+    // we have a URL but it has no protocol
+    if (inUrl.indexOf(PROTOCOL_SEP) > -1) {
+        host = inUrl.split(PROTOCOL_SEP);
+        if (!host) {
+            return {};
+        }
+    } else {
+        host = inUrl;
     }
 
     if (Array.isArray(host)) {
@@ -35,15 +41,17 @@ function parseHostProtocol(inUrl) {
 
     // by here we have host
     const idx = host.indexOf('/');
-    if (idx > 0) {
+    if (idx > -1) {
         // remove everything after the first remaining /
         // ie foo.com/ becomes foo.com
         host = host.substring(0, idx);
     }
-    
-    if (!useFQDN && host) {
+
+    if (!useFQDN && host && host.length > 0) {
         const hostParts = host.split('.');
-        host = hostParts[hostParts.length-2] + '.' + hostParts[hostParts.length-1];
+        if (hostParts.length > 0) {
+            host = hostParts[hostParts.length - 2] + '.' + hostParts[hostParts.length - 1];
+        }
     }
 
     // return fqdn (fully qualified domain name) 
@@ -59,7 +67,9 @@ function getFilter(url) {
         let {
             host, protocol
         } = parseHostProtocol(url);
-        if (host && protocol) {
+
+        // we don't always have protocol 
+        if (host) {
             pageUrl = host;
         }
     }
@@ -91,20 +101,28 @@ function checkDetails(details) {
     let stop = false;
     if (pageUrl && requestedHost && pageUrl !== requestedHost) {
         //console.log(pageUrl + ' ' + requestedHost + ' ' + requestedHost.indexOf(pageUrl));
-        const isInList = urlAllowBlockList.filter(host => {
+        const filteredHostsList = host => {
             const filteredHost = getFilter(host);
+            // console.log(`${host}  .... ${filteredHost}`);
             if (filteredHost === requestedHost) {
                 return true;
             }
             return false;
-        }).length;
-        if (isInList > 0) {
-            if (isAllowMode) {
-                 stop = false;   
-            } else {
-                console.log(`Cancelling request to: ${details.url}`);
-                stop = true;
-            }
+        };
+        const isAllowed = allowedURLList.filter(filteredHostsList).length,
+            isBlocked = blockedURLList.filter(filteredHostsList).length;
+
+        // BE AFRAID, be very afraid
+        // using the allowedURLList means that only domains in this list will be accessible by the browser
+        // this is ONLY useful when testing your site for SPOF and you want to intentionally block all third 
+        // parties but are not sure what all the third parties are.
+        if (allowedURLList.length > 0 && isAllowed === 0) {
+            console.log(`NOT ALLOWED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
+            stop = true;
+        }
+        if (blockedURLList.length > 0 && isBlocked > 0) {
+            console.log(`BLOCKED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
+            stop = true;
         }
     }
 
