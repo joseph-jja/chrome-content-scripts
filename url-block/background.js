@@ -6,7 +6,8 @@ const requests = chrome.webRequest,
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
     },
-    urlAllowBlockList = [];
+    urlAllowBlockList = [],
+    isAllowMode = true;
 
 let pageUrl,
     icon = GO_ICON;
@@ -91,9 +92,9 @@ function checkDetails(details) {
             }
             return false;
         }).length;
-        if (!isInList) {
+        if (isInList > 0) {
             console.log(`Cancelling request to: ${details.url}`);
-            stop = true;
+            stop = !isAllowMode;
         }
     }
 
