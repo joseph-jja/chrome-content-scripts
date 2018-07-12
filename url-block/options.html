@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>URL Blocking Editor</title>
+
+    <style type="text/css">
+        body {
+            font-size: 1em;
+        }
+        table th,
+        table td {
+            border: 1px solid black;
+            padding: 0.25em
+        }
+        .hidden { 
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form>
+        <label>Parent Domain:</label>
+        <input type="text" size="50" name="parent-domain-url" id="parent-domain-url-id">
+
+        <br>
+        <label>Alllow or Block URL</label>
+        <input type="text" size="50" name="allow-block-url" id="allow-block-url-id">
+        <input type="checkbox" value="block" name="allow-block" id="allow-block-id">
+        <br>
+        <button id="add-button">Add</button>
+    
+        <br>
+        <br>
+        <table id="display-results">
+            <thead>
+            <tr>
+                <th>Parent Domain</th>
+                <th>URL</th>
+                <th>Allowed or Blocked</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </form>
+
+    <script src="options.js"></script>
+
+</body>
+
+</html>
