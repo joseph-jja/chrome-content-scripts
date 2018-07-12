@@ -7,7 +7,8 @@ const requests = chrome.webRequest,
         urls: ['https://*/*', 'http://*/*']
     },
     urlAllowBlockList = [],
-    isAllowMode = true;
+    isAllowMode = true,
+    useFQDN = false;
 
 let pageUrl,
     icon = GO_ICON;
@@ -38,6 +39,11 @@ function parseHostProtocol(inUrl) {
         // remove everything after the first remaining /
         // ie foo.com/ becomes foo.com
         host = host.substring(0, idx);
+    }
+    
+    if (!useFQDN && host) {
+        const hostParts = host.split('.');
+        host = hostParts[hostParts.length-2] + '.' + hostParts[hostParts.length-1];
     }
 
     // return fqdn (fully qualified domain name) 
