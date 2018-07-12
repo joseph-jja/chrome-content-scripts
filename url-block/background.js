@@ -6,7 +6,7 @@ const requests = chrome.webRequest,
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
     },
-    urlBlockList = [];
+    urlAllowBlockList = [];
 
 let pageUrl,
     icon = GO_ICON;
@@ -84,7 +84,7 @@ function checkDetails(details) {
     let stop = false;
     if (pageUrl && requestedHost && pageUrl !== requestedHost) {
         //console.log(pageUrl + ' ' + requestedHost + ' ' + requestedHost.indexOf(pageUrl));
-        const isNotAllowed = urlBlockList.filter(host => {
+        const isNotAllowed = urlAllowBlockList.filter(host => {
             const filteredHost = getFilter(host);
             if (filteredHost === requestedHost) {
                 return true;
