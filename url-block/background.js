@@ -99,8 +99,12 @@ function checkDetails(details) {
             return false;
         }).length;
         if (isInList > 0) {
-            console.log(`Cancelling request to: ${details.url}`);
-            stop = !isAllowMode;
+            if (isAllowMode) {
+                 stop = false;   
+            } else {
+                console.log(`Cancelling request to: ${details.url}`);
+                stop = true;
+            }
         }
     }
 
