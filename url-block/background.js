@@ -6,12 +6,7 @@ const requests = chrome.webRequest,
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
     },
-    allowedAlways = [
-        's.btstatic.com',
-        'thebrighttag.com',
-        'go-mpulse.net',
-        'akstat.io'
-    ];
+    urlBlockList = [];
 
 let pageUrl,
     icon = GO_ICON;
@@ -44,15 +39,11 @@ function parseHostProtocol(inUrl) {
         host = host.substring(0, idx);
     }
 
-    const hostParts = host.split('.');
-    if (hostParts.length > 2) {
-        host = hostParts[hostParts.length - 2] + '.' + hostParts[hostParts.length - 1];
-    }
+    // return fqdn (fully qualified domain name) 
     return {
         host,
         protocol
     };
-    f
 }
 
 function getFilter(url) {
@@ -92,21 +83,17 @@ function checkDetails(details) {
 
     let stop = false;
     if (pageUrl && requestedHost && pageUrl !== requestedHost) {
-        if (requestedHost.indexOf(pageUrl) === -1) {
-            //console.log(pageUrl + ' ' + requestedHost + ' ' + requestedHost.indexOf(pageUrl));
-            const isAllowed = allowedAlways.filter(host => {
-                const filteredHostParts = host.split(/\./),
-                    flen = filteredHostParts.length,
-                    filteredHost = filteredHostParts[flen - 2] + '.' + filteredHostParts[flen - 1];
-                if (filteredHost === requestedHost) {
-                    return true;
-                }
-                return false;
-            }).length;
-            if (!isAllowed) {
-                console.log(`Cancelling request to: ${details.url}`);
-                stop = true;
+        //console.log(pageUrl + ' ' + requestedHost + ' ' + requestedHost.indexOf(pageUrl));
+        const isNotAllowed = urlBlockList.filter(host => {
+            const filteredHost = getFilter(host);
+            if (filteredHost === requestedHost) {
+                return true;
             }
+            return false;
+        }).length;
+        if (!isNotAllowed) {
+            console.log(`Cancelling request to: ${details.url}`);
+            stop = true;
         }
     }
 
