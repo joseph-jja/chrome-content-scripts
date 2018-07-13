@@ -1,8 +1,6 @@
 // onload get the list of blocked URLs
 
-
-const dataRowContent = `<td>{{parentURL}}</td><td>{{allowBlockURL}}</td><td>{{allowBlockText}}</td>`,
-    buttonRowContent = `<td><button id="delete-button" data-id="{{dataID}}">Delete</button></td>`;
+let storageItems = {};
 
 function handleAddClick() {
 
@@ -27,15 +25,17 @@ function handleAddClick() {
             alwaysAllow = allowedBlocked.checked;
         }
     } else {
-        // otherwise we just block this url always
-        var tr = document.createElement('tr');
-        table.tBodies[0].appendChild(tr);
-        const parts = ['', abUrl, 'Blocked', 'button'];
-        for (let i = 0; i < 4; i++) {
-            const td = document.createElement('td');
-            td.innerHTML = parts[i];
-            tr.appendChild(td);
-        }
+        chrome.storage.local.set({
+            'urlBlockerData': {
+                blocked: [abUrl]
+            }
+        }, function(items) {
+
+            if (items) {
+                console.log(items);
+            }
+            //window.location.reload();
+        });
     }
 }
 
@@ -45,18 +45,27 @@ addButton.addEventListener('click', handleAddClick, false);
 document.addEventListener('DOMContentLoaded', restore_options => {
     const table = document.getElementById('display-results').tBodies[0];
 
-    chrome.storage.sync.get('urlBlockerData', function(items) {
-        
-        if ( items ) { 
-            console.log(items);
+    chrome.storage.local.get('urlBlockerData', function(items) {
+
+        if (items && items.urlBlockerData) {
+            storageItems = items;
+
+            const urlBlockerData = storageItems.urlBlockerData
+
+            if (urlBlockerData && urlBlockerData.blocked) {
+                const blockedItems = urlBlockerData.blocked;
+                for (let i = 0, end = blockedItems.length; i < end; i++) {
+                    var tr = document.createElement('tr');
+                    table.appendChild(tr);
+                    const parts = ['', blockedItems[i], 'Blocked', 'button'];
+                    for (let i = 0; i < 4; i++) {
+                        const td = document.createElement('td');
+                        td.innerHTML = parts[i];
+                        tr.appendChild(td);
+
+                    }
+                }
+            }
         }
-        /*var tr = document.createElement('tr');
-        table.appendChild(tr);
-        const parts = ['', '', 'Blocked', 'button'];
-        for (let i = 0; i < 4; i++) {
-            const td = document.createElement('td');
-            td.innerHTML = parts[i];
-            tr.appendChild(td);
-        }*/
     });
 });
