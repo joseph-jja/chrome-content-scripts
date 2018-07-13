@@ -6,14 +6,14 @@ const requests = chrome.webRequest,
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
     },
-    allowedURLs = {},
-    blockedUrls = {},
-    alwaysBlockedUrls = [],
     useFQDN = false,
     DEFAULT_TAB_URL = 'chrome://newtab/';
 
 let icon = GO_ICON,
-    activeTabsList = {};
+    activeTabsList = {},
+    allowedURLs = {},
+    blockedUrls = {},
+    alwaysBlockedUrls = [];
 
 function parseHostProtocol(inUrl) {
     if (!inUrl) {
@@ -56,7 +56,7 @@ function parseHostProtocol(inUrl) {
         }
     }
 
-    // return fqdn (fully qualified domain name) 
+    // return fqdn (fully qualified domain name)
     return {
         host,
         protocol
@@ -67,10 +67,11 @@ function getFilter(url) {
     let pageUrl;
     if (url) {
         let {
-            host, protocol
+            host,
+            protocol
         } = parseHostProtocol(url);
 
-        // we don't always have protocol 
+        // we don't always have protocol
         if (host) {
             pageUrl = host;
         }
@@ -100,11 +101,13 @@ chrome.tabs.onCreated.addListener((tab) => {
 
             if (urlBlockerData && urlBlockerData.blocked) {
                 const blockedItems = urlBlockerData.blocked;
-                for (let i = 0, end = blockedItems.length; i < end; i++) {
-                    if (!alwaysBlockedUrls.includes(blockedItems[i])) {
-                        alwaysBlockedUrls.push(blockedItems[i]);
-                    }
-                }
+                alwaysBlockedUrls = blockedItems;
+            } else if (urlBlockerData && urlBlockerData.alwaysBlocked) {
+                const blockedItems = urlBlockerData.alwaysBlocked;
+                blockedUrls = blockedItems;
+            } else if (urlBlockerData && urlBlockerData.alwaysAllowed) {
+                const allowedItems = urlBlockerData.alwaysAllowed;
+                allowedURLs = allowedItems;
             }
         }
     });
@@ -175,7 +178,7 @@ function checkDetails(details) {
         // putting a url in alwaysBlocekedUrls, means that this url will ALWAYS be blocked
         // so site x would never be loaded
         // for example, if you put google.com in this list, you would not be able to access
-        // ANY of google.com domains 
+        // ANY of google.com domains
         if (alwaysBlockedUrls.length > 0) {
             isBlocked = (alwaysBlockedUrls.filter(filteredHostsList).length > 0);
         }

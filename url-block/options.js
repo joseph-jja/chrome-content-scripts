@@ -6,9 +6,7 @@ let storageItems = {};
 
 function updateStorage() {
 
-    chrome.storage.local.set({
-            'urlBlockerData': storageItems.urlBlockerData
-        },
+    chrome.storage.local.set(storageItems,
         function(items) {
 
             if (items) {
@@ -38,9 +36,14 @@ function handleAddClick() {
         const mapKey = parentDomain.value;
 
         const urlBlockerData = storageItems.urlBlockerData;
-        if (!urlBlockerData) {
+        if (!urlBlockerData || !storageItems.urlBlockerData.alwaysAllowed) {
             storageItems.urlBlockerData = {
-                'alwaysAllowed': {},
+                'alwaysAllowed': {}
+            };
+        }
+
+        if (!urlBlockerData || !storageItems.urlBlockerData.alwaysBlocked) {
+            storageItems.urlBlockerData = {
                 'alwaysBlocked': {}
             };
         }
@@ -61,10 +64,8 @@ function handleAddClick() {
         updateStorage();
     } else {
         const urlBlockerData = storageItems.urlBlockerData;
-        if (!urlBlockerData) {
-            storageItems.urlBlockerData = {
-                'blocked': []
-            };
+        if (!urlBlockerData || !storageItems.urlBlockerData.blocked) {
+            storageItems.urlBlockerData['blocked'] = [];
         }
         storageItems.urlBlockerData.blocked.push(abUrl);
         updateStorage();
@@ -112,7 +113,7 @@ document.addEventListener('DOMContentLoaded', restore_options => {
                     table.appendChild(tr);
                     const domainName = blockedItems[i];
                     const parts = ['', domainName, 'Blocked', 'button'];
-                    renderRow(tr, parts, '', doaminName, false);
+                    renderRow(tr, parts, '', domainName, false);
                 }
             }
             if (urlBlockerData.alwaysBlocked) {
