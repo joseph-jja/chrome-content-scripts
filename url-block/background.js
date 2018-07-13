@@ -102,10 +102,14 @@ chrome.tabs.onCreated.addListener((tab) => {
             if (urlBlockerData && urlBlockerData.blocked) {
                 const blockedItems = urlBlockerData.blocked;
                 alwaysBlockedUrls = blockedItems;
-            } else if (urlBlockerData && urlBlockerData.alwaysBlocked) {
+            }
+
+            if (urlBlockerData && urlBlockerData.alwaysBlocked) {
                 const blockedItems = urlBlockerData.alwaysBlocked;
                 blockedUrls = blockedItems;
-            } else if (urlBlockerData && urlBlockerData.alwaysAllowed) {
+            }
+
+            if (urlBlockerData && urlBlockerData.alwaysAllowed) {
                 const allowedItems = urlBlockerData.alwaysAllowed;
                 allowedURLs = allowedItems;
             }
@@ -172,23 +176,23 @@ function checkDetails(details) {
         if (blockedUrls[pageUrl]) {
             blockedURLList = blockedUrls[pageUrl];
             isBlocked = (blockedURLList.filter(filteredHostsList).length > 0);
-
         }
 
         // putting a url in alwaysBlocekedUrls, means that this url will ALWAYS be blocked
         // so site x would never be loaded
         // for example, if you put google.com in this list, you would not be able to access
         // ANY of google.com domains
-        if (alwaysBlockedUrls.length > 0) {
+        // so if you block something by a domain, then no use hitting this
+        if (alwaysBlockedUrls.length > 0 && !isBlocked) {
             isBlocked = (alwaysBlockedUrls.filter(filteredHostsList).length > 0);
         }
 
         if (allowedURLList.length > 0 && !isAllowed) {
-            console.log(`NOT ALLOWED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
+            //console.log(`NOT ALLOWED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
             stop = true;
         }
         if ((alwaysBlockedUrls.length > 0 || blockedURLList.length > 0) && isBlocked) {
-            console.log(`BLOCKED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
+            //console.log(`BLOCKED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
             stop = true;
         }
     }
