@@ -91,6 +91,23 @@ function setActiveTab(tabId, key) {
 chrome.tabs.onCreated.addListener((tab) => {
     const tabID = tab.id;
     setActiveTab(tabID, 'Created:');
+    chrome.storage.local.get('urlBlockerData', function(items) {
+
+        if (items && items.urlBlockerData) {
+            storageItems = items;
+
+            const urlBlockerData = storageItems.urlBlockerData
+
+            if (urlBlockerData && urlBlockerData.blocked) {
+                const blockedItems = urlBlockerData.blocked;
+                for (let i = 0, end = blockedItems.length; i < end; i++) {
+                    if (!alwaysBlockedUrls.includes(blockedItems[i])) {
+                        alwaysBlockedUrls.push(blockedItems[i]);
+                    }
+                }
+            }
+        }
+    });
 });
 
 chrome.tabs.onActivated.addListener((activeInfo) => {
