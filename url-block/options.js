@@ -74,13 +74,15 @@ function handleAddClick() {
 const addButton = document.getElementById('add-button');
 addButton.addEventListener('click', handleAddClick, false);
 
-function renderRow(tr, parts, parent, domainName) {
+function renderRow(tr, parts, parent, domainName, isAllow) {
     for (let j = 0, jend = parts.length; j < jend; j++) {
         const td = document.createElement('td');
         if (parts[j] === 'button') {
             const button = document.createElement('button');
             button.innerHTML = 'Delete';
-            button.dataset.domainName = parent + domainName;
+            button.dataset.parentDomainName = parent;
+            button.dataset.domainName = domainName;
+            button.dataset.allowed = (isAllow ? 'a' : 'b');
             button.className = 'deleteBlockedDataDomain';
             td.appendChild(button);
         } else {
@@ -110,7 +112,7 @@ document.addEventListener('DOMContentLoaded', restore_options => {
                     table.appendChild(tr);
                     const domainName = blockedItems[i];
                     const parts = ['', domainName, 'Blocked', 'button'];
-                    renderRow(tr, parts, '', doaminName);
+                    renderRow(tr, parts, '', doaminName, false);
                 }
             }
             if (urlBlockerData.alwaysBlocked) {
@@ -123,7 +125,7 @@ document.addEventListener('DOMContentLoaded', restore_options => {
                         table.appendChild(tr);
                         const domainName = domains[m];
                         const parts = [keys[i], domainName, 'Blocked', 'button'];
-                        renderRow(tr, parts, keys[i], domainName);
+                        renderRow(tr, parts, keys[i], domainName, false);
                     }
                 }
             }
@@ -137,7 +139,7 @@ document.addEventListener('DOMContentLoaded', restore_options => {
                         table.appendChild(tr);
                         const domainName = domains[m];
                         const parts = [keys[i], domainName, 'Allowed', 'button'];
-                        renderRow(tr, parts, keys[i], domainName);
+                        renderRow(tr, parts, keys[i], domainName, true);
                     }
                 }
             }
@@ -147,11 +149,27 @@ document.addEventListener('DOMContentLoaded', restore_options => {
                 if (!domainName) {
                     return;
                 }
-                // FIXME for different storage types
-                const i = storageItems.urlBlockerData.blocked.indexOf(domainName);
-                if (i > -1) {
-                    storageItems.urlBlockerData.blocked.splice(i, 1);
-                    updateStorage();
+                // parent domain name?
+                const parentDomainName = tgt.dataset['parentDomainName'];
+                if (parentDomainName) {
+                    const isAllowed = (tgt.dataset['allowed'] === 'a');
+                    const storageArea = storageItems.urlBlockerData[(isAllowed ? 'alwaysAllowed' : 'alwaysBlocked')];
+                    const parentDomain = storageArea[parentDomainName];
+                    const i = parentDomain.indexOf(domainName);
+                    if (i > -1) {
+                        parentDomain.splice(i, 1);
+                        storageArea[parentDomainName] = parentDomain;
+                        updateStorage();
+                    }
+                } else {
+                    // FIXME for different storage types
+                    if (storageItems.urlBlockerData.blocked) {
+                        const i = storageItems.urlBlockerData.blocked.indexOf(domainName);
+                        if (i > -1) {
+                            storageItems.urlBlockerData.blocked.splice(i, 1);
+                            updateStorage();
+                        }
+                    }
                 }
             });
 
