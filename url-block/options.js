@@ -2,6 +2,22 @@
 
 let storageItems = {};
 
+//chrome.storage.local.clear();
+
+function updateStorage() {
+
+    chrome.storage.local.set({
+            'urlBlockerData': storageItems.urlBlockerData
+        },
+        function(items) {
+
+            if (items) {
+                console.log(items);
+            }
+            //window.location.reload();
+        });
+}
+
 function handleAddClick() {
 
     const parentDomain = document.getElementById('parent-domain-url-id'),
@@ -25,17 +41,14 @@ function handleAddClick() {
             alwaysAllow = allowedBlocked.checked;
         }
     } else {
-        chrome.storage.local.set({
-            'urlBlockerData': {
-                blocked: [abUrl]
-            }
-        }, function(items) {
-
-            if (items) {
-                console.log(items);
-            }
-            //window.location.reload();
-        });
+        const urlBlockerData = storageItems.urlBlockerData;
+        if (!urlBlockerData) {
+            storageItems.urlBlockerData = {
+                'blocked': []
+            };
+        }
+        storageItems.urlBlockerData.blocked.push(abUrl);
+        updateStorage();
     }
 }
 
@@ -57,15 +70,37 @@ document.addEventListener('DOMContentLoaded', restore_options => {
                 for (let i = 0, end = blockedItems.length; i < end; i++) {
                     var tr = document.createElement('tr');
                     table.appendChild(tr);
-                    const parts = ['', blockedItems[i], 'Blocked', 'button'];
-                    for (let i = 0; i < 4; i++) {
+                    const domainName = blockedItems[i];
+                    const parts = ['', domainName, 'Blocked', 'button'];
+                    for (let j = 0, jend = parts.length; j < jend; j++) {
                         const td = document.createElement('td');
-                        td.innerHTML = parts[i];
+                        if (parts[j] === 'button') {
+                            const button = document.createElement('button');
+                            button.innerHTML = 'Delete';
+                            button.dataset.domainName = domainName;
+                            button.className = 'deleteBlockedDataDomain';
+                            td.appendChild(button);
+                        } else {
+                            td.innerHTML = parts[j];
+                        }
                         tr.appendChild(td);
 
                     }
                 }
             }
+            table.addEventListener('click', (e) => {
+                const tgt = e.target;
+                const domainName = tgt.dataset['domainName'];
+                if (!domainName) {
+                    return;
+                }
+                const i = storageItems.urlBlockerData.blocked.indexOf(domainName);
+                if (i > -1) {
+                    storageItems.urlBlockerData.blocked.splice(i, 1);
+                    updateStorage();
+                }
+            });
+
         }
     });
 });
