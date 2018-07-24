@@ -1,5 +1,6 @@
 
-const containers = [ 'cpu', 'memory', 'storage', 'display' ],
+const containers = [ 'cpu', 'memory', 'storage', 'display', 'network' ],
+      containerInfoMethod = ['getInfo', 'getInfo', 'getInfo', 'getInfo', 'getNetworkInterfaces'],
     sizeNames = ['K', 'M', 'G', 'T'];
 
 const NAME_LIST = {
@@ -151,9 +152,10 @@ function updateDisplay(name, data) {
 }
 
 function getStats() {
-    containers.forEach( component => {
+    containers.forEach( (component, index) => {
 
-        chrome.system[component].getInfo( data => { 
+        methodCall = containerInfoMethod[index];
+        chrome.system[component][methodCall]( data => { 
             updateDisplay(component, data);
             if ( component === 'cpu' ) {
                 manageWorker();
