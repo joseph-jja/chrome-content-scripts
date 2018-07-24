@@ -33,3 +33,10 @@ function formatNum(n, nSize) {
     return `${nn}${(ns ? sizeNames[ns] : '')}`;
 }
 
+function calculatePercent(x, total) {
+    let result = x;
+    if (total !== 0) {
+        result = Math.ceil((x / total) * 100);
+    }
+    return result;
+}
