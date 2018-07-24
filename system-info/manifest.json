@@ -3,8 +3,8 @@
     "name": "system-info",
     "short_name": "system-info",
     "description": "",
-    "version": "0.0.6",
-    "minimum_chrome_version": "50",
+    "version": "0.0.7",
+    "minimum_chrome_version": "60",
 
     "app": {
         "background": {
