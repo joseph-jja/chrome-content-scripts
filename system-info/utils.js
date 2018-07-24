@@ -12,6 +12,13 @@ function iterateOverObject(obj, formatter) {
         let idStr = '';
         if (formatter) {
             idStr = formatter(keyName, value);
+        } else if (keyName === 'processors' ) {
+            idStr = ' id="' + keyName + '"';
+        } else if ( keyName === 'temperatures' ) {
+            idStr = ' id="' + keyName + '"';
+            for ( let j = 0, jend = value.length; j<jend; j++ ) { 
+                value[j] = Math.floor( ( value[j] * 1.8 ) + 32 );
+            }
         }
         const displayName = (NAME_LIST[keyName] ? NAME_LIST[keyName] : keyName);
         result += `<div${idStr}>${displayName}: ${JSON.stringify(value)}</div>`;
