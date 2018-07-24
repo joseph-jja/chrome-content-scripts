@@ -16,26 +16,6 @@ const workerPath = chrome.runtime.getURL('timer.js');
 //console.log(workerPath);
 const workerThread = new Worker(workerPath);
 
-function createContainer(name) {
-    const container = document.getElementById('system-info');
-    container.style.padding = '0.4em';
-
-    const fieldset = document.createElement('fieldset');
-    const legend = document.createElement('legend');
-    legend.innerHTML = name;
-
-    const childElement = document.createElement('div');
-    childElement.id = name;
-    childElement.style.margin = '0 0.4em';
-    childElement.style.fontSize = '1.1em';
-    childElement.style.width = '90%';
-    childElement.style.overflowY = 'scroll';
-
-    container.appendChild(fieldset);
-    fieldset.appendChild(legend);
-    fieldset.appendChild(childElement);
-}
-
 let lastProcessorData
 
 function manageWorker() {
