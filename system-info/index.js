@@ -89,6 +89,14 @@ function manageWorker() {
     });    
 }
 
+function calculatePercent(x, total) {
+    let result = x;
+    if ( total !== 0 ) {
+        result =  Math.ceil( ( x / total ) * 100 );  
+    }
+    return result;
+}
+
 workerThread.onmessage = (e) => {
     chrome.system.cpu.getInfo( data => {
         const processors = document.getElementById('processors'), 
