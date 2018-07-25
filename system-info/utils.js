@@ -34,6 +34,17 @@ function iterateOverObject(obj, formatter) {
             idStr = formatter(keyName, value);
         } else if (keyName === 'processors') {
             idStr = ' id="' + keyName + '"';
+            for (let j = 0, jend = value.length; j < jend; j++) {
+                const usage = value[j].usage;
+                const usageResult = {
+                    usage: {
+                        idle: Math.ceil(calculatePercent(usage.idle, usage.total)),      
+                        user: Math.ceil(calculatePercent(usage.user, usage.total)),      
+                        kernel: Math.ceil(calculatePercent(usage.kernel, usage.total))      
+                    }
+                };
+                value[j] = usageResult;
+            }
         } else if (keyName === 'temperatures') {
             idStr = ' id="' + keyName + '"';
             for (let j = 0, jend = value.length; j < jend; j++) {
