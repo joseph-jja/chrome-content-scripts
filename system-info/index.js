@@ -88,10 +88,11 @@ function getStats() {
     containers.forEach((component, index) => {
 
         methodCall = containerInfoMethod[index];
-        console.log(methodCall);
         chrome.system[component][methodCall](data => {
+            const originalData = Object.assign({}, data.processors);
             updateDisplay(component, data);
             if (component === 'cpu') {
+                //lastProcessorData = originalData;
                 manageWorker();
             }
         });
