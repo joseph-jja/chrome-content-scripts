@@ -16,14 +16,9 @@ const workerPath = chrome.runtime.getURL('timer.js');
 //console.log(workerPath);
 const workerThread = new Worker(workerPath);
 
-let lastProcessorData
+let lastProcessorData;
 
 function manageWorker() {
-    if (!lastProcessorData) {
-        const processors = document.getElementById('processors');
-        const last = JSON.parse(processors.innerHTML.replace('processors: ', ''));
-        lastProcessorData = last;
-    }
     workerThread.postMessage({
         'callMeBack': 1000
     });
@@ -34,6 +29,9 @@ workerThread.onmessage = (e) => {
         const processors = document.getElementById('processors'),
             temperatures = document.getElementById('temperatures');
         let results = [];
+
+        const originalData = JSON.stringify([].concat(data.processors));
+
         for (let i = 0, end = lastProcessorData.length; i < end; i++) {
             const idle = (data.processors[i].usage.idle - lastProcessorData[i].usage.idle),
                 total = (data.processors[i].usage.total - lastProcessorData[i].usage.total),
@@ -49,7 +47,7 @@ workerThread.onmessage = (e) => {
             });
         }
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
-        lastProcessorData = data.processors;
+        lastProcessorData = JSON.parse(originalData);
 
         results = [];
         for (let j = 0, jend = data.temperatures.length; j < jend; j++) {
@@ -89,10 +87,10 @@ function getStats() {
 
         methodCall = containerInfoMethod[index];
         chrome.system[component][methodCall](data => {
-            const originalData = Object.assign({}, data.processors);
+            const originalData = JSON.stringify([].concat(data.processors));
             updateDisplay(component, data);
             if (component === 'cpu') {
-                //lastProcessorData = originalData;
+                lastProcessorData = JSON.parse(originalData);
                 manageWorker();
             }
         });
