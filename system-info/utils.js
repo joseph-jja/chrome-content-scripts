@@ -38,9 +38,9 @@ function iterateOverObject(obj, formatter) {
                 const usage = value[j].usage;
                 const usageResult = {
                     usage: {
-                        idle: Math.ceil(calculatePercent(usage.idle, usage.total)),      
-                        user: Math.ceil(calculatePercent(usage.user, usage.total)),      
-                        kernel: Math.ceil(calculatePercent(usage.kernel, usage.total))      
+                        idle: calculatePercent(usage.idle, usage.total),      
+                        user: calculatePercent(usage.user, usage.total),      
+                        kernel: calculatePercent(usage.kernel, usage.total)      
                     }
                 };
                 value[j] = usageResult;
@@ -98,7 +98,8 @@ function formatNum(n, nSize) {
 function calculatePercent(x, total) {
     let result = x;
     if (total !== 0) {
-        result = Math.ceil((x / total) * 100);
+        //result = Math.ceil((x / total) * 100);
+        result = Number.parseFloat((x / total) * 100).toFixed(1);
     }
     return result;
 }
