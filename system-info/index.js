@@ -37,13 +37,7 @@ workerThread.onmessage = (e) => {
                 total = (data.processors[i].usage.total - lastProcessorData[i].usage.total),
                 user = (data.processors[i].usage.user - lastProcessorData[i].usage.user),
                 kernel = (data.processors[i].usage.kernel - lastProcessorData[i].usage.kernel);
-            results.push({
-                usage: {
-                        idle: calculatePercent(idle, total),    
-                        user: calculatePercent(user, total),    
-                        kernel: calculatePercent(kernel, total)     
-                }
-            });
+            results.push(getUsage(user, kernel, total));
         }
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
         lastProcessorData = JSON.parse(originalData);
