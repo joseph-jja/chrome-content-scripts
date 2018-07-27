@@ -18,6 +18,22 @@ function createContainer(name) {
     fieldset.appendChild(childElement);
 }
 
+// we can approximate idle as it should be about the rest
+function getUsage(user, kernel, total) {
+
+    const userPct = calculatePercent(user, total),
+        kernelPct = calculatePercent(kernel, total),
+        idlePct = Number.parseFloat(100 - userPct - kernelPct).toFixed(1);
+
+    return {
+        usage: {
+            idle: idlePct,
+            user: userPct,
+            kernel: kernelPct
+        }
+    };
+}
+
 function iterateOverObject(obj, formatter) {
 
     let result = '';
@@ -36,14 +52,7 @@ function iterateOverObject(obj, formatter) {
             idStr = ' id="' + keyName + '"';
             for (let j = 0, jend = value.length; j < jend; j++) {
                 const usage = value[j].usage;
-                const usageResult = {
-                    usage: {
-                        idle: calculatePercent(usage.idle, usage.total),      
-                        user: calculatePercent(usage.user, usage.total),      
-                        kernel: calculatePercent(usage.kernel, usage.total)      
-                    }
-                };
-                value[j] = usageResult;
+                value[j] = getUsage(usage.user, usage.kernel, usage.total);
             }
         } else if (keyName === 'temperatures') {
             idStr = ' id="' + keyName + '"';
