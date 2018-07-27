@@ -98,7 +98,6 @@ function formatNum(n, nSize) {
 function calculatePercent(x, total) {
     let result = x;
     if (total !== 0) {
-        //result = Math.ceil((x / total) * 100);
         result = Number.parseFloat((x / total) * 100).toFixed(1);
     }
     return result;
