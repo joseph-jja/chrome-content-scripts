@@ -39,10 +39,10 @@ workerThread.onmessage = (e) => {
                 kernel = (data.processors[i].usage.kernel - lastProcessorData[i].usage.kernel);
             results.push({
                 usage: {
-                        idle: Math.ceil(calculatePercent(idle, total)),    
-                        user: Math.ceil(calculatePercent(user, total)),    
-                        kernel: Math.ceil(calculatePercent(kernel, total))      
-                                    }
+                        idle: calculatePercent(idle, total),    
+                        user: calculatePercent(user, total),    
+                        kernel: calculatePercent(kernel, total)     
+                }
             });
         }
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
