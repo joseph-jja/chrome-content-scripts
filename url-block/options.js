@@ -23,7 +23,7 @@ function handleAddClick() {
         allowedBlocked = document.getElementById('allow-block-id');
 
     if (!allowBlockUrl.value) {
-        Blocked
+        //Blocked
         return;
     }
 
