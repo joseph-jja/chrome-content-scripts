@@ -64,7 +64,10 @@ function handleAddClick() {
         updateStorage();
     } else {
         const urlBlockerData = storageItems.urlBlockerData;
-        if (!urlBlockerData || !storageItems.urlBlockerData.blocked) {
+        if (!urlBlockerData || storageItems.urlBlockerData.blocked) {
+            if (!storageItems.urlBlockerData) {
+                storageItems.urlBlockerData = {};  
+            }
             storageItems.urlBlockerData['blocked'] = [];
         }
         storageItems.urlBlockerData.blocked.push(abUrl);
