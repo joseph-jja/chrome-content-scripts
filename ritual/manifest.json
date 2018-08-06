@@ -1,0 +1,19 @@
+{
+    "manifest_version": 2,
+    "name": "ritual",
+    "short_name": "ritual",
+    "description": "ritual extension",
+    "version": "0.0.7",
+    "minimum_chrome_version": "59",
+    
+    "content_scripts": [{
+        "matches": ["https://order.ritual.co/*"],
+        "all_frames": true,
+        "css": ["styles.css"],
+        "js": ["ritual.js"]
+    }],
+
+    "permissions": [
+        "tabs"
+    ]
+}
