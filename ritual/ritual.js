@@ -12,3 +12,6 @@ merchants.forEach(x => {
         x.style.display = 'none';
     }
 });
+
+const searchBox = document.getElementById('field-search-city');
+searchBox.value = '525 Market St, San Francisco, CA 94105, USA';
