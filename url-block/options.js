@@ -1,6 +1,12 @@
 // onload get the list of blocked URLs
 
-let storageItems = {};
+let storageItems = {
+    urlBlockerData: {
+        blocked: [],
+        'alwaysBlocked': {},
+        'alwaysAllowed': {}
+    }
+};
 
 //chrome.storage.local.clear();
 
@@ -35,19 +41,6 @@ function handleAddClick() {
         // so if we have a parent domain then we can do certain things
         const mapKey = parentDomain.value;
 
-        const urlBlockerData = storageItems.urlBlockerData;
-        if (!urlBlockerData || !storageItems.urlBlockerData.alwaysAllowed) {
-            storageItems.urlBlockerData = {
-                'alwaysAllowed': {}
-            };
-        }
-
-        if (!urlBlockerData || !storageItems.urlBlockerData.alwaysBlocked) {
-            storageItems.urlBlockerData = {
-                'alwaysBlocked': {}
-            };
-        }
-
         if (allowedBlocked.checked) {
             let key = storageItems.urlBlockerData.alwaysBlocked[mapKey];
             if (!key) {
@@ -63,13 +56,6 @@ function handleAddClick() {
         }
         updateStorage();
     } else {
-        const urlBlockerData = storageItems.urlBlockerData;
-        if (!urlBlockerData || storageItems.urlBlockerData.blocked) {
-            if (!storageItems.urlBlockerData) {
-                storageItems.urlBlockerData = {};  
-            }
-            storageItems.urlBlockerData['blocked'] = [];
-        }
         storageItems.urlBlockerData.blocked.push(abUrl);
         updateStorage();
     }
@@ -104,11 +90,16 @@ document.addEventListener('DOMContentLoaded', restore_options => {
         if (items && items.urlBlockerData) {
             storageItems = items;
 
-            const urlBlockerData = storageItems.urlBlockerData
-            if (!urlBlockerData) {
+            if (!items) {
+                storageItems.urlBlockerData = {
+                    blocked: [],
+                    'alwaysBlocked': {},
+                    'alwaysAllowed': {}
+                };
                 return;
             }
 
+            const urlBlockerData = storageItems.urlBlockerData;
             if (urlBlockerData.blocked) {
                 const blockedItems = urlBlockerData.blocked;
                 for (let i = 0, end = blockedItems.length; i < end; i++) {
