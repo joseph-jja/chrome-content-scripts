@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
-    <app appid='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'>
+    <app appid='dicdbkggdkpggdigkkjnkgnfoegigcoa'>
         <updatecheck codebase='https://raw.githubusercontent.com/joseph-jja/chrome-content-scripts/master/aquabid.crx' version='2.0' />
     </app>
 </gupdate>
