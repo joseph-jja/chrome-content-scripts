@@ -54,7 +54,7 @@ if (table) {
                 let request = new XMLHttpRequest();
                 request.open("GET", url, true);
                 request.addEventListener("load", function() {
-                    let content, ele, i;
+                    let ele, i;
                     let winHeight = window.innerHeight - 200;
 
                     overlay.style.height = winHeight + "px";
