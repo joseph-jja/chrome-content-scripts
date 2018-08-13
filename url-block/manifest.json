@@ -1,7 +1,7 @@
 {
     "name": "URL Blocker",
     "manifest_version": 2,
-    "version": "0.0.4",
+    "version": "0.0.5",
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "all_frames": true,
