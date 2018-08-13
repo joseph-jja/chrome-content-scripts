@@ -3,7 +3,7 @@
 var table = document.querySelector('.sortable tbody');
 if (!table) {
     let selectedCell;
-    cells = document.querySelectorAll('center table tr:first-child td:first-child font b');
+    const cells = document.querySelectorAll('center table tr:first-child td:first-child font b');
     cells.forEach(function(x) {
         if (x.innerHTML === 'Item' && x.parentNode) {
             selectedCell = x.parentNode.parentNode;
@@ -13,9 +13,9 @@ if (!table) {
         table = selectedCell.parentNode.parentNode.parentNode;
     }
 }
+
 if (table) {
-    var overlay = document.getElementById("overlay-api"),
-        content;
+    let overlay = document.getElementById("overlay-api");
     if (!overlay) {
         overlay = document.createElement("div");
         document.body.appendChild(overlay);
@@ -27,7 +27,7 @@ if (table) {
     overlay.style.display = "none";
 
     overlay.onclick = function(e) {
-        var tgt = e.target;
+        const tgt = e.target;
         if (tgt.nodeName.toLowerCase() === 'div') {
             if (tgt.id === 'closeModal') {
                 overlay.style.display = "none";
@@ -36,16 +36,16 @@ if (table) {
     };
 
     table.onclick = function(e) {
-        var img, url, x, y;
 
         if (e.target.nodeName.toLowerCase() === 'td') {
             let row = e.target.parentNode;
-            row.querySelectorAll('td').forEach(function(x) {
-                x.style.background = 'yellow';
+            row.querySelectorAll('td').forEach(function(m) {
+                m.style.background = 'yellow';
             });
-            img = e.target.parentNode.querySelector('img[alt="PIC "]');
+            
+            let img = e.target.parentNode.querySelector('img[alt="PIC "]');
             if (img) {
-                url = img.parentNode.href;
+                let url = img.parentNode.href;
                 if (!url) {
                     // search pages
                     url = img.parentNode.querySelector('a').href;
@@ -54,7 +54,7 @@ if (table) {
                 let request = new XMLHttpRequest();
                 request.open("GET", url, true);
                 request.addEventListener("load", function() {
-                    var content, ele, i;
+                    let content, ele, i;
                     let winHeight = window.innerHeight - 200;
 
                     overlay.style.height = winHeight + "px";
@@ -64,7 +64,7 @@ if (table) {
                     overlay.style.top = (50 + (+window.pageYOffset)) + "px";
                     overlay.style.left = (window.innerWidth > 800 ? (window.innerWidth - 800) + "px" : "500px");
 
-                    content = this.responseText;
+                    let content = this.responseText;
                     content = content.replace(/center/ig, 'b');
                     content = content.substring(content.indexOf("<blockquote>") + 12);
                     content = content.substring(0, content.lastIndexOf("</blockquote>"));
@@ -73,14 +73,15 @@ if (table) {
                     content = `<div id="closeModal">close</div><div style="height: ${winHeight - 30}px; width: 730px; overflow: scroll;">` + content + '</div>';
                     overlay.innerHTML = content;
 
-                    x = document.querySelectorAll("#overlay-api *");
-                    y = document.querySelectorAll("#overlay-api div");
-                    y = y[1];
-                    x = Array.prototype.slice.call(x, 0);
+                    let allChildren = document.querySelectorAll("#overlay-api *");
+                    let allDivs = document.querySelectorAll("#overlay-api div");
+                    allDivs = allDivs[1];
+                    allChildren = Array.prototype.slice.call(allChildren, 0);
+                    
                     let isWetspot = false;
                     // loop de loop de loop
                     // find out if this is w-spot they show fish image first
-                    x.forEach(node => {
+                    allChildren.forEach(node => {
                         let nodeName = node.nodeName.toLowerCase();
                         if (nodeName === 'img') {
                             let url = node.src.toLowerCase();
@@ -91,9 +92,9 @@ if (table) {
                     });
                     // no? reverse 
                     if (!isWetspot) {
-                        x.reverse();
+                        allChildren.reverse();
                     }
-                    x.forEach(node => {
+                    allChildren.forEach(node => {
                         let nodeName = node.nodeName.toLowerCase();
                         if (nodeName !== 'img' && nodeName !== 'div') {
                             node.style.display = 'none';
@@ -104,11 +105,11 @@ if (table) {
                                 show = false;
                             }
                             if (show) {
-                                y.appendChild(node);
+                                allDivs.appendChild(node);
                             }
                         }
                     });
-                    let childImages = y.querySelectorAll('img');
+                    let childImages = allDivs.querySelectorAll('img');
                     childImages.forEach(i => {
                         let iWidth = getComputedStyle(i).getPropertyValue('width');
                         if (iWidth && parseInt(iWidth) !== 0 && parseInt(iWidth) <= 50) {
