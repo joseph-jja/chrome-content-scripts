@@ -1,7 +1,7 @@
 {
     "name": "URL Blocker",
     "manifest_version": 2,
-    "version": "0.0.3",
+    "version": "0.0.4",
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "all_frames": true,
@@ -25,5 +25,5 @@
         "storage"
     ],
     "options_page": "options.html", 
-    "update_url": "http://github.com/joseph-jja/chrome-content-scripts/tree/master/url-block/update.xml"
+    "update_url": "https://raw.githubusercontent.com/joseph-jja/chrome-content-scripts/master/url-block/update.xml"
 }
