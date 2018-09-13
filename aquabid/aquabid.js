@@ -77,6 +77,7 @@ if (table) {
                     allChildren = Array.prototype.slice.call(allChildren, 0);
                     
                     let olaDiv = document.getElementById('overlay-api-content');
+                    olaDiv.innerHTML = '';
                     
                     let isWetspot = false;
                     // loop de loop de loop
