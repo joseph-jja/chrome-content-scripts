@@ -70,13 +70,13 @@ if (table) {
                     content = content.substring(0, content.lastIndexOf("</blockquote>"));
                     content = content.replace(/  /g, ' ');
 
-                    content = `<div id="closeModal">close</div><div style="height: ${winHeight - 30}px; width: 730px; overflow: scroll;">` + content + '</div>';
+                    content = `<div id="closeModal">close</div><div style="height: ${winHeight - 30}px; width: 730px; overflow: scroll;" id="overlay-api-content">` + content + '</div>';
                     overlay.innerHTML = content;
 
-                    let allChildren = document.querySelectorAll("#overlay-api *");
-                    let allDivs = document.querySelectorAll("#overlay-api div");
-                    allDivs = allDivs[1];
+                    let allChildren = document.querySelectorAll("#overlay-api-content img");
                     allChildren = Array.prototype.slice.call(allChildren, 0);
+                    
+                    let olaDiv = document.getElementById('overlay-api-content');
                     
                     let isWetspot = false;
                     // loop de loop de loop
@@ -96,20 +96,18 @@ if (table) {
                     }
                     allChildren.forEach(node => {
                         let nodeName = node.nodeName.toLowerCase();
-                        if (nodeName !== 'img' && nodeName !== 'div') {
-                            node.style.display = 'none';
-                        } else if (nodeName === 'img') {
+                        if (nodeName === 'img') {
                             let url = node.src.toLowerCase(),
                                 show = true;
                             if (url.indexOf('logo') > -1 || url.indexOf('banner') > -1) {
                                 show = false;
                             }
                             if (show) {
-                                allDivs.appendChild(node);
+                                olaDiv.appendChild(node);
                             }
                         }
                     });
-                    let childImages = allDivs.querySelectorAll('img');
+                    let childImages = olaDiv.querySelectorAll('img');
                     childImages.forEach(i => {
                         let iWidth = getComputedStyle(i).getPropertyValue('width');
                         if (iWidth && parseInt(iWidth) !== 0 && parseInt(iWidth) <= 50) {
