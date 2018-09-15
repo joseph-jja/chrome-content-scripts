@@ -102,6 +102,8 @@ if (table) {
                                 show = true;
                             if (url.indexOf('logo') > -1 || url.indexOf('banner') > -1) {
                                 show = false;
+                            } else if (url.indexOf('sorry.jpg') > -1) {
+                                show = false;
                             }
                             if (show) {
                                 olaDiv.appendChild(node);
