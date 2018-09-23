@@ -59,7 +59,7 @@ if (table) {
                           winHeight = window.innerHeight;
                     const windowHeight = winHeight - 150;
 
-                    overlay.style.height = winHeight + "px";
+                    overlay.style.height = windowHeight + "px";
                     overlay.style.width = "750px";
                     overlay.style.overflow = "hidden";
                     overlay.style.position = "absolute";
