@@ -55,14 +55,16 @@ if (table) {
                 request.open("GET", url, true);
                 request.addEventListener("load", function() {
                     let ele, i;
-                    let winHeight = window.innerHeight - 200;
+                    const winWidth = window.innerWidth,
+                          winHeight = window.innerHeight;
+                    const windowHeight = winHeight - 150;
 
                     overlay.style.height = winHeight + "px";
                     overlay.style.width = "750px";
                     overlay.style.overflow = "hidden";
                     overlay.style.position = "absolute";
                     overlay.style.top = (50 + (+window.pageYOffset)) + "px";
-                    overlay.style.left = (window.innerWidth > 800 ? (window.innerWidth - 800) + "px" : "500px");
+                    overlay.style.left = (winWidth > 800 ? (winWidth - 800) + "px" : "500px");
 
                     let content = this.responseText;
                     content = content.replace(/center/ig, 'b');
@@ -70,7 +72,7 @@ if (table) {
                     content = content.substring(0, content.lastIndexOf("</blockquote>"));
                     content = content.replace(/  /g, ' ');
 
-                    content = `<div id="closeModal">close</div><div style="height: ${winHeight - 30}px; width: 730px; overflow: scroll;" id="overlay-api-content">` + content + '</div>';
+                    content = `<div id="closeModal">close</div><div style="height: ${windowHeight - 30}px; width: 730px; overflow: scroll;" id="overlay-api-content">` + content + '</div>';
                     overlay.innerHTML = content;
 
                     let allChildren = document.querySelectorAll("#overlay-api-content img");
@@ -113,8 +115,13 @@ if (table) {
                     let childImages = olaDiv.querySelectorAll('img');
                     childImages.forEach(i => {
                         let iWidth = getComputedStyle(i).getPropertyValue('width');
-                        if (iWidth && parseInt(iWidth) !== 0 && parseInt(iWidth) <= 50) {
-                            i.style.display = 'none';
+                        if (iWidth && parseInt(iWidth) !== 0 ) {
+                            if (parseInt(iWidth) <= 50) {
+                                i.style.display = 'none';
+                            } else {
+                                //i.style.width = '250px';
+                                //i.style.display = 'block';
+                            }
                         }
                     });
                     overlay.style.display = "block";
