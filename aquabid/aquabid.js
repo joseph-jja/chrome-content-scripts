@@ -72,7 +72,7 @@ if (table) {
                     content = content.substring(0, content.lastIndexOf("</blockquote>"));
                     content = content.replace(/  /g, ' ');
 
-                    content = `<div id="closeModal">close</div><div style="height: ${windowHeight - 30}px; width: 730px; overflow: scroll;" id="overlay-api-content">` + content + '</div>';
+                    content = `<div id="closeModal">close</div><div style="height: ${windowHeight - 100}px; width: 730px; overflow: scroll;" id="overlay-api-content">` + content + '</div>';
                     overlay.innerHTML = content;
 
                     let allChildren = document.querySelectorAll("#overlay-api-content img");
