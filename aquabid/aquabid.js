@@ -57,7 +57,7 @@ if (table) {
                     let ele, i;
                     const winWidth = window.innerWidth,
                           winHeight = window.innerHeight;
-                    const windowHeight = winHeight - 150;
+                    const windowHeight = winHeight - 100;
 
                     overlay.style.height = windowHeight + "px";
                     overlay.style.width = "750px";
