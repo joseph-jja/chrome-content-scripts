@@ -81,6 +81,9 @@ function getFilter(url) {
 
 // generic function to get the active tab and the url
 function setActiveTab(tabId, key) {
+    ir (!tabId) {
+        return;
+    }
     chrome.tabs.get(tabId, (tab) => {
         if (tab.url && tab.url !== DEFAULT_TAB_URL) {
             let url = getFilter(tab.url);
