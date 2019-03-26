@@ -3,8 +3,8 @@
     "name": "ritual",
     "short_name": "ritual",
     "description": "ritual extension",
-    "version": "0.0.7",
-    "minimum_chrome_version": "59",
+    "version": "0.0.8",
+    "minimum_chrome_version": "70",
     
     "content_scripts": [{
         "matches": ["https://order.ritual.co/*"],
