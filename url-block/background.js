@@ -81,6 +81,9 @@ function getFilter(url) {
 
 // generic function to get the active tab and the url
 function setActiveTab(tabId, key) {
+    if (!tabId) {
+        return;
+    }
     chrome.tabs.get(tabId, (tab) => {
         if (tab.url && tab.url !== DEFAULT_TAB_URL) {
             let url = getFilter(tab.url);
@@ -89,7 +92,7 @@ function setActiveTab(tabId, key) {
     });
 }
 
-chrome.tabs.onCreated.addListener((tab) => {
+function initialize(tab) {
     const tabID = tab.id;
     setActiveTab(tabID, 'Created:');
     chrome.storage.local.get('urlBlockerData', function(items) {
@@ -115,23 +118,17 @@ chrome.tabs.onCreated.addListener((tab) => {
             }
         }
     });
-});
+}
 
-chrome.tabs.onActivated.addListener((activeInfo) => {
-    const tabID = activeInfo.tabId;
-    setActiveTab(tabID, 'Activated:');
-});
+chrome.tabs.onCreated.addListener(initialize);
+chrome.tabs.onActivated.addListener(initialize);
 
-chrome.tabs.onUpdated.addListener((id, data, tab) => {
-    const tabID = id;
-    //console.log(data);
-    //console.log(tab);
+chrome.tabs.onUpdated.addListener((tabID, data, tab) => {
     setActiveTab(tabID, 'Updated:');
 });
 
 chrome.tabs.onRemoved.addListener((tabID, removeInfo) => {
     delete activeTabsList[tabID];
-    //chrome.tabs.query({}, (allTabs) => { });
 });
 
 function checkDetails(details) {
