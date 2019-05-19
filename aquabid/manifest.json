@@ -3,8 +3,8 @@
     "name": "aquabid",
     "short_name": "aquabid",
     "description": "aquabid extension",
-    "version": "0.2.0",
-    "minimum_chrome_version": "59",
+    "version": "0.3.0",
+    "minimum_chrome_version": "70",
     "update_url": "https://raw.githubusercontent.com/joseph-jja/chrome-content-scripts/master/aquabid/update.xml",
 
     "browser_action": {
