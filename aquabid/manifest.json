@@ -1,10 +1,7 @@
 {
     "manifest_version": 2,
     "name": "aquabid",
-    "short_name": "aquabid",
-    "description": "aquabid extension",
-    "version": "0.3.0",
-    "minimum_chrome_version": "70",
+    "version": "0.3.1",
     "update_url": "https://raw.githubusercontent.com/joseph-jja/chrome-content-scripts/master/aquabid/update.xml",
 
     "browser_action": {
@@ -12,15 +9,19 @@
             "32": "aquabid_logo.png"
         }
     },
-
+    "background": {
+        "scripts": ["background.js"]
+    },
     "content_scripts": [{
-        "matches": ["http://www.aquabid.com/*"],
+        "matches": ["http://www.aquabid.com/*", "https://www.aquabid.com/*"],
         "all_frames": true,
         "css": ["styles.css"],
-        "js": ["aquabid.js"]
+        "js": ["aquabid.js"],
+        "run_at": "document_end"
     }],
 
     "permissions": [
-        "tabs"
+        "tabs",
+        "*://*.aquabid.com/*"
     ]
 }
