@@ -45,6 +45,18 @@ function mapTemperature(value) {
     });
 }
 
+function renderCPU(data) {
+
+    const header = '<thead><th>CPU</th><th>idle</th><th>user</th><th>system</th></thead>';
+    
+    const rows = data.map( (row, i) => {
+        return `<tr><td>${i}</td><td>${row.idle}</td><td>${row.user}</td><td>${row.kernel}</td></tr>`; 
+    });
+    
+    return `<table>${header}<tbody>${rows.join('')}</tbody></table><br>`;
+    
+}
+
 function iterateOverObject(obj, formatter) {
 
     let result = '';
@@ -69,7 +81,7 @@ function iterateOverObject(obj, formatter) {
                 const usage = val.usage;
                 return getUsage(usage.user, usage.kernel, usage.total).usage;
             });
-            value = JSON.stringify(rvalue);   
+            value = renderCPU(rvalue);   
         } else if (keyName === 'temperatures') {
             idStr = ' id="' + keyName + '"';
             value = JSON.stringify(mapTemperature(value));   
