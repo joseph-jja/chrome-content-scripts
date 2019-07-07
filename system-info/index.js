@@ -31,12 +31,15 @@ workerThread.onmessage = (e) => {
         
         const originalData = JSON.stringify([].concat(data.processors));
 
+        let i = 0;
         let results = lastProcessorData.map( lastUsage => {
             const idle = (data.processors[i].usage.idle - lastUsage.usage.idle),
                 total = (data.processors[i].usage.total - lastUsage.usage.total),
                 user = (data.processors[i].usage.user - lastUsage.usage.user),
                 kernel = (data.processors[i].usage.kernel - lastUsage.usage.kernel);
-            return getUsage(user, kernel, total).usage; 
+            const usage = getUsage(user, kernel, total).usage;
+            i++;
+            return usage; 
         });
         
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
@@ -51,29 +54,6 @@ workerThread.onmessage = (e) => {
     });
 }
 
-function updateDisplay(name, data) {
-    const container = document.getElementById(name);
-
-    let result = '';
-
-    if (Array.isArray(data)) {
-        for (let i = 0, end = data.length; i < end; i++) {
-            let idName = i,
-                iterObj = data[i];
-            if (iterObj['name']) {
-                idName = iterObj['name'];
-                delete iterObj['name'];
-            }
-            result += `<div>${NAME_LIST['name']}: ${idName}<br><div style="padding-left:1em;">`;
-            result += iterateOverObject(iterObj);
-            result += '</div></div>';
-        }
-    } else {
-        result = iterateOverObject(data);
-    }
-
-    container.innerHTML = result;
-}
 
 function getStats() {
     containers.forEach((component, index) => {
