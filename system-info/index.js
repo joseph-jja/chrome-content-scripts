@@ -28,17 +28,17 @@ workerThread.onmessage = (e) => {
     chrome.system.cpu.getInfo(data => {
         const processors = document.getElementById('processors'),
             temperatures = document.getElementById('temperatures');
-        let results = [];
-
+        
         const originalData = JSON.stringify([].concat(data.processors));
 
-        for (let i = 0, end = lastProcessorData.length; i < end; i++) {
-            const idle = (data.processors[i].usage.idle - lastProcessorData[i].usage.idle),
-                total = (data.processors[i].usage.total - lastProcessorData[i].usage.total),
-                user = (data.processors[i].usage.user - lastProcessorData[i].usage.user),
-                kernel = (data.processors[i].usage.kernel - lastProcessorData[i].usage.kernel);
-            results.push(getUsage(user, kernel, total));
-        }
+        let results = lastProcessorData.map( lastUsage => {
+            const idle = (data.processors[i].usage.idle - lastUsage.usage.idle),
+                total = (data.processors[i].usage.total - lastUsage.usage.total),
+                user = (data.processors[i].usage.user - lastUsage.usage.user),
+                kernel = (data.processors[i].usage.kernel - lastUsage.usage.kernel);
+            return getUsage(user, kernel, total).usage; 
+        });
+        
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
         lastProcessorData = JSON.parse(originalData);
 
