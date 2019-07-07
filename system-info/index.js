@@ -39,7 +39,7 @@ workerThread.onmessage = (e) => {
             return getUsage(user, kernel, total).usage;
         });
         
-        processors.innerHTML = 'processors: ' + JSON.stringify(results);
+        processors.innerHTML = 'processors: ' + renderCPU(results);
         lastProcessorData = JSON.parse(originalData);
 
         results = JSON.stringify(mapTemperature(data.temperatures));   
