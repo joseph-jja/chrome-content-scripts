@@ -42,11 +42,8 @@ workerThread.onmessage = (e) => {
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
         lastProcessorData = JSON.parse(originalData);
 
-        results = [];
-        for (let j = 0, jend = data.temperatures.length; j < jend; j++) {
-            results.push(Math.floor((data.temperatures[j] * 1.8) + 32));
-        }
-        temperatures.innerHTML = 'temperatures: ' + JSON.stringify(results);
+        results = JSON.stringify(mapTemperature(data.temperatures));   
+        temperatures.innerHTML = `temperatures: ${results}`;
         manageWorker();
     });
 }
