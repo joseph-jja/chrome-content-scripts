@@ -31,15 +31,12 @@ workerThread.onmessage = (e) => {
         
         const originalData = JSON.stringify([].concat(data.processors));
 
-        let i = 0;
-        let results = lastProcessorData.map( lastUsage => {
+        let results = lastProcessorData.map( (lastUsage, i) => {
             const idle = (data.processors[i].usage.idle - lastUsage.usage.idle),
                 total = (data.processors[i].usage.total - lastUsage.usage.total),
                 user = (data.processors[i].usage.user - lastUsage.usage.user),
                 kernel = (data.processors[i].usage.kernel - lastUsage.usage.kernel);
-            const usage = getUsage(user, kernel, total).usage;
-            i++;
-            return usage; 
+            return getUsage(user, kernel, total).usage;
         });
         
         processors.innerHTML = 'processors: ' + JSON.stringify(results);
