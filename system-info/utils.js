@@ -52,7 +52,7 @@ function iterateOverObject(obj, formatter) {
             idStr = ' id="' + keyName + '"';
             for (let j = 0, jend = value.length; j < jend; j++) {
                 const usage = value[j].usage;
-                value[j] = getUsage(usage.user, usage.kernel, usage.total);
+                value[j] = getUsage(usage.user, usage.kernel, usage.total).usage;
             }
         } else if (keyName === 'temperatures') {
             idStr = ' id="' + keyName + '"';
