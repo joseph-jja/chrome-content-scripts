@@ -85,6 +85,8 @@ function iterateOverObject(obj, formatter) {
         } else if (keyName === 'temperatures') {
             idStr = ' id="' + keyName + '"';
             value = JSON.stringify(mapTemperature(value));   
+        } else if ( value instanceof String || (typeof value).toLowerCase() === 'string' ) {
+            // do nothing as the data is already a string
         } else {
             value = JSON.stringify(value);   
         }
