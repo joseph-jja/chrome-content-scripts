@@ -12,6 +12,8 @@ merchants.forEach(x => {
         x.style.display = 'none';
     } else if (company.toLowerCase().indexOf('la fromagerie') > -1) {
         x.style.display = 'none';
+    } else if (company.toLowerCase().indexOf('the melt') > -1) {
+        x.style.display = 'none';
     }
 });
 
