@@ -34,6 +34,29 @@ function getUsage(user, kernel, total) {
     };
 }
 
+function getDisplayName(keyName) {
+    return (NAME_LIST[keyName] ? NAME_LIST[keyName] : keyName);   
+}
+
+function mapTemperature(value) {
+    return value.map( val => {
+        const temp = Math.floor((val * 1.8) + 32);
+        return `${temp}F`;
+    });
+}
+
+function renderCPU(data) {
+
+    const header = '<thead><th>CPU</th><th>idle</th><th>user</th><th>system</th></thead>';
+    
+    const rows = data.map( (row, i) => {
+        return `<tr><td>${i}</td><td>${row.idle}</td><td>${row.user}</td><td>${row.kernel}</td></tr>`; 
+    });
+    
+    return `<table>${header}<tbody>${rows.join('')}</tbody></table><br>`;
+    
+}
+
 function iterateOverObject(obj, formatter) {
 
     let result = '';
@@ -41,27 +64,34 @@ function iterateOverObject(obj, formatter) {
     const keys = Object.keys(obj);
     for (let i = 0, end = keys.length; i < end; i++) {
         const keyName = keys[i];
+        
         let value = obj[keyName];
+        // not an array and is just a number
         if (!Array.isArray(value) && isFinite(value)) {
             value = formatNum(value);
         }
+        
         let idStr = '';
         if (formatter) {
             idStr = formatter(keyName, value);
+            value = JSON.stringify(value);   
         } else if (keyName === 'processors') {
             idStr = ' id="' + keyName + '"';
-            for (let j = 0, jend = value.length; j < jend; j++) {
-                const usage = value[j].usage;
-                value[j] = getUsage(usage.user, usage.kernel, usage.total);
-            }
+            const rvalue = value.map( val => {
+                const usage = val.usage;
+                return getUsage(usage.user, usage.kernel, usage.total).usage;
+            });
+            value = renderCPU(rvalue);   
         } else if (keyName === 'temperatures') {
             idStr = ' id="' + keyName + '"';
-            for (let j = 0, jend = value.length; j < jend; j++) {
-                value[j] = Math.floor((value[j] * 1.8) + 32);
-            }
+            value = JSON.stringify(mapTemperature(value));   
+        } else if ( value instanceof String || (typeof value).toLowerCase() === 'string' ) {
+            // do nothing as the data is already a string
+        } else {
+            value = JSON.stringify(value);   
         }
-        const displayName = (NAME_LIST[keyName] ? NAME_LIST[keyName] : keyName);
-        result += `<div${idStr}>${displayName}: ${JSON.stringify(value)}</div>`;
+        
+        result += `<div${idStr}>${getDisplayName(keyName)}: ${value}</div>`;
     }
     return result;
 }

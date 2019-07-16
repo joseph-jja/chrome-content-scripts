@@ -28,52 +28,26 @@ workerThread.onmessage = (e) => {
     chrome.system.cpu.getInfo(data => {
         const processors = document.getElementById('processors'),
             temperatures = document.getElementById('temperatures');
-        let results = [];
-
+        
         const originalData = JSON.stringify([].concat(data.processors));
 
-        for (let i = 0, end = lastProcessorData.length; i < end; i++) {
-            const idle = (data.processors[i].usage.idle - lastProcessorData[i].usage.idle),
-                total = (data.processors[i].usage.total - lastProcessorData[i].usage.total),
-                user = (data.processors[i].usage.user - lastProcessorData[i].usage.user),
-                kernel = (data.processors[i].usage.kernel - lastProcessorData[i].usage.kernel);
-            results.push(getUsage(user, kernel, total));
-        }
-        processors.innerHTML = 'processors: ' + JSON.stringify(results);
+        let results = lastProcessorData.map( (lastUsage, i) => {
+            const idle = (data.processors[i].usage.idle - lastUsage.usage.idle),
+                total = (data.processors[i].usage.total - lastUsage.usage.total),
+                user = (data.processors[i].usage.user - lastUsage.usage.user),
+                kernel = (data.processors[i].usage.kernel - lastUsage.usage.kernel);
+            return getUsage(user, kernel, total).usage;
+        });
+        
+        processors.innerHTML = 'processors: ' + renderCPU(results);
         lastProcessorData = JSON.parse(originalData);
 
-        results = [];
-        for (let j = 0, jend = data.temperatures.length; j < jend; j++) {
-            results.push(Math.floor((data.temperatures[j] * 1.8) + 32));
-        }
-        temperatures.innerHTML = 'temperatures: ' + JSON.stringify(results);
+        results = JSON.stringify(mapTemperature(data.temperatures));   
+        temperatures.innerHTML = `temperatures: ${results}`;
         manageWorker();
     });
 }
 
-function updateDisplay(name, data) {
-    const container = document.getElementById(name);
-
-    let result = '';
-
-    if (Array.isArray(data)) {
-        for (let i = 0, end = data.length; i < end; i++) {
-            let idName = i,
-                iterObj = data[i];
-            if (iterObj['name']) {
-                idName = iterObj['name'];
-                delete iterObj['name'];
-            }
-            result += `<div>${NAME_LIST['name']}: ${idName}<br><div style="padding-left:1em;">`;
-            result += iterateOverObject(iterObj);
-            result += '</div></div>';
-        }
-    } else {
-        result = iterateOverObject(data);
-    }
-
-    container.innerHTML = result;
-}
 
 function getStats() {
     containers.forEach((component, index) => {
