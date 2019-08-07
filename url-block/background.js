@@ -20,7 +20,7 @@ function parseHostProtocol(inUrl) {
         return {};
     }
 
-    let host, protocol;
+    let host, protocol, domainlessHost;
 
     // we have a URL but it has no protocol
     if (inUrl.indexOf(PROTOCOL_SEP) > -1) {
@@ -53,13 +53,15 @@ function parseHostProtocol(inUrl) {
         const hostParts = host.split('.');
         if (hostParts.length > 0) {
             host = hostParts[hostParts.length - 2] + '.' + hostParts[hostParts.length - 1];
+            domainlessHost = hostParts[hostParts.length - 2];
         }
     }
 
     // return fqdn (fully qualified domain name)
     return {
         host,
-        protocol
+        protocol, 
+        domainlessHost
     };
 }
 
@@ -68,7 +70,8 @@ function getFilter(url) {
     if (url) {
         let {
             host,
-            protocol
+            protocol, 
+            domainlessHost
         } = parseHostProtocol(url);
 
         // we don't always have protocol
