@@ -6,14 +6,11 @@ const requests = chrome.webRequest,
     URL_FILTER = {
         urls: ['https://*/*', 'http://*/*']
     },
-    useFQDN = false,
     DEFAULT_TAB_URL = 'chrome://newtab/';
 
 let icon = GO_ICON,
     activeTabsList = {},
-    allowedURLs = {},
-    blockedUrls = {},
-    alwaysBlockedUrls = [];
+    allowedURLs = {};
 
 function parseHostProtocol(inUrl) {
     if (!inUrl) {
@@ -49,10 +46,10 @@ function parseHostProtocol(inUrl) {
         host = host.substring(0, idx);
     }
 
-    if (!useFQDN && host && host.length > 0) {
+    if (host && host.length > 0) {
         const hostParts = host.split('.');
         if (hostParts.length > 0) {
-            host = hostParts[hostParts.length - 2] + '.' + hostParts[hostParts.length - 1];
+            // www.foo.com then we want foo.com and foo
             domainlessHost = hostParts[hostParts.length - 2];
         }
     }
@@ -60,22 +57,24 @@ function parseHostProtocol(inUrl) {
     // return fqdn (fully qualified domain name)
     return {
         host,
-        protocol, 
+        protocol,
         domainlessHost
     };
 }
 
-function getFilter(url) {
+function getFilter(url, justName = false) {
     let pageUrl;
     if (url) {
         let {
             host,
-            protocol, 
+            protocol,
             domainlessHost
         } = parseHostProtocol(url);
 
         // we don't always have protocol
-        if (host) {
+        if (justName && domainlessHost) {
+            pageUrl = domainlessHost;
+        } else if (host) {
             pageUrl = host;
         }
     }
@@ -105,18 +104,8 @@ function initialize(tab) {
 
             const urlBlockerData = storageItems.urlBlockerData
 
-            if (urlBlockerData && urlBlockerData.blocked) {
-                const blockedItems = urlBlockerData.blocked;
-                alwaysBlockedUrls = blockedItems;
-            }
-
-            if (urlBlockerData && urlBlockerData.alwaysBlocked) {
-                const blockedItems = urlBlockerData.alwaysBlocked;
-                blockedUrls = blockedItems;
-            }
-
-            if (urlBlockerData && urlBlockerData.alwaysAllowed) {
-                const allowedItems = urlBlockerData.alwaysAllowed;
+            if (urlBlockerData && urlBlockerData.allowed) {
+                const allowedItems = urlBlockerData.allowed;
                 allowedURLs = allowedItems;
             }
         }
@@ -142,59 +131,29 @@ function checkDetails(details) {
         }
     }
 
-    const pageUrl = getFilter(details.initiator),
+    const pageUrl = getFilter(details.initiator, true),
         requestedHost = getFilter(details.url),
         tabID = details.tabId;
 
     let stop = false;
-    if (pageUrl && requestedHost && pageUrl !== requestedHost && activeTabsList[tabID]) {
+    if (pageUrl && requestedHost && requestedHost.indexOf(pageUrl) < 0 && activeTabsList[tabID]) {
 
-        //console.log(pageUrl + ' ' + requestedHost + ' ' + requestedHost.indexOf(pageUrl));
-        const filteredHostsList = host => {
-            const filteredHost = getFilter(host);
-            // console.log(`${host}  .... ${filteredHost}`);
-            if (filteredHost === requestedHost) {
-                return true;
-            }
-            return false;
-        };
+        stop = true;
 
-        let isAllowed = true,
-            isBlocked = false,
-            allowedURLList = [],
-            blockedURLList = [];
+        const filterdName = getFilter(requestedHost),
+            filteredHost = getFilter(requestedHost, true);
 
         // so here you can say for site x always allow these domains
-        if (allowedURLs[pageUrl]) {
-            allowedURLList = allowedURLs[pageUrl];
-            isAllowed = (allowedURLList.filter(filteredHostsList).length > 0);
+        // this can be fo foo.com or www.my.foo.com
+        if ((allowedURLs[filterdName] &&
+                requestedHost.indexOf(allowedURLs[filterdName]) > -1) ||
+            allowedURLs[filteredHost]) {
+            stop = false;
         }
+    }
 
-        // here you can specify for site x always block these domains
-        // so if a url is already in the allowedURLs this code will be run
-        // AND override the isAllowed, see below
-        if (blockedUrls[pageUrl]) {
-            blockedURLList = blockedUrls[pageUrl];
-            isBlocked = (blockedURLList.filter(filteredHostsList).length > 0);
-        }
-
-        // putting a url in alwaysBlocekedUrls, means that this url will ALWAYS be blocked
-        // so site x would never be loaded
-        // for example, if you put google.com in this list, you would not be able to access
-        // ANY of google.com domains
-        // so if you block something by a domain, then no use hitting this
-        if (alwaysBlockedUrls.length > 0 && !isBlocked) {
-            isBlocked = (alwaysBlockedUrls.filter(filteredHostsList).length > 0);
-        }
-
-        if (allowedURLList.length > 0 && !isAllowed) {
-            //console.log(`NOT ALLOWED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
-            stop = true;
-        }
-        if ((alwaysBlockedUrls.length > 0 || blockedURLList.length > 0) && isBlocked) {
-            //console.log(`BLOCKED: Cancelling request to: ${details.url} and parsed domain: ${requestedHost}.`);
-            stop = true;
-        }
+    if (stop) {
+        console.log(`Page request from domain ${pageUrl} is blocking rquest to ${requestedHost}`);
     }
 
     return {
