@@ -11,29 +11,35 @@ const GO_ICON = 'images/go32.png',
 
 function enableDisableExtension(e) {
 
-  const btn = e.target;
-  console.log(btn);
-  const text = btn.innerHTML;
-  console.log(text);
+    const btn = e.target;
+    chrome.browserAction.getTitle({}, (title) => {
 
-  let icon = GO_ICON;
-  if ( text === 'Disable') {
-       btn.innerHTML = 'Enable';
-       icon = STOP_ICON;
-       chrome.browserAction.disable();
-  } else if ( text === 'Enable') {
-       btn.innerHTML = 'Disable';
-       icon = GO_ICON;
-       chrome.browserAction.enable();
-  }
+        const text = title.replace('URL Blocker:', '').trim();
 
-  chrome.browserAction.setIcon({
-      'path': icon
-  });
+        let icon = GO_ICON,
+            titleText = 'Disable';
+        if (text === 'Enabled') {
+            btn.innerHTML = 'Enable';
+            icon = STOP_ICON;
+            titleText = 'Disabled';
+        } else if (text === 'Disabled') {
+            btn.innerHTML = 'Disable';
+            icon = GO_ICON;
+            titleText = 'Enabled';
+        }
+
+        chrome.browserAction.setIcon({
+            'path': icon
+        });
+        chrome.browserAction.setTitle({
+            'title': 'URL Blocker: ' + titleText
+        });
+
+    })
 }
 
-//const enableButton = document.getElementById('enableDisable');
-//enableButton.addEventListener('click', enableDisableExtension, false);
+const enableButton = document.getElementById('enableDisable');
+enableButton.addEventListener('click', enableDisableExtension, false);
 
 //chrome.storage.local.clear();
 

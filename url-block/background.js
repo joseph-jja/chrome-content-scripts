@@ -121,9 +121,18 @@ chrome.tabs.onRemoved.addListener((tabID, removeInfo) => {
     delete activeTabsList[tabID];
 });
 
-function checkDetails(details) {
+async function getTitle() {
+    return new Promise(resolve => {
+        chrome.browserAction.getTitle({}, title => {
+            resolve(title.replace('URL Blocker:', '').trim());
+        });
+    });
+}
 
-    if (icon === STOP_ICON || !details) {
+async function checkDetails(details) {
+
+    const title = await getTitle();
+    if (title === 'Disabled' || !details) {
         return {
             cancel: false
         }
@@ -174,7 +183,11 @@ navRequests.onCreatedNavigationTarget.addListener((details) => {
 
 requests.onBeforeRequest.addListener(checkDetails, URL_FILTER, (icon === GO_ICON ? ['blocking'] : undefined));
 
-chrome.browserAction.onClicked.addListener((tabs) => {
+chrome.browserAction.setTitle({
+    'title': 'URL Blocker: Enabled'
+});
+
+/*chrome.browserAction.onClicked.addListener((tabs) => {
 
     if (icon === GO_ICON) {
         icon = STOP_ICON;
@@ -185,4 +198,4 @@ chrome.browserAction.onClicked.addListener((tabs) => {
         'path': icon
     });
     //console.log(icon);
-});
+});*/
