@@ -141,12 +141,18 @@ function checkDetails(details) {
         const filterdName = getFilter(requestedHost, true),
             filteredHost = getFilter(requestedHost);
 
+        const splitHost = filteredHost.split('.');
+        const baseHost = splitHost[splitHost.length - 2] + '.' +  splitHost[splitHost.length - 1];
+
         // so here you can say for site x always allow these domains
         // this can be fo foo.com or www.my.foo.com
+        //console.log('baseHost ' + baseHost);
         //console.log(filterdName + ' ' + allowedURLs.includes(filterdName) +
         //    ' - ' + filteredHost + ' ' + allowedURLs.includes(filteredHost));
         if ((allowedURLs.includes(filterdName) &&
                 requestedHost.indexOf(filterdName) > -1) ||
+                (allowedURLs.includes(baseHost) &&
+                        requestedHost.indexOf(baseHost) > -1) ||
             allowedURLs.includes(filteredHost)) {
             stop = false;
         }
