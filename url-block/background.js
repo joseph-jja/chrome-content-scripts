@@ -159,7 +159,7 @@ function checkDetails(details) {
     }
 
     if (stop) {
-        console.log(`Page request from domain ${pageUrl} is blocking rquest to ${requestedHost}`);
+        console.log(`Page request from domain ${pageUrl} is blocking request to ${requestedHost}`);
     }
 
     return {
