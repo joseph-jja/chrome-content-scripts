@@ -100,9 +100,7 @@ function initialize(tab) {
     chrome.storage.local.get('urlBlockerData', function(items) {
 
         if (items && items.urlBlockerData) {
-            storageItems = items;
-
-            const urlBlockerData = storageItems.urlBlockerData
+            const urlBlockerData = items.urlBlockerData;
 
             if (urlBlockerData && urlBlockerData.allowed) {
                 const allowedItems = urlBlockerData.allowed;
@@ -140,14 +138,16 @@ function checkDetails(details) {
 
         stop = true;
 
-        const filterdName = getFilter(requestedHost),
-            filteredHost = getFilter(requestedHost, true);
+        const filterdName = getFilter(requestedHost, true),
+            filteredHost = getFilter(requestedHost);
 
         // so here you can say for site x always allow these domains
         // this can be fo foo.com or www.my.foo.com
-        if ((allowedURLs[filterdName] &&
-                requestedHost.indexOf(allowedURLs[filterdName]) > -1) ||
-            allowedURLs[filteredHost]) {
+        //console.log(filterdName + ' ' + allowedURLs.includes(filterdName) +
+        //    ' - ' + filteredHost + ' ' + allowedURLs.includes(filteredHost));
+        if ((allowedURLs.includes(filterdName) &&
+                requestedHost.indexOf(filterdName) > -1) ||
+            allowedURLs.includes(filteredHost)) {
             stop = false;
         }
     }

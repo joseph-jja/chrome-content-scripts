@@ -13,7 +13,7 @@
             border: 1px solid black;
             padding: 0.25em
         }
-        .hidden { 
+        .hidden {
             display: none;
         }
     </style>
@@ -22,24 +22,18 @@
 <body>
 
     <form>
-        <label>Parent Domain:</label>
-        <input type="text" size="50" name="parent-domain-url" id="parent-domain-url-id">
-
         <br>
-        <label>Alllow or Block URL</label>
-        <input type="text" size="50" name="allow-block-url" id="allow-block-url-id">
-        <input type="checkbox" value="block" name="allow-block" id="allow-block-id">
+        <label>Allow URL</label>
+        <input type="text" size="50" name="allow-url" id="allow-url-id">
         <br>
         <button id="add-button">Add</button>
-    
+
         <br>
         <br>
         <table id="display-results">
             <thead>
             <tr>
-                <th>Parent Domain</th>
-                <th>URL</th>
-                <th>Allowed or Blocked</th>
+                <th>Host or Domain</th>
                 <th>Delete</th>
             </tr>
             </thead>
