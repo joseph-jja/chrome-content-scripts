@@ -9,9 +9,9 @@ let storageItems = {
 const GO_ICON = 'images/go32.png',
     STOP_ICON = 'images/stop32.png';
 
-function enableDisableExtension(e) {
+const enableButton = document.getElementById('enableDisable');
+function enableDisableExtension() {
 
-    const btn = e.target;
     chrome.browserAction.getTitle({}, (title) => {
 
         const text = title.replace('URL Blocker:', '').trim();
@@ -19,11 +19,11 @@ function enableDisableExtension(e) {
         let icon = GO_ICON,
             titleText = 'Disable';
         if (text === 'Enabled') {
-            btn.innerHTML = 'Enable';
+            enableButton.innerHTML = 'Enable';
             icon = STOP_ICON;
             titleText = 'Disabled';
         } else if (text === 'Disabled') {
-            btn.innerHTML = 'Disable';
+            enableButton.innerHTML = 'Disable';
             icon = GO_ICON;
             titleText = 'Enabled';
         }
@@ -38,7 +38,6 @@ function enableDisableExtension(e) {
     })
 }
 
-const enableButton = document.getElementById('enableDisable');
 enableButton.addEventListener('click', enableDisableExtension, false);
 
 //chrome.storage.local.clear();
