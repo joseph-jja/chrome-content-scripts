@@ -6,6 +6,35 @@ let storageItems = {
     }
 };
 
+const GO_ICON = 'images/go32.png',
+    STOP_ICON = 'images/stop32.png';
+
+function enableDisableExtension(e) {
+
+  const btn = e.target;
+  console.log(btn);
+  const text = btn.innerHTML;
+  console.log(text);
+
+  let icon = GO_ICON;
+  if ( text === 'Disable') {
+       btn.innerHTML = 'Enable';
+       icon = STOP_ICON;
+       chrome.browserAction.disable();
+  } else if ( text === 'Enable') {
+       btn.innerHTML = 'Disable';
+       icon = GO_ICON;
+       chrome.browserAction.enable();
+  }
+
+  chrome.browserAction.setIcon({
+      'path': icon
+  });
+}
+
+//const enableButton = document.getElementById('enableDisable');
+//enableButton.addEventListener('click', enableDisableExtension, false);
+
 //chrome.storage.local.clear();
 
 function updateStorage() {
