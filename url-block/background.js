@@ -10,7 +10,7 @@ const requests = chrome.webRequest,
 
 let icon = GO_ICON,
     activeTabsList = {},
-    allowedURLs = {};
+    allowedURLs = []
 
 function parseHostProtocol(inUrl) {
     if (!inUrl) {
