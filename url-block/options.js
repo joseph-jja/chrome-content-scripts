@@ -35,11 +35,21 @@ function enableDisableExtension() {
             'title': 'URL Blocker: ' + titleText
         });
 
-    })
+    });
 }
 
 enableButton.addEventListener('click', enableDisableExtension, false);
 
+chrome.browserAction.getTitle({}, (title) => {
+
+    const text = title.replace('URL Blocker:', '').trim();
+
+    if (text === 'Enabled') {
+        enableButton.innerHTML = 'Disable';
+    } else if (text === 'Disabled') {
+        enableButton.innerHTML = 'Enable';
+    }
+});
 //chrome.storage.local.clear();
 
 function updateStorage() {
