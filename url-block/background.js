@@ -121,6 +121,8 @@ chrome.tabs.onUpdated.addListener((tabID, data, tab) => {
 
 chrome.tabs.onRemoved.addListener((tabID, removeInfo) => {
     delete activeTabsList[tabID];
+    // delete the data for the tab that no longer exists
+    delete blockedDetails[tabID];
 });
 
 async function getTitle() {
@@ -202,6 +204,12 @@ requests.onBeforeRequest.addListener(checkDetails, URL_FILTER, (icon === GO_ICON
 
 chrome.browserAction.setTitle({
     'title': 'URL Blocker: Enabled'
+});
+
+chrome.extension.onConnect.addListener(function(port) {
+    port.onMessage.addListener(function(msg) {
+        port.postMessage(blockedDetails);
+    });
 });
 
 /*chrome.browserAction.onClicked.addListener((tabs) => {

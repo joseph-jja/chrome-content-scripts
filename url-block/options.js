@@ -6,6 +6,18 @@ let storageItems = {
     }
 };
 
+const blockedDetails = {};
+
+const port = chrome.extension.connect({
+    name: 'Blocked URL Message Channel'
+});
+port.onMessage.addListener(function(msg) {
+    //Object.keys(msg)
+    //blockedDetails
+    console.log(msg);
+});
+port.postMessage('Give me the URLs that have been blocked');
+
 const GO_ICON = 'images/go32.png',
     STOP_ICON = 'images/stop32.png';
 
