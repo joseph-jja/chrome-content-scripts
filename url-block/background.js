@@ -153,7 +153,7 @@ async function checkDetails(details) {
         };
     }*/
 
-    if ( ! blockedDetails[details.tabId]) {
+    if (!blockedDetails[details.tabId]) {
         blockedDetails[details.tabId] = {};
     }
 

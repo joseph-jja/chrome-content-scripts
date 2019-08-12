@@ -12,9 +12,36 @@ const port = chrome.extension.connect({
     name: 'Blocked URL Message Channel'
 });
 port.onMessage.addListener(function(msg) {
-    //Object.keys(msg)
-    //blockedDetails
-    console.log(msg);
+    const table = document.getElementById('blocked-results');
+    const rows = table.rows;
+    for (let j = rows.length-1; j > 0; j--) {
+        table.removeChild(table.rows[j]);
+    }
+    chrome.tabs.query({
+        active: true
+    }, tabs => {
+        try {
+            if (tabs[0]) {
+                const tabID = tabs[0].id;
+                if (msg[tabID]) {
+                    const blockedURLs = msg[tabID];
+                    Object.keys(blockedURLs).forEach(url => {
+                        var tr = document.createElement('tr');
+                        table.appendChild(tr);
+                        // domain cell
+                        const tddomain = document.createElement('td');
+                        tddomain.innerHTML = url;
+                        tr.appendChild(tddomain);
+                        const tdcount = document.createElement('td');
+                        tr.appendChild(tdcount);
+                        tdcount.innerHTML = blockedURLs[url];
+                    });
+                }
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    });
 });
 port.postMessage('Give me the URLs that have been blocked');
 
@@ -22,6 +49,7 @@ const GO_ICON = 'images/go32.png',
     STOP_ICON = 'images/stop32.png';
 
 const enableButton = document.getElementById('enableDisable');
+
 function enableDisableExtension() {
 
     chrome.browserAction.getTitle({}, (title) => {
