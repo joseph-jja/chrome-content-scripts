@@ -12,6 +12,8 @@ let icon = GO_ICON,
     activeTabsList = {},
     allowedURLs = []
 
+const blockedDetails = {};
+
 function parseHostProtocol(inUrl) {
     if (!inUrl) {
         return {};
@@ -142,6 +144,17 @@ async function checkDetails(details) {
         requestedHost = getFilter(details.url),
         tabID = details.tabId;
 
+    /*if ( details.frameId && details.frameId > 0 ) {
+        console.log(`Frame ID ${details.frameId} ${pageUrl}`);
+        return {
+            cancel: true
+        };
+    }*/
+
+    if ( ! blockedDetails[details.tabId]) {
+        blockedDetails[details.tabId] = {};
+    }
+
     let stop = false;
     if (pageUrl && requestedHost && requestedHost.indexOf(pageUrl) < 0 && activeTabsList[tabID]) {
 
@@ -166,6 +179,10 @@ async function checkDetails(details) {
     }
 
     if (stop) {
+        if (!blockedDetails[details.tabId][requestedHost]) {
+            blockedDetails[details.tabId][requestedHost] = 0;
+        }
+        blockedDetails[details.tabId][requestedHost]++;
         console.log(`Page request from domain ${pageUrl} is blocking request to ${requestedHost}`);
     }
 
