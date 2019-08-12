@@ -74,7 +74,7 @@ function enableDisableExtension() {
         chrome.browserAction.setTitle({
             'title': 'URL Blocker: ' + titleText
         });
-        port.postMessage(text + ' ' +_ titleText);
+        port.postMessage('URL Blocker: ' + titleText);
     });
 }
 

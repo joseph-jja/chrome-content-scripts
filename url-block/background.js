@@ -198,6 +198,7 @@ chrome.browserAction.setTitle({
 
 chrome.extension.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) {
+      console.log(msg);
         if (msg.indexOf('URL Blocker: ') < 0) {
             port.postMessage(blockedDetails);
         } else {
