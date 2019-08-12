@@ -4,13 +4,14 @@ const requests = chrome.webRequest,
     GO_ICON = 'images/go32.png',
     STOP_ICON = 'images/stop32.png',
     URL_FILTER = {
-        urls: ['https://*/*', 'http://*/*']
+        urls: ['<all_urls>']
     },
     DEFAULT_TAB_URL = 'chrome://newtab/';
 
 let icon = GO_ICON,
     activeTabsList = {},
-    allowedURLs = []
+    allowedURLs = [],
+    isEnabled = true;
 
 const blockedDetails = {};
 
@@ -125,18 +126,9 @@ chrome.tabs.onRemoved.addListener((tabID, removeInfo) => {
     delete blockedDetails[tabID];
 });
 
-async function getTitle() {
-    return new Promise(resolve => {
-        chrome.browserAction.getTitle({}, title => {
-            resolve(title.replace('URL Blocker:', '').trim());
-        });
-    });
-}
+function checkDetails(details) {
 
-async function checkDetails(details) {
-
-    const title = await getTitle();
-    if (title === 'Disabled' || !details) {
+    if (!isEnabled) {
         return {
             cancel: false
         }
@@ -193,14 +185,12 @@ async function checkDetails(details) {
     };
 }
 
+navRequests.onBeforeNavigate.addListener(checkDetails);
 navRequests.onCreatedNavigationTarget.addListener((details) => {
-    checkDetails(details);
-    return {
-        cancel: false
-    };
+    return checkDetails(details);
 }, URL_FILTER);
 
-requests.onBeforeRequest.addListener(checkDetails, URL_FILTER, (icon === GO_ICON ? ['blocking'] : undefined));
+requests.onBeforeRequest.addListener(checkDetails, URL_FILTER, ['blocking']);
 
 chrome.browserAction.setTitle({
     'title': 'URL Blocker: Enabled'
@@ -208,19 +198,10 @@ chrome.browserAction.setTitle({
 
 chrome.extension.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) {
-        port.postMessage(blockedDetails);
+        if (msg.indexOf('URL Blocker: ') < 0) {
+            port.postMessage(blockedDetails);
+        } else {
+            isEnabled = (msg.replace('URL Blocker:', '').trim() === 'Enabled');
+        }
     });
 });
-
-/*chrome.browserAction.onClicked.addListener((tabs) => {
-
-    if (icon === GO_ICON) {
-        icon = STOP_ICON;
-    } else {
-        icon = GO_ICON;
-    }
-    chrome.browserAction.setIcon({
-        'path': icon
-    });
-    //console.log(icon);
-});*/
