@@ -104,25 +104,6 @@ function updateStorage() {
         });
 }
 
-function handleAddClick() {
-
-    const allowedUrl = document.getElementById('allow-url-id');
-
-    if (!allowedUrl.value) {
-        return;
-    }
-
-    const abUrl = allowedUrl.value;
-
-    const table = document.getElementById('display-results');
-
-    storageItems.urlBlockerData.allowed.push(abUrl);
-    updateStorage();
-}
-
-const addButton = document.getElementById('add-button');
-addButton.addEventListener('click', handleAddClick, false);
-
 function renderRow(tr, parts, domainName) {
     for (let j = 0, jend = parts.length; j < jend; j++) {
         const td = document.createElement('td');
@@ -138,6 +119,28 @@ function renderRow(tr, parts, domainName) {
         tr.appendChild(td);
     }
 }
+
+function handleAddClick() {
+
+    const allowedUrl = document.getElementById('allow-url-id');
+
+    if (!allowedUrl.value) {
+        return;
+    }
+
+    const abUrl = allowedUrl.value;
+
+    const table = document.getElementById('display-results');
+    var tr = document.createElement('tr');
+    table.appendChild(tr);
+    renderRow(tr, [abUrl, 'button'], abUrl);
+
+    storageItems.urlBlockerData.allowed.push(abUrl);
+    updateStorage();
+}
+
+const addButton = document.getElementById('add-button');
+addButton.addEventListener('click', handleAddClick, false);
 
 document.addEventListener('DOMContentLoaded', restore_options => {
     const table = document.getElementById('display-results').tBodies[0];
