@@ -134,8 +134,10 @@ function checkDetails(details) {
         }
     }
 
+    // for simplicity just look at hosts
     const pageUrl = getFilter(details.initiator, true),
         requestedHost = getFilter(details.url),
+
         tabID = details.tabId;
 
     /*if ( details.frameId && details.frameId > 0 ) {
@@ -144,7 +146,6 @@ function checkDetails(details) {
             cancel: true
         };
     }*/
-
     if (!blockedDetails[details.tabId]) {
         blockedDetails[details.tabId] = {};
     }
@@ -154,6 +155,7 @@ function checkDetails(details) {
 
         stop = true;
 
+        // for simplicity just look at hosts
         const filterdName = getFilter(requestedHost, true),
             filteredHost = getFilter(requestedHost);
 
@@ -165,10 +167,16 @@ function checkDetails(details) {
         //console.log('baseHost ' + baseHost);
         //console.log(filterdName + ' ' + allowedURLs.includes(filterdName) +
         //    ' - ' + filteredHost + ' ' + allowedURLs.includes(filteredHost));
-        if ((allowedURLs.includes(filterdName) && requestedHost.indexOf(filterdName) > -1) ||
-            (allowedURLs.includes(baseHost) && requestedHost.indexOf(baseHost) > -1) ||
-            allowedURLs.includes(filteredHost)) {
-            stop = false;
+        for (let i = 0, end = allowedURLs.length; i < end; i++) {
+            const xurl = allowedURLs[i];
+            if (xurl.indexOf(filterdName) > -1 ||
+                xurl.indexOf(baseHost) > -1 ||
+                xurl.indexOf(filteredHost) > -1) {
+
+                console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
+
+                stop = false;
+            }
         }
     }
 
