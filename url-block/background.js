@@ -173,11 +173,10 @@ function checkDetails(details) {
                 xurl.indexOf(baseHost) > -1 ||
                 xurl.indexOf(filteredHost) > -1) {
 
-                console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
-
                 stop = false;
             }
         }
+        console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
     }
 
     if (stop) {
