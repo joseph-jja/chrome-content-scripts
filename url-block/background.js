@@ -175,8 +175,8 @@ function checkDetails(details) {
 
                 stop = false;
             }
+            console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
         }
-        console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
     }
 
     if (stop) {
