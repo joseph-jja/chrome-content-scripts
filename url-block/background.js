@@ -97,16 +97,25 @@ function checkDetails(details) {
         //console.log('baseHost ' + baseHost);
         //console.log(filterdName + ' ' + disallowed.includes(filterdName) +
         //    ' - ' + filteredHost + ' ' + disallowed.includes(filteredHost));
+        const list = [];
         for (let i = 0, end = disallowed.length; i < end; i++) {
             const xurl = disallowed[i];
-            if (xurl.indexOf(filterdName) > -1 ||
-                xurl.indexOf(baseHost) > -1 ||
-                xurl.indexOf(filteredHost) > -1) {
+            if (xurl === filterdName ||
+                baseHost.indexOf(xurl) > -1 ||
+                filteredHost.indexOf(xurl) > -1) {
 
                 stop = true;
             }
-            //console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
+            list.push({
+                'Page URL': pageUrl,
+                'Request URL': requestedHost,
+                'Disallowed URL': xurl,
+                'Filtered Name': filterdName,
+                'Base Host': baseHost,
+                'Filtered Host': filteredHost
+            });
         }
+        //console.table(list);
     }
 
     if (stop) {
