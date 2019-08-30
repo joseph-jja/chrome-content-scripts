@@ -24,7 +24,6 @@ port.onMessage.addListener(function(msg) {
             if (tabs[0]) {
                 const tabID = tabs[0].id,
                     tabURL =  getFilter(tabs[0].url, true);
-                console.log(tabURL);
                 if (msg[tabID] && msg[tabID][tabURL]) {
                     const blockedURLs = msg[tabID][tabURL];
                     Object.keys(blockedURLs).forEach(url => {

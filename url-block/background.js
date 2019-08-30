@@ -105,7 +105,7 @@ function checkDetails(details) {
 
                 stop = true;
             }
-            console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
+            //console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
         }
     }
 
@@ -119,7 +119,7 @@ function checkDetails(details) {
             allowedDetails[details.tabId][pageUrl][requestedHost] = 0;
         }
         allowedDetails[details.tabId][pageUrl][requestedHost]++;
-        console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
+        //console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
     }
 
     return {
