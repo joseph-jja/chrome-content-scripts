@@ -1,6 +1,5 @@
 const requests = chrome.webRequest,
     navRequests = chrome.webNavigation,
-    PROTOCOL_SEP = '://',
     GO_ICON = 'images/go32.png',
     STOP_ICON = 'images/stop32.png',
     URL_FILTER = {
@@ -14,75 +13,6 @@ let icon = GO_ICON,
     isEnabled = true;
 
 const allowedDetails = {};
-
-function parseHostProtocol(inUrl) {
-    if (!inUrl) {
-        return {};
-    }
-
-    let host, protocol, domainlessHost;
-
-    // we have a URL but it has no protocol
-    if (inUrl.indexOf(PROTOCOL_SEP) > -1) {
-        host = inUrl.split(PROTOCOL_SEP);
-        if (!host) {
-            return {};
-        }
-    } else {
-        host = inUrl;
-    }
-
-    if (Array.isArray(host)) {
-        if (host.length > 1) {
-            protocol = host[0];
-            host = host[1];
-        } else {
-            host = host[0];
-        }
-    }
-
-    // by here we have host
-    const idx = host.indexOf('/');
-    if (idx > -1) {
-        // remove everything after the first remaining /
-        // ie foo.com/ becomes foo.com
-        host = host.substring(0, idx);
-    }
-
-    if (host && host.length > 0) {
-        const hostParts = host.split('.');
-        if (hostParts.length > 0) {
-            // www.foo.com then we want foo.com and foo
-            domainlessHost = hostParts[hostParts.length - 2];
-        }
-    }
-
-    // return fqdn (fully qualified domain name)
-    return {
-        host,
-        protocol,
-        domainlessHost
-    };
-}
-
-function getFilter(url, justName = false) {
-    let pageUrl;
-    if (url) {
-        let {
-            host,
-            protocol,
-            domainlessHost
-        } = parseHostProtocol(url);
-
-        // we don't always have protocol
-        if (justName && domainlessHost) {
-            pageUrl = domainlessHost;
-        } else if (host) {
-            pageUrl = host;
-        }
-    }
-    return pageUrl;
-}
 
 // generic function to get the active tab and the url
 function setActiveTab(tabId, key) {
@@ -182,10 +112,13 @@ function checkDetails(details) {
     if (stop) {
         console.log(`Page request from domain ${pageUrl} is BLOCKING requests to ${requestedHost}`);
     } else if (requestedHost !== 'about:blank') {
-        if (!allowedDetails[details.tabId][requestedHost]) {
-            allowedDetails[details.tabId][requestedHost] = 0;
+        if (!allowedDetails[details.tabId][pageUrl]) {
+            allowedDetails[details.tabId][pageUrl] = {};
         }
-        allowedDetails[details.tabId][requestedHost]++;
+        if (!allowedDetails[details.tabId][pageUrl][requestedHost]) {
+            allowedDetails[details.tabId][pageUrl][requestedHost] = 0;
+        }
+        allowedDetails[details.tabId][pageUrl][requestedHost]++;
         console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
     }
 
@@ -207,7 +140,7 @@ chrome.browserAction.setTitle({
 
 chrome.extension.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) {
-      console.log(msg);
+        console.log(msg);
         if (msg.indexOf('URL Blocker: ') < 0) {
             port.postMessage(allowedDetails);
         } else {

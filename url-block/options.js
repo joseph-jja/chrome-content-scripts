@@ -14,7 +14,7 @@ const port = chrome.extension.connect({
 port.onMessage.addListener(function(msg) {
     const table = document.getElementById('blocked-results');
     const rows = table.rows;
-    for (let j = rows.length-1; j > 0; j--) {
+    for (let j = rows.length - 1; j > 0; j--) {
         table.removeChild(table.rows[j]);
     }
     chrome.tabs.query({
@@ -22,9 +22,11 @@ port.onMessage.addListener(function(msg) {
     }, tabs => {
         try {
             if (tabs[0]) {
-                const tabID = tabs[0].id;
-                if (msg[tabID]) {
-                    const blockedURLs = msg[tabID];
+                const tabID = tabs[0].id,
+                    tabURL =  getFilter(tabs[0].url, true);
+                console.log(tabURL);
+                if (msg[tabID] && msg[tabID][tabURL]) {
+                    const blockedURLs = msg[tabID][tabURL];
                     Object.keys(blockedURLs).forEach(url => {
                         var tr = document.createElement('tr');
                         table.appendChild(tr);
