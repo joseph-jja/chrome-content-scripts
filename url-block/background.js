@@ -10,10 +10,10 @@ const requests = chrome.webRequest,
 
 let icon = GO_ICON,
     activeTabsList = {},
-    allowedURLs = [],
+    disallowed = [],
     isEnabled = true;
 
-const blockedDetails = {};
+const allowedDetails = {};
 
 function parseHostProtocol(inUrl) {
     if (!inUrl) {
@@ -105,9 +105,9 @@ function initialize(tab) {
         if (items && items.urlBlockerData) {
             const urlBlockerData = items.urlBlockerData;
 
-            if (urlBlockerData && urlBlockerData.allowed) {
-                const allowedItems = urlBlockerData.allowed;
-                allowedURLs = allowedItems;
+            if (urlBlockerData && urlBlockerData.blocked) {
+                const blockedItems = urlBlockerData.blocked;
+                disallowed = blockedItems;
             }
         }
     });
@@ -123,7 +123,7 @@ chrome.tabs.onUpdated.addListener((tabID, data, tab) => {
 chrome.tabs.onRemoved.addListener((tabID, removeInfo) => {
     delete activeTabsList[tabID];
     // delete the data for the tab that no longer exists
-    delete blockedDetails[tabID];
+    delete allowedDetails[tabID];
 });
 
 function checkDetails(details) {
@@ -146,14 +146,14 @@ function checkDetails(details) {
             cancel: true
         };
     }*/
-    if (!blockedDetails[details.tabId]) {
-        blockedDetails[details.tabId] = {};
+    if (!allowedDetails[details.tabId]) {
+        allowedDetails[details.tabId] = {};
     }
 
     let stop = false;
     if (pageUrl && requestedHost && requestedHost.indexOf(pageUrl) < 0 && activeTabsList[tabID]) {
 
-        stop = true;
+        stop = false;
 
         // for simplicity just look at hosts
         const filterdName = getFilter(requestedHost, true),
@@ -165,26 +165,28 @@ function checkDetails(details) {
         // so here you can say for site x always allow these domains
         // this can be fo foo.com or www.my.foo.com
         //console.log('baseHost ' + baseHost);
-        //console.log(filterdName + ' ' + allowedURLs.includes(filterdName) +
-        //    ' - ' + filteredHost + ' ' + allowedURLs.includes(filteredHost));
-        for (let i = 0, end = allowedURLs.length; i < end; i++) {
-            const xurl = allowedURLs[i];
+        //console.log(filterdName + ' ' + disallowed.includes(filterdName) +
+        //    ' - ' + filteredHost + ' ' + disallowed.includes(filteredHost));
+        for (let i = 0, end = disallowed.length; i < end; i++) {
+            const xurl = disallowed[i];
             if (xurl.indexOf(filterdName) > -1 ||
                 xurl.indexOf(baseHost) > -1 ||
                 xurl.indexOf(filteredHost) > -1) {
 
-                stop = false;
+                stop = true;
             }
             console.log(pageUrl + ': ' + requestedHost + ' => ' + xurl + ' --- ' + filterdName + ' --- ' + baseHost + ' --- ' + filteredHost);
         }
     }
 
     if (stop) {
-        if (!blockedDetails[details.tabId][requestedHost]) {
-            blockedDetails[details.tabId][requestedHost] = 0;
+        console.log(`Page request from domain ${pageUrl} is BLOCKING requests to ${requestedHost}`);
+    } else {
+        if (!allowedDetails[details.tabId][requestedHost]) {
+            allowedDetails[details.tabId][requestedHost] = 0;
         }
-        blockedDetails[details.tabId][requestedHost]++;
-        console.log(`Page request from domain ${pageUrl} is blocking request to ${requestedHost}`);
+        allowedDetails[details.tabId][requestedHost]++;
+        console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
     }
 
     return {
@@ -207,7 +209,7 @@ chrome.extension.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) {
       console.log(msg);
         if (msg.indexOf('URL Blocker: ') < 0) {
-            port.postMessage(blockedDetails);
+            port.postMessage(allowedDetails);
         } else {
             isEnabled = (msg.replace('URL Blocker:', '').trim() === 'Enabled');
         }

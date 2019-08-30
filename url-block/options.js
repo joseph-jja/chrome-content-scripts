@@ -2,11 +2,11 @@
 
 let storageItems = {
     urlBlockerData: {
-        allowed: []
+        blocked: []
     }
 };
 
-const blockedDetails = {};
+const allowedDetails = {};
 
 const port = chrome.extension.connect({
     name: 'Blocked URL Message Channel'
@@ -122,20 +122,20 @@ function renderRow(tr, parts, domainName) {
 
 function handleAddClick() {
 
-    const allowedUrl = document.getElementById('allow-url-id');
+    const blockedUrl = document.getElementById('allow-url-id');
 
-    if (!allowedUrl.value) {
+    if (!blockedUrl.value) {
         return;
     }
 
-    const abUrl = allowedUrl.value;
+    const abUrl = blockedUrl.value;
 
     const table = document.getElementById('display-results');
     var tr = document.createElement('tr');
     table.appendChild(tr);
     renderRow(tr, [abUrl, 'button'], abUrl);
 
-    storageItems.urlBlockerData.allowed.push(abUrl);
+    storageItems.urlBlockerData.blocked.push(abUrl);
     updateStorage();
 }
 
@@ -152,15 +152,15 @@ document.addEventListener('DOMContentLoaded', restore_options => {
 
             if (!items) {
                 storageItems.urlBlockerData = {
-                    allowed: []
+                    blocked: []
                 };
                 return;
             }
 
             const urlBlockerData = storageItems.urlBlockerData;
-            if (urlBlockerData.allowed) {
-                const allowed = urlBlockerData.allowed;
-                allowed.forEach(domainName => {
+            if (urlBlockerData.blocked) {
+                const blocked = urlBlockerData.blocked;
+                blocked.forEach(domainName => {
                     var tr = document.createElement('tr');
                     table.appendChild(tr);
                     renderRow(tr, [domainName, 'button'], domainName);
@@ -172,11 +172,11 @@ document.addEventListener('DOMContentLoaded', restore_options => {
                 if (!domainName) {
                     return;
                 }
-                // remove an allowed domain
-                if (storageItems.urlBlockerData.allowed) {
-                    const i = storageItems.urlBlockerData.allowed.indexOf(domainName);
+                // remove an blocked domain
+                if (storageItems.urlBlockerData.blocked) {
+                    const i = storageItems.urlBlockerData.blocked.indexOf(domainName);
                     if (i > -1) {
-                        storageItems.urlBlockerData.allowed.splice(i, 1);
+                        storageItems.urlBlockerData.blocked.splice(i, 1);
                         updateStorage();
                     }
                 }
