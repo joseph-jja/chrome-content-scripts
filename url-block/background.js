@@ -181,7 +181,7 @@ function checkDetails(details) {
 
     if (stop) {
         console.log(`Page request from domain ${pageUrl} is BLOCKING requests to ${requestedHost}`);
-    } else {
+    } else if (requestedHost !== 'about:blank') {
         if (!allowedDetails[details.tabId][requestedHost]) {
             allowedDetails[details.tabId][requestedHost] = 0;
         }
