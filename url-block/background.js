@@ -118,8 +118,23 @@ function checkDetails(details) {
         //console.table(list);
     }
 
+    // TODO chnage this to have allowed and blocked flags with countts
+    /* 
+    if (!allowedDetails[details.tabId][pageUrl]) {
+        allowedDetails[details.tabId][pageUrl] = {
+             blocked: {}, 
+             allowed: {}
+        };
+    }
+    */
     if (stop) {
         console.log(`Page request from domain ${pageUrl} is BLOCKING requests to ${requestedHost}`);
+        /*
+        if (!allowedDetails[details.tabId][pageUrl].blocked[requestedHost]) {
+            allowedDetails[details.tabId][pageUrl].blocked[requestedHost] = 0;
+        }
+        allowedDetails[details.tabId][pageUrl].blocked[requestedHost]++;
+        */
     } else if (requestedHost !== 'about:blank') {
         if (!allowedDetails[details.tabId][pageUrl]) {
             allowedDetails[details.tabId][pageUrl] = {};
@@ -127,6 +142,12 @@ function checkDetails(details) {
         if (!allowedDetails[details.tabId][pageUrl][requestedHost]) {
             allowedDetails[details.tabId][pageUrl][requestedHost] = 0;
         }
+        /*
+        if (!allowedDetails[details.tabId][pageUrl].allowed[requestedHost]) {
+            allowedDetails[details.tabId][pageUrl].allowed[requestedHost] = 0;
+        }
+        allowedDetails[details.tabId][pageUrl].allowed[requestedHost]++;
+        */
         allowedDetails[details.tabId][pageUrl][requestedHost]++;
         //console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
     }
