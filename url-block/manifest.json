@@ -1,10 +1,12 @@
 {
     "name": "URL Blocker",
     "manifest_version": 2,
-    "version": "0.3.0",
+    "version": "0.3.1",
     "content_scripts": [{
         "matches": ["<all_urls>"],
-        "exclude_matches": [ "https://*.google.com/*" ],
+        "exclude_matches": [ 
+             "https://*.google.com/*"
+        ],
         "all_frames": true,
         "js": ["index.js"]
     }],
