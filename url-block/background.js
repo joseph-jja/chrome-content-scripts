@@ -81,11 +81,13 @@ function checkDetails(details) {
     if (!allowedDetails[tabID]) {
         allowedDetails[tabID] = {};
     }
+    
+    if (pageUrl && !allowedDetails[tabID][pageUrl]) {
+        allowedDetails[tabID][pageUrl] = {};
+    }
 
     let stop = false;
-    if (pageUrl && requestedHost && requestedHost.indexOf(pageUrl) < 0 && activeTabsList[tabID]) {
-
-        stop = false;
+    if (pageUrl && requestedHost && requestedHost.indexOf(pageUrl) < 0) {
 
         // for simplicity just look at hosts
         const filterdName = getFilter(requestedHost, true),
@@ -138,19 +140,10 @@ function checkDetails(details) {
         allowedDetails[details.tabId][pageUrl].blocked[requestedHost]++;
         */
     } else if (requestedHost !== 'about:blank') {
-        if (!allowedDetails[details.tabId][pageUrl]) {
-            allowedDetails[details.tabId][pageUrl] = {};
+        if (!allowedDetails[tabID][pageUrl][requestedHost]) {
+            allowedDetails[tabID][pageUrl][requestedHost] = 0;
         }
-        if (!allowedDetails[details.tabId][pageUrl][requestedHost]) {
-            allowedDetails[details.tabId][pageUrl][requestedHost] = 0;
-        }
-        /*
-        if (!allowedDetails[details.tabId][pageUrl].allowed[requestedHost]) {
-            allowedDetails[details.tabId][pageUrl].allowed[requestedHost] = 0;
-        }
-        allowedDetails[details.tabId][pageUrl].allowed[requestedHost]++;
-        */
-        allowedDetails[details.tabId][pageUrl][requestedHost]++;
+        allowedDetails[tabID][pageUrl][requestedHost]++;
         //console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
     }
 
