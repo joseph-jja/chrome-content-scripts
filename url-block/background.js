@@ -67,17 +67,19 @@ function checkDetails(details) {
     // for simplicity just look at hosts
     const pageUrl = getFilter(details.initiator, true),
         requestedHost = getFilter(details.url),
-
         tabID = details.tabId;
 
-    /*if ( details.frameId && details.frameId > 0 ) {
-        console.log(`Frame ID ${details.frameId} ${pageUrl}`);
+    // in that case if there is a frameId > 0 then it is an iframe
+    // so we are just denying them all
+    if (details.frameId && details.frameId > 0) {
+        //console.log(`Denying frameId: ${details.frameId}  requestedHost: ${requestedHost}`);
         return {
             cancel: true
         };
-    }*/
-    if (!allowedDetails[details.tabId]) {
-        allowedDetails[details.tabId] = {};
+    }
+    
+    if (!allowedDetails[tabID]) {
+        allowedDetails[tabID] = {};
     }
 
     let stop = false;
