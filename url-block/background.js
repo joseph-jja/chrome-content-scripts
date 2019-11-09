@@ -64,10 +64,12 @@ function checkDetails(details) {
         }
     }
 
-    // for simplicity just look at hosts
-    const pageUrl = getFilter(details.initiator, true),
-        requestedHost = getFilter(details.url),
-        tabID = details.tabId;
+    // about blank allow
+    if (details.initiator === 'about:blank' || details.url === 'about:blank') {
+        return {
+            cancel: false
+        }
+    } 
 
     // in that case if there is a frameId > 0 then it is an iframe
     // so we are just denying them all
@@ -77,6 +79,14 @@ function checkDetails(details) {
             cancel: true
         };
     }
+    
+    // get host and domainless host
+    const pageUrlData = parseHostProtocol(details.initiator),
+        requestedUrlData = parseHostProtocol(details.url);
+    
+    const pageUrl = pageUrlData.domainlessHost,
+        requestedHost = requestedUrlData.host,
+        tabID = details.tabId;
     
     if (!allowedDetails[tabID]) {
         allowedDetails[tabID] = {};
