@@ -93,24 +93,17 @@ function checkDetails(details) {
     }
     
     if (pageUrl && !allowedDetails[tabID][pageUrl]) {
-        allowedDetails[tabID][pageUrl] = {};
+        allowedDetails[tabID][pageUrl] = {
+            blocked: {}, 
+            allowed: {} 
+        };
     }
 
     let stop = false;
-    if (pageUrl && requestedHost && requestedHost.indexOf(pageUrl) < 0) {
+    if (pageUrl && requestedHost) {
 
-        // for simplicity just look at hosts
-        const filterdName = getFilter(requestedHost, true),
-            filteredHost = getFilter(requestedHost);
-
-        const splitHost = filteredHost.split('.');
-        const baseHost = splitHost[splitHost.length - 2] + '.' + splitHost[splitHost.length - 1];
-
-        // so here you can say for site x always allow these domains
-        // this can be fo foo.com or www.my.foo.com
-        //console.log('baseHost ' + baseHost);
-        //console.log(filterdName + ' ' + disallowed.includes(filterdName) +
-        //    ' - ' + filteredHost + ' ' + disallowed.includes(filteredHost));
+        const filteredName = requestedUrlData.domainlessHost;
+        const filteredHost = requestedUrlData.host; 
         const list = [];
         for (let i = 0, end = disallowed.length; i < end; i++) {
             const xurl = disallowed[i];
@@ -125,36 +118,24 @@ function checkDetails(details) {
                 'Request URL': requestedHost,
                 'Disallowed URL': xurl,
                 'Filtered Name': filterdName,
-                'Base Host': baseHost,
                 'Filtered Host': filteredHost
             });
         }
         //console.table(list);
     }
 
-    // TODO chnage this to have allowed and blocked flags with countts
-    /* 
-    if (!allowedDetails[details.tabId][pageUrl]) {
-        allowedDetails[details.tabId][pageUrl] = {
-             blocked: {}, 
-             allowed: {}
-        };
-    }
-    */
-    if (stop) {
+    if (stop && pageUrl) {
         console.log(`Page request from domain ${pageUrl} is BLOCKING requests to ${requestedHost}`);
-        /*
         if (!allowedDetails[details.tabId][pageUrl].blocked[requestedHost]) {
             allowedDetails[details.tabId][pageUrl].blocked[requestedHost] = 0;
         }
         allowedDetails[details.tabId][pageUrl].blocked[requestedHost]++;
-        */
-    } else if (requestedHost !== 'about:blank') {
+    } else if (pageUrl) {
         if (!allowedDetails[tabID][pageUrl][requestedHost]) {
             allowedDetails[tabID][pageUrl][requestedHost] = 0;
         }
         allowedDetails[tabID][pageUrl][requestedHost]++;
-        //console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
+        console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
     }
 
     return {
