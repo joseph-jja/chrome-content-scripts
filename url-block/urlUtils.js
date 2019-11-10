@@ -49,22 +49,3 @@ function parseHostProtocol(inUrl) {
         domainlessHost
     };
 }
-
-function getFilter(url, justName = false) {
-    let pageUrl;
-    if (url) {
-        let {
-            host,
-            protocol,
-            domainlessHost
-        } = parseHostProtocol(url);
-
-        // we don't always have protocol
-        if (justName && domainlessHost) {
-            pageUrl = domainlessHost;
-        } else if (host) {
-            pageUrl = host;
-        }
-    }
-    return pageUrl;
-}
