@@ -110,10 +110,10 @@ function checkDetails(details) {
     }
 
     let stop = false;
-    if (pageHost && requestedHost) {
+    if (pageHost && requestedHost && pageDomain && requestedDomain) {
         
         if (requestedHost.indexOf(pageDomain) < 0) {
-            console.log(`Page request from domain ${pageHost} should block requests to ${requestedHost}`);
+            console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain}`);
             stop = true;
         }
         
@@ -144,10 +144,10 @@ function checkDetails(details) {
         }
         allowedDetails[details.tabId][pageHost].blocked[requestedHost]++;
     } else if (pageDomain) {
-        if (!allowedDetails[tabID][pageHost][requestedHost]) {
-            allowedDetails[tabID][pageHost][requestedHost] = 0;
+        if (!allowedDetails[tabID][pageHost].allowed[requestedHost]) {
+            allowedDetails[tabID][pageHost].allowed[requestedHost] = 0;
         }
-        allowedDetails[tabID][pageHost][requestedHost]++;
+        allowedDetails[tabID][pageHost].allowed[requestedHost]++;
         console.log(`Page request from domain ${pageHost} is allowing request to ${requestedHost}`);
     }
 
