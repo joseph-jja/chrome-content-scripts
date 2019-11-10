@@ -118,20 +118,22 @@ function checkDetails(details) {
         }
         
         const pageAllowed = allowed[pageHost];
-        for (let i = 0, end = pageAllowed.length; i < end; i++) {
-            const host = pageAllowed[i];
-            if (host.indexOf(requestedDomain)) {
-                stop = false;
-            } else {
-                stop = true;
+        if(pageAllowed) {
+            for (let i = 0, end = pageAllowed.length; i < end; i++) {
+                const host = pageAllowed[i];
+                if (host.indexOf(requestedDomain)) {
+                    stop = false;
+                } else {
+                    stop = true;
+                }
+                /*list.push({
+                    'Page Host': pageHost,
+                    'Requested Host': requestedHost,
+                    'x URL': xurl,
+                    'Page Domain': pageDomain,
+                    'Requested Domain': requestedDomain
+                });*/
             }
-            /*list.push({
-                'Page Host': pageHost,
-                'Requested Host': requestedHost,
-                'x URL': xurl,
-                'Page Domain': pageDomain,
-                'Requested Domain': requestedDomain
-            });*/
         }
         //console.table(list);
     }
