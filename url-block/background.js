@@ -95,6 +95,7 @@ function checkDetails(details) {
         pageDomain = pageUrlData.domainlessHost,
         requestedHost = requestedUrlData.host,
         requestedDomain = requestedUrlData.domainlessHost,
+        requestedFQDN = requestedUrlData.fqdnDomainHost,
         tabID = details.tabId;
     
     if (!allowedDetails[tabID]) {
@@ -128,7 +129,7 @@ function checkDetails(details) {
     if (requestedHost && pageDomain && requestedDomain) {
         
         if (requestedHost.indexOf(pageDomain) < 0) {
-            console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain}`);
+            console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain} ${requestedFQDN}`);
             stop = true;
         }
         
@@ -137,16 +138,20 @@ function checkDetails(details) {
         if(pagesAllowed) {
             for (let i = 0, end = pagesAllowed.length; i < end; i++) {
                 const allowedHost = pagesAllowed[i];
-                if (allowedHost && allowedHost === requestedHost) {
-                    stop = false;
+                if (allowedHost) {
+                    if (allowedHost === requestedHost || allowedHost === requestedFQDN) {
+                        stop = false;
+                    }
                 } 
             }
         }
         if(pagesBlocked) {
             for (let i = 0, end = pagesBlocked.length; i < end; i++) {
                 const blockedHost = pagesBlocked[i];
-                if (blockedHost && blockedHost === requestedHost) {
-                    stop = true;
+                if (blockedHost) {
+                    if (blockedHost === requestedHost || blockedHost === requestedFQDN) {
+                        stop = true;
+                    }
                 } 
             }
         }
