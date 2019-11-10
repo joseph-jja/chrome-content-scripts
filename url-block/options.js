@@ -13,7 +13,8 @@ const port = chrome.extension.connect({
 });
 port.onMessage.addListener(function(msg) {
     const tableAllowed = document.getElementById('allowed-results'), 
-         tableBlocked = document.getElementById('blocked-results');
+         tableBlocked = document.getElementById('blocked-results'),
+         tableEnabled = document.getElementById('enabled-results');
     let rows = tableAllowed.rows;
     for (let j = rows.length - 1; j > 0; j--) {
         tableAllowed.removeChild(tableAllowed.rows[j]);
@@ -21,6 +22,10 @@ port.onMessage.addListener(function(msg) {
     rows = tableBlocked.rows;
     for (let j = rows.length - 1; j > 0; j--) {
         tableBlocked.removeChild(tableBlocked.rows[j]);
+    }
+    rows = tableEnabled.rows;
+    for (let j = rows.length - 1; j > 0; j--) {
+        tableEnabled.removeChild(tableEnabled.rows[j]);
     }
     chrome.tabs.query({
         active: true
@@ -61,6 +66,23 @@ port.onMessage.addListener(function(msg) {
                         tr.appendChild(tdenable);
                         tdcount.innerHTML = blockedURLs[url];
                     });
+                    /*const enabledUrls = msg[tabID][tabURL].enabled;
+                    Object.keys(enabledUrls).forEach(url => {
+                        var tr = document.createElement('tr');
+                        tableBlocked.appendChild(tr);
+                        // domain cell
+                        const tddomain = document.createElement('td');
+                        tddomain.innerHTML = url;
+                        tr.appendChild(tddomain);
+                        const tddelete = document.createElement('td');
+                        const button = document.createElement('button');
+                        button.innerHTML = 'Delete';
+                        button.dataset.domainName = url;
+                        button.className = 'enabledDomain';
+                        tdenable.appendChild(button);
+                        tr.appendChild(tdenable);
+                        tdcount.innerHTML = enabledUrls[url];
+                    });*/
                 }
             }
         } catch (e) {
@@ -118,8 +140,8 @@ chrome.browserAction.getTitle({}, (title) => {
 //chrome.storage.local.clear();
 
 function updateStorage() {
-
-    chrome.storage.local.set(storageItems,
+    
+    chrome.storage.local.set(('urlBlockerData', storageItems),
         function(items) {
 
             if (items) {
@@ -145,27 +167,79 @@ function renderRow(tr, parts, domainName) {
     }
 }
 
-function handleAddClick() {
+async function getCurrentTab() {
+    return new Promise((resolve, reject) => {
+        chrome.tabs.getSelected(tab => {
+            if (tab && tab.url) {
+                resolve(tab.url);    
+            } else {
+                reject();
+            }
+        });
+    });
+}
+                       
+        
+function handleEnableClick(e) {
 
-    const blockedUrl = document.getElementById('allow-url-id');
+    const tgt = e.target;
 
-    if (!blockedUrl.value) {
+    if (tgt.nodeName.toLowerCase() !== 'button') {
         return;
-    }
+    }    
 
-    const abUrl = blockedUrl.value;
+    const abUrl = tgt.dataset.domainName;
 
-    const table = document.getElementById('blocked-results');
-    var tr = document.createElement('tr');
-    table.appendChild(tr);
-    renderRow(tr, [abUrl, 'button'], abUrl);
+    getCurrentTab().then(furl => {
+        const url = parseHostProtocol(furl).host;
+        if (!storageItems.urlBlockerData.allowed) {
+            storageItems.urlBlockerData.allowed = {};
+        }
+        if (!storageItems.urlBlockerData.allowed[url]) {
+            storageItems.urlBlockerData.allowed = {};
+            storageItems.urlBlockerData.allowed[url] = [];
+        }
 
-    storageItems.urlBlockerData.blocked.push(abUrl);
-    updateStorage();
+        const table = document.getElementById('enabled-results');
+        var tr = document.createElement('tr');
+        table.appendChild(tr);
+        renderRow(tr, [abUrl, 'button'], abUrl);
+
+        storageItems.urlBlockerData.allowed[url].push(abUrl);
+        updateStorage();
+    }, () => {});
+}
+
+//enabled-results
+const enableButtons = document.getElementById('blocked-results');
+enableButtons.addEventListener('click', handleEnableClick, false);
+
+function handleAddClick(e) {
+    const allowUrl = document.getElementById('allow-url');    
+    
+    getCurrentTab().then(furl => {
+        const url = parseHostProtocol(furl).host;
+        if (!storageItems.urlBlockerData.allowed) {
+            storageItems.urlBlockerData.allowed = {};
+        }
+        if (!storageItems.urlBlockerData.allowed[url]) {
+            storageItems.urlBlockerData.allowed = {};
+            storageItems.urlBlockerData.allowed[url] = [];
+        }
+        
+        const table = document.getElementById('enabled-results');
+        var tr = document.createElement('tr');
+        table.appendChild(tr);
+        renderRow(tr, [allowUrl, 'button'], allowUrl);
+
+        storageItems.urlBlockerData.allowed[url].push(allowUrl);
+        updateStorage();
+    }, () => {});
 }
 
 const addButton = document.getElementById('add-button');
-addButton.addEventListener('click', handleAddClick, false);
+enableButtons.addEventListener('click', handleAddClick, false);
+
 
 document.addEventListener('DOMContentLoaded', restore_options => {
     const table = document.getElementById('blocked-results').tBodies[0];
