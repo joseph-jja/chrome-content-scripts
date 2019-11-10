@@ -96,6 +96,7 @@ function checkDetails(details) {
     
     if (pageHost && !allowedDetails[tabID][pageHost]) {
         allowedDetails[tabID][pageHost] = {
+            enabled: {}, 
             blocked: {}, 
             allowed: {} 
         };
@@ -107,6 +108,12 @@ function checkDetails(details) {
         return {
             cancel: false
         };
+    }
+
+    if (pageHost && requestedHost && pageHost == requestedHost) {
+        return {
+            cancel: false
+        };        
     }
 
     let stop = false;
@@ -121,11 +128,13 @@ function checkDetails(details) {
         if(pageAllowed) {
             for (let i = 0, end = pageAllowed.length; i < end; i++) {
                 const host = pageAllowed[i];
-                if (host.indexOf(requestedDomain)) {
-                    stop = false;
-                } else {
-                    stop = true;
-                }
+                if (host) {
+                    if (host.indexOf(requestedDomain) > -1) {
+                        stop = false;
+                    } else {
+                        stop = true;
+                    }
+                }    
                 /*list.push({
                     'Page Host': pageHost,
                     'Requested Host': requestedHost,
@@ -136,6 +145,13 @@ function checkDetails(details) {
             }
         }
         //console.table(list);
+    }
+
+    if (allowed[pageHost]) {
+        if (!allowedDetails[details.tabId][pageHost].enabled[requestedHost]) {
+            allowedDetails[details.tabId][pageHost].enabled[requestedHost] = 0;
+        }
+        allowedDetails[details.tabId][pageHost].enabled[requestedHost]++;
     }
 
     if (stop && pageHost) {
