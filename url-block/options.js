@@ -12,10 +12,15 @@ const port = chrome.extension.connect({
     name: 'Blocked URL Message Channel'
 });
 port.onMessage.addListener(function(msg) {
-    const table = document.getElementById('blocked-results');
-    const rows = table.rows;
+    const tableAllowed = document.getElementById('allowed-results'), 
+         tableBlocked = document.getElementById('blocked-results');
+    let rows = tableAllowed.rows;
     for (let j = rows.length - 1; j > 0; j--) {
-        table.removeChild(table.rows[j]);
+        tableAllowed.removeChild(tableAllowed.rows[j]);
+    }
+    rows = tableBlocked.rows;
+    for (let j = rows.length - 1; j > 0; j--) {
+        tableBlocked.removeChild(tableBlocked.rows[j]);
     }
     chrome.tabs.query({
         active: true
@@ -23,12 +28,24 @@ port.onMessage.addListener(function(msg) {
         try {
             if (tabs[0]) {
                 const tabID = tabs[0].id,
-                    tabURL =  getFilter(tabs[0].url, true);
+                    tabURL =  parseHostProtocol(tabs[0].url, true).host;
                 if (msg[tabID] && msg[tabID][tabURL]) {
-                    const blockedURLs = msg[tabID][tabURL];
+                    const allowedURLs = msg[tabID][tabURL].allowed;
+                    Object.keys(allowedURLs).forEach(url => {
+                        var tr = document.createElement('tr');
+                        tableAllowed.appendChild(tr);
+                        // domain cell
+                        const tddomain = document.createElement('td');
+                        tddomain.innerHTML = url;
+                        tr.appendChild(tddomain);
+                        const tdcount = document.createElement('td');
+                        tr.appendChild(tdcount);
+                        tdcount.innerHTML = allowedURLs[url];
+                    });
+                    const blockedURLs = msg[tabID][tabURL].blocked;
                     Object.keys(blockedURLs).forEach(url => {
                         var tr = document.createElement('tr');
-                        table.appendChild(tr);
+                        tableBlocked.appendChild(tr);
                         // domain cell
                         const tddomain = document.createElement('td');
                         tddomain.innerHTML = url;
@@ -131,7 +148,7 @@ function handleAddClick() {
 
     const abUrl = blockedUrl.value;
 
-    const table = document.getElementById('display-results');
+    const table = document.getElementById('blocked-results');
     var tr = document.createElement('tr');
     table.appendChild(tr);
     renderRow(tr, [abUrl, 'button'], abUrl);
@@ -144,7 +161,7 @@ const addButton = document.getElementById('add-button');
 addButton.addEventListener('click', handleAddClick, false);
 
 document.addEventListener('DOMContentLoaded', restore_options => {
-    const table = document.getElementById('display-results').tBodies[0];
+    const table = document.getElementById('blocked-results').tBodies[0];
 
     chrome.storage.local.get('urlBlockerData', function(items) {
 
