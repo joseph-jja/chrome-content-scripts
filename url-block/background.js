@@ -21,7 +21,7 @@ function setActiveTab(tabId, key) {
     }
     chrome.tabs.get(tabId, (tab) => {
         if (tab.url && tab.url !== DEFAULT_TAB_URL) {
-            let url = getFilter(tab.url);
+            let url = parseHostProtocol(tab.url).host;
             activeTabsList[tab.id] = url;
         }
     });
@@ -84,58 +84,71 @@ function checkDetails(details) {
     const pageUrlData = parseHostProtocol(details.initiator),
         requestedUrlData = parseHostProtocol(details.url);
     
-    const pageUrl = pageUrlData.domainlessHost,
+    const pageHost = pageUrlData.host,
+        pageDomain = pageUrlData.domainlessHost,
         requestedHost = requestedUrlData.host,
+        requestedDomain = requestedUrlData.domainlessHost,
         tabID = details.tabId;
     
     if (!allowedDetails[tabID]) {
         allowedDetails[tabID] = {};
     }
     
-    if (pageUrl && !allowedDetails[tabID][pageUrl]) {
-        allowedDetails[tabID][pageUrl] = {
+    if (pageHost && !allowedDetails[tabID][pageHost]) {
+        allowedDetails[tabID][pageHost] = {
             blocked: {}, 
             allowed: {} 
         };
     }
+    
+    if (!pageHost) {
+        //console.log(`Requested ${requestedHost}`); 
+        // first request?
+        return {
+            cancel: false
+        };
+    }
 
     let stop = false;
-    if (pageUrl && requestedHost) {
-
-        const filteredName = requestedUrlData.domainlessHost;
-        const filteredHost = requestedUrlData.host; 
+    if (pageHost && requestedHost) {
+        
+        if (requestedHost.indexOf(pageDomain) < 0) {
+            console.log(`Page request from domain ${pageHost} should block requests to ${requestedHost}`);
+            stop = true;
+        }
+        
         const list = [];
         for (let i = 0, end = disallowed.length; i < end; i++) {
             const xurl = disallowed[i];
-            if (xurl === filterdName ||
+            /*if (xurl === filterdName ||
                 baseHost.indexOf(xurl) > -1 ||
                 filteredHost.indexOf(xurl) > -1) {
 
                 stop = true;
-            }
+            }*/
             list.push({
-                'Page URL': pageUrl,
-                'Request URL': requestedHost,
-                'Disallowed URL': xurl,
-                'Filtered Name': filterdName,
-                'Filtered Host': filteredHost
+                'Page Host': pageHost,
+                'Requested Host': requestedHost,
+                'x URL': xurl,
+                'Page Domain': pageDomain,
+                'Requested Domain': requestedDomain
             });
         }
         //console.table(list);
     }
 
-    if (stop && pageUrl) {
-        console.log(`Page request from domain ${pageUrl} is BLOCKING requests to ${requestedHost}`);
-        if (!allowedDetails[details.tabId][pageUrl].blocked[requestedHost]) {
-            allowedDetails[details.tabId][pageUrl].blocked[requestedHost] = 0;
+    if (stop && pageHost) {
+        console.log(`Page request from domain ${pageHost} is BLOCKING requests to ${requestedHost}`);
+        if (!allowedDetails[details.tabId][pageHost].blocked[requestedHost]) {
+            allowedDetails[details.tabId][pageHost].blocked[requestedHost] = 0;
         }
-        allowedDetails[details.tabId][pageUrl].blocked[requestedHost]++;
-    } else if (pageUrl) {
-        if (!allowedDetails[tabID][pageUrl][requestedHost]) {
-            allowedDetails[tabID][pageUrl][requestedHost] = 0;
+        allowedDetails[details.tabId][pageHost].blocked[requestedHost]++;
+    } else if (pageDomain) {
+        if (!allowedDetails[tabID][pageHost][requestedHost]) {
+            allowedDetails[tabID][pageHost][requestedHost] = 0;
         }
-        allowedDetails[tabID][pageUrl][requestedHost]++;
-        console.log(`Page request from domain ${pageUrl} is allowing request to ${requestedHost}`);
+        allowedDetails[tabID][pageHost][requestedHost]++;
+        console.log(`Page request from domain ${pageHost} is allowing request to ${requestedHost}`);
     }
 
     return {
