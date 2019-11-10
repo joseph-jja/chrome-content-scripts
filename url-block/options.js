@@ -52,6 +52,13 @@ port.onMessage.addListener(function(msg) {
                         tr.appendChild(tddomain);
                         const tdcount = document.createElement('td');
                         tr.appendChild(tdcount);
+                        const tdenable = document.createElement('td');
+                        const button = document.createElement('button');
+                        button.innerHTML = 'Allow';
+                        button.dataset.domainName = url;
+                        button.className = 'allowDomain';
+                        tdenable.appendChild(button);
+                        tr.appendChild(tdenable);
                         tdcount.innerHTML = blockedURLs[url];
                     });
                 }
