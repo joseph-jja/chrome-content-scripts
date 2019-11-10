@@ -39,7 +39,7 @@ function parseHostProtocol(inUrl) {
         if (hostParts.length > 0) {
             // www.foo.com then we want foo.com and foo
             domainlessHost = hostParts[hostParts.length - 2];
-            fqdnDomainHost = `${hostParts[hostParts.length - 2]}.${hostParts[hostParts.length - 2]}`;
+            fqdnDomainHost = `${hostParts[hostParts.length - 2]}.${hostParts[hostParts.length - 1]}`;
         }
     }
 
