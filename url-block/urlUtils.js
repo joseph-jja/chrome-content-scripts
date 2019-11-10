@@ -5,7 +5,7 @@ function parseHostProtocol(inUrl) {
         return {};
     }
 
-    let host, protocol, domainlessHost;
+    let host, protocol, domainlessHost, fqdnDomainHost;
 
     // we have a URL but it has no protocol
     if (inUrl.indexOf(PROTOCOL_SEP) > -1) {
@@ -39,6 +39,7 @@ function parseHostProtocol(inUrl) {
         if (hostParts.length > 0) {
             // www.foo.com then we want foo.com and foo
             domainlessHost = hostParts[hostParts.length - 2];
+            fqdnDomainHost = `${hostParts[hostParts.length - 2]}.${hostParts[hostParts.length - 2]}`;
         }
     }
 
@@ -46,6 +47,7 @@ function parseHostProtocol(inUrl) {
     return {
         host,
         protocol,
-        domainlessHost
+        domainlessHost,
+        fqdnDomainHost
     };
 }
