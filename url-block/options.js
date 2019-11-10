@@ -2,19 +2,17 @@
 
 let storageItems = {
     urlBlockerData: {
-        blocked: []
+        allowed: {},
+        blocked: {}
     }
 };
-
-const allowedDetails = {};
 
 const port = chrome.extension.connect({
     name: 'Blocked URL Message Channel'
 });
 port.onMessage.addListener(function(msg) {
     const tableAllowed = document.getElementById('allowed-results'), 
-         tableBlocked = document.getElementById('blocked-results'),
-         tableEnabled = document.getElementById('enabled-results');
+         tableBlocked = document.getElementById('blocked-results');
     let rows = tableAllowed.rows;
     for (let j = rows.length - 1; j > 0; j--) {
         tableAllowed.removeChild(tableAllowed.rows[j]);
@@ -22,10 +20,6 @@ port.onMessage.addListener(function(msg) {
     rows = tableBlocked.rows;
     for (let j = rows.length - 1; j > 0; j--) {
         tableBlocked.removeChild(tableBlocked.rows[j]);
-    }
-    rows = tableEnabled.rows;
-    for (let j = rows.length - 1; j > 0; j--) {
-        tableEnabled.removeChild(tableEnabled.rows[j]);
     }
     chrome.tabs.query({
         active: true
@@ -39,24 +33,39 @@ port.onMessage.addListener(function(msg) {
                     Object.keys(allowedURLs).forEach(url => {
                         var tr = document.createElement('tr');
                         tableAllowed.appendChild(tr);
+                        
                         // domain cell
                         const tddomain = document.createElement('td');
                         tddomain.innerHTML = url;
                         tr.appendChild(tddomain);
+                        
                         const tdcount = document.createElement('td');
-                        tr.appendChild(tdcount);
                         tdcount.innerHTML = allowedURLs[url];
+                        tr.appendChild(tdcount);
+                        
+                        const tddisable = document.createElement('td');
+                        tr.appendChild(tdcount);
+                        const button = document.createElement('button');
+                        button.innerHTML = 'Block';
+                        button.dataset.domainName = url;
+                        button.className = 'blockDomain';
+                        tddisable.appendChild(button);
+                        tr.appendChild(tddisable);
                     });
                     const blockedURLs = msg[tabID][tabURL].blocked;
                     Object.keys(blockedURLs).forEach(url => {
                         var tr = document.createElement('tr');
                         tableBlocked.appendChild(tr);
+                        
                         // domain cell
                         const tddomain = document.createElement('td');
                         tddomain.innerHTML = url;
                         tr.appendChild(tddomain);
+                        
                         const tdcount = document.createElement('td');
+                        tdcount.innerHTML = blockedURLs[url];
                         tr.appendChild(tdcount);
+                        
                         const tdenable = document.createElement('td');
                         const button = document.createElement('button');
                         button.innerHTML = 'Allow';
@@ -64,25 +73,7 @@ port.onMessage.addListener(function(msg) {
                         button.className = 'allowDomain';
                         tdenable.appendChild(button);
                         tr.appendChild(tdenable);
-                        tdcount.innerHTML = blockedURLs[url];
                     });
-                    /*const enabledUrls = msg[tabID][tabURL].enabled;
-                    Object.keys(enabledUrls).forEach(url => {
-                        var tr = document.createElement('tr');
-                        tableBlocked.appendChild(tr);
-                        // domain cell
-                        const tddomain = document.createElement('td');
-                        tddomain.innerHTML = url;
-                        tr.appendChild(tddomain);
-                        const tddelete = document.createElement('td');
-                        const button = document.createElement('button');
-                        button.innerHTML = 'Delete';
-                        button.dataset.domainName = url;
-                        button.className = 'enabledDomain';
-                        tdenable.appendChild(button);
-                        tr.appendChild(tdenable);
-                        tdcount.innerHTML = enabledUrls[url];
-                    });*/
                 }
             }
         } catch (e) {
@@ -91,53 +82,6 @@ port.onMessage.addListener(function(msg) {
     });
 });
 port.postMessage('Give me the URLs that have been blocked');
-
-const GO_ICON = 'images/go32.png',
-    STOP_ICON = 'images/stop32.png';
-
-const enableButton = document.getElementById('enableDisable');
-
-function enableDisableExtension() {
-
-    chrome.browserAction.getTitle({}, (title) => {
-
-        const text = title.replace('URL Blocker:', '').trim();
-
-        let icon = GO_ICON,
-            titleText = 'Disable';
-        if (text === 'Enabled') {
-            enableButton.innerHTML = 'Enable';
-            icon = STOP_ICON;
-            titleText = 'Disabled';
-        } else if (text === 'Disabled') {
-            enableButton.innerHTML = 'Disable';
-            icon = GO_ICON;
-            titleText = 'Enabled';
-        }
-
-        chrome.browserAction.setIcon({
-            'path': icon
-        });
-        chrome.browserAction.setTitle({
-            'title': 'URL Blocker: ' + titleText
-        });
-        port.postMessage('URL Blocker: ' + titleText);
-    });
-}
-
-enableButton.addEventListener('click', enableDisableExtension, false);
-
-chrome.browserAction.getTitle({}, (title) => {
-
-    const text = title.replace('URL Blocker:', '').trim();
-
-    if (text === 'Enabled') {
-        enableButton.innerHTML = 'Disable';
-    } else if (text === 'Disabled') {
-        enableButton.innerHTML = 'Enable';
-    }
-});
-//chrome.storage.local.clear();
 
 function updateStorage() {
     
@@ -196,7 +140,6 @@ function handleEnableClick(e) {
             storageItems.urlBlockerData.allowed = {};
         }
         if (!storageItems.urlBlockerData.allowed[url]) {
-            storageItems.urlBlockerData.allowed = {};
             storageItems.urlBlockerData.allowed[url] = [];
         }
 
