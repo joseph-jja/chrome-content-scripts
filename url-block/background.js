@@ -9,7 +9,7 @@ const requests = chrome.webRequest,
 
 let icon = GO_ICON,
     activeTabsList = {},
-    disallowed = [],
+    allowed = [],
     isEnabled = true;
 
 const allowedDetails = {};
@@ -35,9 +35,9 @@ function initialize(tab) {
         if (items && items.urlBlockerData) {
             const urlBlockerData = items.urlBlockerData;
 
-            if (urlBlockerData && urlBlockerData.blocked) {
-                const blockedItems = urlBlockerData.blocked;
-                disallowed = blockedItems;
+            if (urlBlockerData && urlBlockerData.allowed) {
+                const blockedItems = urlBlockerData.allowed;
+                allowed = blockedItems;
             }
         }
     });
@@ -117,22 +117,21 @@ function checkDetails(details) {
             stop = true;
         }
         
-        const list = [];
-        for (let i = 0, end = disallowed.length; i < end; i++) {
-            const xurl = disallowed[i];
-            /*if (xurl === filterdName ||
-                baseHost.indexOf(xurl) > -1 ||
-                filteredHost.indexOf(xurl) > -1) {
-
+        const pageAllowed = allowed[pageHost];
+        for (let i = 0, end = pageAllowed.length; i < end; i++) {
+            const host = pageAllowed[i];
+            if (host.indexOf(requestedDomain)) {
+                stop = false;
+            } else {
                 stop = true;
-            }*/
-            list.push({
+            }
+            /*list.push({
                 'Page Host': pageHost,
                 'Requested Host': requestedHost,
                 'x URL': xurl,
                 'Page Domain': pageDomain,
                 'Requested Domain': requestedDomain
-            });
+            });*/
         }
         //console.table(list);
     }
