@@ -9,7 +9,8 @@ const requests = chrome.webRequest,
 
 let icon = GO_ICON,
     activeTabsList = {},
-    allowed = [],
+    allowed = {},
+    blocked = {},
     isEnabled = true;
 
 const allowedDetails = {};
@@ -35,9 +36,15 @@ function initialize(tab) {
         if (items && items.urlBlockerData) {
             const urlBlockerData = items.urlBlockerData;
 
-            if (urlBlockerData && urlBlockerData.allowed) {
-                const blockedItems = urlBlockerData.allowed;
-                allowed = blockedItems;
+            if (urlBlockerData) {
+                if (urlBlockerData.allowed) {
+                    const allowedItems = urlBlockerData.allowed;
+                    allowed = allowedItems;
+                }
+                if (urlBlockerData.blocked) {
+                    const blockedItems = urlBlockerData.blocked;
+                    blocked = blockedItems;
+                }
             }
         }
     });
@@ -96,12 +103,13 @@ function checkDetails(details) {
     
     if (pageHost && !allowedDetails[tabID][pageHost]) {
         allowedDetails[tabID][pageHost] = {
-            enabled: {}, 
             blocked: {}, 
             allowed: {} 
         };
     }
     
+    // no page host, so this is the main initiator
+    // since we do not do iframes
     if (!pageHost) {
         //console.log(`Requested ${requestedHost}`); 
         // first request?
@@ -110,57 +118,49 @@ function checkDetails(details) {
         };
     }
 
-    if (pageHost && requestedHost && pageHost == requestedHost) {
+    if (requestedHost && pageHost === requestedHost) {
         return {
             cancel: false
         };        
     }
 
     let stop = false;
-    if (pageHost && requestedHost && pageDomain && requestedDomain) {
+    if (requestedHost && pageDomain && requestedDomain) {
         
         if (requestedHost.indexOf(pageDomain) < 0) {
             console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain}`);
             stop = true;
         }
         
-        const pageAllowed = allowed[pageHost];
-        if(pageAllowed) {
-            for (let i = 0, end = pageAllowed.length; i < end; i++) {
-                const host = pageAllowed[i];
-                if (host) {
-                    if (host.indexOf(requestedDomain) > -1) {
-                        stop = false;
-                    } else {
-                        stop = true;
-                    }
-                }    
-                /*list.push({
-                    'Page Host': pageHost,
-                    'Requested Host': requestedHost,
-                    'x URL': xurl,
-                    'Page Domain': pageDomain,
-                    'Requested Domain': requestedDomain
-                });*/
+        const pagesAllowed = allowed[pageHost], 
+              pagesBlocked = blocked[pageHost];
+        if(pagesAllowed) {
+            for (let i = 0, end = pagesAllowed.length; i < end; i++) {
+                const allowedHost = pagesAllowed[i];
+                if (allowedHost && allowedHost === requestedHost) {
+                    stop = false;
+                } 
+            }
+        }
+        if(pagesBlocked) {
+            for (let i = 0, end = pagesBlocked.length; i < end; i++) {
+                const blockedHost = pagesBlocked[i];
+                if (blockedHost && blockedHost === requestedHost) {
+                    stop = true;
+                } 
             }
         }
         //console.table(list);
     }
 
-    if (allowed[pageHost]) {
-        if (!allowedDetails[details.tabId][pageHost].enabled[requestedHost]) {
-            allowedDetails[details.tabId][pageHost].enabled[requestedHost] = 0;
-        }
-        allowedDetails[details.tabId][pageHost].enabled[requestedHost]++;
-    }
-
-    if (stop && pageHost) {
+    // data is either blocked or allowed
+    if (stop) {
         console.log(`Page request from domain ${pageHost} is BLOCKING requests to ${requestedHost}`);
         if (!allowedDetails[details.tabId][pageHost].blocked[requestedHost]) {
             allowedDetails[details.tabId][pageHost].blocked[requestedHost] = 0;
         }
         allowedDetails[details.tabId][pageHost].blocked[requestedHost]++;
-    } else if (pageDomain) {
+    } else {
         if (!allowedDetails[tabID][pageHost].allowed[requestedHost]) {
             allowedDetails[tabID][pageHost].allowed[requestedHost] = 0;
         }
