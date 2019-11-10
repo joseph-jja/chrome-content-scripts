@@ -119,8 +119,6 @@ function handleAllowClick(e) {
         storageItems.urlBlockerData.allowed[url].push(allowUrl);
         updateStorage();
     }, () => {});
-
-
 }
 const allowButtons = document.getElementById('blocked-results');
 allowButtons.addEventListener('click', handleAllowClick, false);
@@ -157,21 +155,29 @@ const blockButtons = document.getElementById('allowed-results');
 blockButtons.addEventListener('click', handleBlockClick, false);
 
 
-function renderRow(tr, parts, domainName) {
-    for (let j = 0, jend = parts.length; j < jend; j++) {
-        const td = document.createElement('td');
-        if (parts[j] === 'button') {
-            const button = document.createElement('button');
-            button.innerHTML = 'Delete';
-            button.dataset.domainName = domainName;
-            button.className = 'deleteDomain';
-            td.appendChild(button);
-        } else {
-            td.innerHTML = parts[j];
+function handleAddClick() {
+
+    const allowUrl = document.getElementById('allow-url-id').value;
+    
+    getCurrentTab().then(furl => {
+                
+        const url = parseHostProtocol(furl).host;
+        if (!storageItems.urlBlockerData.allowed) {
+            storageItems.urlBlockerData.allowed = {};
         }
-        tr.appendChild(td);
-    }
-}  
+        if (!storageItems.urlBlockerData.allowed[url]) {
+            storageItems.urlBlockerData.allowed[url] = [];
+        }
+
+        const tableAllowed = document.getElementById('allowed-results');
+        createTableRow(tableAllowed, allowUrl, 0, 'Block', 'blockDomain');
+
+        storageItems.urlBlockerData.allowed[url].push(allowUrl);
+        updateStorage();
+    }, () => {});
+}
+const addButtons = document.getElementById('add-button');
+addButtons.addEventListener('click', handleAddClick, false);
         
 document.addEventListener('DOMContentLoaded', restore_options => {
 
