@@ -129,7 +129,7 @@ function checkDetails(details) {
     if (requestedHost && pageDomain && requestedDomain) {
         
         if (requestedHost.indexOf(pageDomain) < 0) {
-            console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain} ${requestedFQDN}`);
+            //console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain} ${requestedFQDN}`);
             stop = true;
         }
         
@@ -160,7 +160,7 @@ function checkDetails(details) {
 
     // data is either blocked or allowed
     if (stop) {
-        console.log(`Page request from domain ${pageHost} is BLOCKING requests to ${requestedHost}`);
+        //console.log(`Page request from domain ${pageHost} is BLOCKING requests to ${requestedHost}`);
         if (!allowedDetails[details.tabId][pageHost].blocked[requestedHost]) {
             allowedDetails[details.tabId][pageHost].blocked[requestedHost] = 0;
         }
@@ -170,7 +170,7 @@ function checkDetails(details) {
             allowedDetails[tabID][pageHost].allowed[requestedHost] = 0;
         }
         allowedDetails[tabID][pageHost].allowed[requestedHost]++;
-        console.log(`Page request from domain ${pageHost} is allowing request to ${requestedHost}`);
+        //console.log(`Page request from domain ${pageHost} is allowing request to ${requestedHost}`);
     }
 
     return {
