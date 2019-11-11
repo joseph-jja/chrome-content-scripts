@@ -107,17 +107,20 @@ function handleAllowClick(e) {
         if (!storageItems.urlBlockerData.allowed[url]) {
             storageItems.urlBlockerData.allowed[url] = [];
         }
-
-        const tableAllowed = document.getElementById('allowed-results');
-        createTableRow(tableAllowed, allowUrl, 0, 'Block', 'blockDomain');
         
-        // delete row from blocked
-        const row = tgt.parentNode.parentNode;
-        const rowParent = row.parentNode;
-        rowParent.removeChild(row);
+        if (!storageItems.urlBlockerData.allowed[url].includes(allowUrl)) {
 
-        storageItems.urlBlockerData.allowed[url].push(allowUrl);
-        updateStorage();
+            const tableAllowed = document.getElementById('allowed-results');
+            createTableRow(tableAllowed, allowUrl, 0, 'Block', 'blockDomain');
+
+            // delete row from blocked
+            const row = tgt.parentNode.parentNode;
+            const rowParent = row.parentNode;
+            rowParent.removeChild(row);
+
+            storageItems.urlBlockerData.allowed[url].push(allowUrl);
+            updateStorage();
+        }
     }, () => {});
 }
 const allowButtons = document.getElementById('blocked-results');
@@ -168,12 +171,15 @@ function handleAddClick() {
         if (!storageItems.urlBlockerData.allowed[url]) {
             storageItems.urlBlockerData.allowed[url] = [];
         }
+        
+        if (!storageItems.urlBlockerData.allowed[url].includes(allowUrl)) {
 
-        const tableAllowed = document.getElementById('allowed-results');
-        createTableRow(tableAllowed, allowUrl, 0, 'Block', 'blockDomain');
+            const tableAllowed = document.getElementById('allowed-results');
+            createTableRow(tableAllowed, allowUrl, 0, 'Block', 'blockDomain');
 
-        storageItems.urlBlockerData.allowed[url].push(allowUrl);
-        updateStorage();
+            storageItems.urlBlockerData.allowed[url].push(allowUrl);
+            updateStorage();
+        }
     }, () => {});
 }
 const addButtons = document.getElementById('add-button');
