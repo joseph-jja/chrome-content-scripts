@@ -130,7 +130,7 @@ function checkDetails(details) {
         
         if (requestedHost.indexOf(pageDomain) < 0) {
             //console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain} ${requestedFQDN}`);
-            stop = true;
+            //stop = true;
         }
         
         const pagesAllowed = allowed[pageHost], 
