@@ -141,11 +141,8 @@ function checkDetails(details) {
     
     let stop = false;
     
-    for ( let x =0, xend = alwaysBlocked.length; x < xend; x++) {
-        if (requestedHost.indexOf(alwaysBlocked[x]) > -1) {
-            stop = true;
-            break;
-        }
+    if (alwaysBlocked.includes(requestedFQDN)) {
+        stop = true;
     }
     
     if (!stop && requestedHost && pageDomain && requestedDomain) {
