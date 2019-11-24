@@ -16,7 +16,15 @@ let icon = GO_ICON,
 const alwaysBlocked = [
     'demdex.net',
     'inside-graph.com',
-    'btstatic.com'
+    'btstatic.com',
+    'pro-market.net',
+    'addthis.com',
+    'advertising.com',
+    'adnxs.com',
+    'scorecardresearch.com',
+    'bluekai.com',
+    'tremorhub.com',
+    'mathtag.com'
 ];
 
 const allowedDetails = {};
