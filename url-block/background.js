@@ -13,6 +13,12 @@ let icon = GO_ICON,
     blocked = {},
     isEnabled = true;
 
+const alwaysBlocked = [
+    'demdex.net',
+    'inside-graph.com',
+    'btstatic.com'
+];
+
 const allowedDetails = {};
 
 // generic function to get the active tab and the url
@@ -124,9 +130,17 @@ function checkDetails(details) {
             cancel: false
         };        
     }
-
+    
     let stop = false;
-    if (requestedHost && pageDomain && requestedDomain) {
+    
+    for ( let x =0, xend = alwaysBlocked.length; x < xend; x++) {
+        if (requestedHost.indexOf(alwaysBlocked[x]) > -1) {
+            stop = true;
+            break;
+        }
+    }
+    
+    if (!stop && requestedHost && pageDomain && requestedDomain) {
         
         if (requestedHost.indexOf(pageDomain) < 0) {
             //console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain} ${requestedFQDN}`);
