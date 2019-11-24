@@ -1,7 +1,7 @@
 {
     "name": "URL Blocker",
     "manifest_version": 2,
-    "version": "0.4.1",
+    "version": "0.4.2",
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
         "exclude_matches": [ 
