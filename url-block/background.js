@@ -9,8 +9,12 @@ const requests = chrome.webRequest,
 
 let icon = GO_ICON,
     activeTabsList = {},
-    allowed = {},
-    blocked = {},
+    allowed = {
+        'facebook': [ 'fbcdn' ]
+    },
+    blocked = {
+        'aquabid': [ 'doubleclick.net' ]
+    },
     isEnabled = true;
 
 const alwaysBlocked = [
@@ -147,34 +151,24 @@ function checkDetails(details) {
     
     if (!stop && requestedHost && pageDomain && requestedDomain) {
         
-        if (requestedHost.indexOf(pageDomain) < 0) {
-            //console.log(`Page request from domain ${pageHost} (${pageDomain}) might block requests to ${requestedHost} ${requestedDomain} ${requestedFQDN}`);
-            //stop = true;
-        }
-        
-        const pagesAllowed = allowed[pageHost], 
-              pagesBlocked = blocked[pageHost];
+        const pagesAllowed = allowed[pageDomain], 
+              pagesBlocked = blocked[pageDomain];
         if(pagesAllowed) {
-            for (let i = 0, end = pagesAllowed.length; i < end; i++) {
-                const allowedHost = pagesAllowed[i];
-                if (allowedHost) {
-                    if (allowedHost === requestedHost || allowedHost === requestedFQDN) {
-                        stop = false;
-                    }
+            for (const allowedHost of pagesAllowed) {
+                const allowedDomain = parseHostProtocol(allowedHost).domainlessHost;
+                if (allowedDomain === requestedDomain) {
+                    stop = false;
                 } 
             }
         }
         if(pagesBlocked) {
-            for (let i = 0, end = pagesBlocked.length; i < end; i++) {
-                const blockedHost = pagesBlocked[i];
-                if (blockedHost) {
-                    if (blockedHost === requestedHost || blockedHost === requestedFQDN) {
-                        stop = true;
-                    }
+            for (const blockedHost of pagesBlocked) {
+                const blockedDomain = parseHostProtocol(blockedHost).domainlessHost;
+                if (blockedDomain === requestedDomain) {
+                    stop = true;
                 } 
             }
         }
-        //console.table(list);
     }
 
     // data is either blocked or allowed
