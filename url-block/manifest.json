@@ -5,7 +5,8 @@
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
         "exclude_matches": [ 
-            "https://*.google.com/*"
+            "https://*.google.com/*",
+            "https://*.gmail.com/*"
         ],
         "all_frames": true,
         "js": ["index.js"]
