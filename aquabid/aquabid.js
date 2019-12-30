@@ -1,5 +1,10 @@
 // search page is slightly different it does not put sortable on table
 
+// change width of all the tables for wider screens
+Array.from(document.querySelectorAll('table')).forEach(tbl => {
+    tbl.width = '90%';
+});
+
 var table = document.querySelector('.sortable tbody');
 if (!table) {
     let selectedCell;
