@@ -2,7 +2,7 @@
 
 // change width of all the tables for wider screens
 Array.from(document.querySelectorAll('table')).forEach(tbl => {
-    tbl.width = '90%';
+    tbl.width = '95%';
 });
 
 var table = document.querySelector('.sortable tbody');
