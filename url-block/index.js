@@ -9,4 +9,12 @@ setTimeout(() => {
     iframes.forEach(iframe => {
         iframe.style.display = 'none';
     });
+    const allElements = Array.from(document.querySelectorAll('*'));
+    allElements.forEach(x => {
+        if (x.id && (x.id.indexOf('ads') > -1)) {
+            x.style.display = 'none';
+        } else if (x.className.indexOf('ads') > -1) {
+            x.style.display = 'none';
+        }
+    });
 }, 1000);
