@@ -15,7 +15,7 @@ let icon = GO_ICON,
     blocked = {
         'aquabid': [ 'doubleclick.net' ]
     },
-    isEnabled = true;
+    isEnabled = false;
 
 const alwaysBlocked = [
     'demdex.net',
