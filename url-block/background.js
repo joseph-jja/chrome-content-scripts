@@ -30,7 +30,8 @@ const alwaysBlocked = [
     'bluekai.com',
     'tremorhub.com',
     'mathtag.com',
-    'letsmakeparty3.ga'
+    'letsmakeparty3.ga',
+    'advertserve.com'
 ];
 
 const allowedDetails = {};
