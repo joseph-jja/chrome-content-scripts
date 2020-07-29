@@ -10,12 +10,12 @@ const requests = chrome.webRequest,
 let icon = GO_ICON,
     activeTabsList = {},
     allowed = {
-        'facebook': [ 'fbcdn' ]
+        'facebook': ['fbcdn']
     },
     blocked = {
-        'aquabid': [ 'doubleclick.net' ]
+        'aquabid': ['doubleclick.net']
     },
-    isEnabled = false;
+    isEnabled = true;
 
 const alwaysBlocked = [
     'demdex.net',
@@ -28,7 +28,8 @@ const alwaysBlocked = [
     'scorecardresearch.com',
     'bluekai.com',
     'tremorhub.com',
-    'mathtag.com'
+    'mathtag.com',
+    'letsmakeparty3.ga'
 ];
 
 const allowedDetails = {};
@@ -94,100 +95,33 @@ function checkDetails(details) {
         return {
             cancel: false
         }
-    } 
-
-    // in that case if there is a frameId > 0 then it is an iframe
-    // so we are just denying them all
-    if (details.frameId && details.frameId > 0) {
-        //console.log(`Denying frameId: ${details.frameId}  requestedHost: ${requestedHost}`);
-        return {
-            cancel: true
-        };
     }
-    
+
     // get host and domainless host
     const pageUrlData = parseHostProtocol(details.initiator),
         requestedUrlData = parseHostProtocol(details.url);
-    
+
     const pageHost = pageUrlData.host,
         pageDomain = pageUrlData.domainlessHost,
         requestedHost = requestedUrlData.host,
         requestedDomain = requestedUrlData.domainlessHost,
         requestedFQDN = requestedUrlData.fqdnDomainHost,
         tabID = details.tabId;
-    
-    if (!allowedDetails[tabID]) {
-        allowedDetails[tabID] = {};
-    }
-    
-    if (pageHost && !allowedDetails[tabID][pageHost]) {
-        allowedDetails[tabID][pageHost] = {
-            blocked: {}, 
-            allowed: {} 
-        };
-    }
-    
-    // no page host, so this is the main initiator
-    // since we do not do iframes
-    if (!pageHost) {
-        //console.log(`Requested ${requestedHost}`); 
-        // first request?
-        return {
-            cancel: false
-        };
-    }
 
-    if (requestedHost && pageHost === requestedHost) {
-        return {
-            cancel: false
-        };        
-    }
-    
-    let stop = false;
-    
     if (alwaysBlocked.includes(requestedFQDN)) {
-        stop = true;
-    }
-    
-    if (!stop && requestedHost && pageDomain && requestedDomain) {
-        
-        const pagesAllowed = allowed[pageDomain], 
-              pagesBlocked = blocked[pageDomain];
-        if(pagesAllowed) {
-            for (const allowedHost of pagesAllowed) {
-                const allowedDomain = parseHostProtocol(allowedHost).domainlessHost;
-                if (allowedDomain === requestedDomain) {
-                    stop = false;
-                } 
-            }
-        }
-        if(pagesBlocked) {
-            for (const blockedHost of pagesBlocked) {
-                const blockedDomain = parseHostProtocol(blockedHost).domainlessHost;
-                if (blockedDomain === requestedDomain) {
-                    stop = true;
-                } 
-            }
+        return {
+            cancel: true
         }
     }
 
-    // data is either blocked or allowed
-    if (stop) {
-        //console.log(`Page request from domain ${pageHost} is BLOCKING requests to ${requestedHost}`);
-        if (!allowedDetails[details.tabId][pageHost].blocked[requestedHost]) {
-            allowedDetails[details.tabId][pageHost].blocked[requestedHost] = 0;
+    if (blocked[pageDomain] && blocked[pageDomain].includes(requestedFQDN)) {
+        return {
+            cancel: true
         }
-        allowedDetails[details.tabId][pageHost].blocked[requestedHost]++;
-    } else {
-        if (!allowedDetails[tabID][pageHost].allowed[requestedHost]) {
-            allowedDetails[tabID][pageHost].allowed[requestedHost] = 0;
-        }
-        allowedDetails[tabID][pageHost].allowed[requestedHost]++;
-        //console.log(`Page request from domain ${pageHost} is allowing request to ${requestedHost}`);
     }
 
     return {
-        cancel: stop
+        cancel: false
     };
 }
 

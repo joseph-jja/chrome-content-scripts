@@ -3,7 +3,7 @@ const hostname = window.location.host;
 //const workerPath = chrome.runtime.getURL('worker.js');
 //const workerThread = new Worker(workerPath);
 
-setTimeout(() => {
+/*setTimeout(() => {
 
     const iframes = Array.from(document.querySelectorAll('iframe'));
     iframes.forEach(iframe => {
@@ -17,4 +17,4 @@ setTimeout(() => {
             x.style.display = 'none';
         }
     });
-}, 1000);
+}, 1000);*/

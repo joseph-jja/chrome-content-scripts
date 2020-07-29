@@ -1,10 +1,10 @@
 {
     "name": "URL Blocker",
     "manifest_version": 2,
-    "version": "0.4.6",
+    "version": "0.5.0",
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
-        "exclude_matches": [ 
+        "exclude_matches": [
             "https://*.google.com/*",
             "https://*.gmail.com/*"
         ],
