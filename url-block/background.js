@@ -13,7 +13,8 @@ let icon = GO_ICON,
         'facebook': ['fbcdn']
     },
     blocked = {
-        'aquabid': ['doubleclick.net']
+        'aquabid': ['doubleclick.net'],
+        'slashdot': ['doubleclick.net']
     },
     isEnabled = true;
 
