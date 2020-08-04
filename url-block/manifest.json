@@ -1,7 +1,7 @@
 {
     "name": "URL Blocker",
     "manifest_version": 2,
-    "version": "0.5.4",
+    "version": "0.5.5",
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
         "exclude_matches": [
@@ -16,7 +16,7 @@
             "32": "images/go32.png"
         },
         "default_title": "URL Blocker",
-        "default_popup": "o['doubleclick.net']ptions.html"
+        "default_popup": "options.html"
     },
     "background": {
         "scripts": ["urlUtils.js", "background.js"]
