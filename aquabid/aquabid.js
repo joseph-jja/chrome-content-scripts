@@ -5,6 +5,10 @@ Array.from(document.querySelectorAll('table')).forEach(tbl => {
     tbl.width = '95%';
 });
 
+Array.from(document.getElementsByTagName('*')).forEach(ele => { 
+    ele.style.fontSize = '14pt'; 
+});
+
 var table = document.querySelector('.sortable tbody');
 if (!table) {
     let selectedCell;
