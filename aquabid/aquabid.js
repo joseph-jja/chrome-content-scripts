@@ -148,4 +148,8 @@ const timerID = setInterval(() => {
     if (counts > 20) {
         clearInterval(timerID);
     }
+    const ele = document.getElementById('IL_INSEARCH');
+    if (ele) {
+        ele.remove();
+    }
 }, 1000);
