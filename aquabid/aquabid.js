@@ -141,6 +141,11 @@ if (table) {
     };
 }
 
-setInterval(() => {
+let counts = 0;
+const timerID = setInterval(() => {
     Array.from(document.querySelectorAll('iframe')).forEach(iframe => { iframe.remove(); });
+    count++;
+    if (count > 20) {
+        clearInterval(timerID);
+    }
 }, 1000);
