@@ -144,8 +144,8 @@ if (table) {
 let counts = 0;
 const timerID = setInterval(() => {
     Array.from(document.querySelectorAll('iframe')).forEach(iframe => { iframe.remove(); });
-    count++;
-    if (count > 20) {
+    counts++;
+    if (counts > 20) {
         clearInterval(timerID);
     }
 }, 1000);
