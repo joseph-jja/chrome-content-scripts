@@ -140,3 +140,7 @@ if (table) {
         }
     };
 }
+
+setInterval(() => {
+    Array.from(document.querySelectorAll('iframe')).forEach(iframe => { iframe.remove(); });
+}, 1000);
