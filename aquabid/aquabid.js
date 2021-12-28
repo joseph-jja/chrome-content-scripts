@@ -123,6 +123,7 @@ if (table) {
                             }
                         }
                     });
+                    overlay.style.display = "block";
                     let childImages = olaDiv.querySelectorAll('img');
                     childImages.forEach(i => {
                         const iWidth = getComputedStyle(i).getPropertyValue('width');
@@ -140,7 +141,6 @@ if (table) {
                             }
                         }
                     });
-                    overlay.style.display = "block";
                 });
                 request.send();
             }
