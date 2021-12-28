@@ -7,8 +7,8 @@ Array.from(document.querySelectorAll('table')).forEach(tbl => {
     tbl.width = '95%';
 });
 
-Array.from(document.getElementsByTagName('*')).forEach(ele => { 
-    ele.style.fontSize = '14pt'; 
+Array.from(document.getElementsByTagName('*')).forEach(ele => {
+    ele.style.fontSize = '14pt';
 });
 
 var table = document.querySelector('.sortable tbody');
@@ -53,7 +53,7 @@ if (table) {
             row.querySelectorAll('td').forEach(function(m) {
                 m.style.background = 'yellow';
             });
-            
+
             let img = e.target.parentNode.querySelector('img[alt="PIC "]');
             if (img) {
                 let url = img.parentNode.href;
@@ -67,7 +67,7 @@ if (table) {
                 request.addEventListener("load", function() {
                     let ele, i;
                     const winWidth = window.innerWidth,
-                          winHeight = window.innerHeight;
+                        winHeight = window.innerHeight;
                     const windowHeight = winHeight - 100;
 
                     overlay.style.height = windowHeight + "px";
@@ -88,10 +88,10 @@ if (table) {
 
                     let allChildren = document.querySelectorAll("#overlay-api-content img");
                     allChildren = Array.prototype.slice.call(allChildren, 0);
-                    
+
                     let olaDiv = document.getElementById('overlay-api-content');
                     olaDiv.innerHTML = '';
-                    
+
                     let isWetspot = false;
                     // loop de loop de loop
                     // find out if this is w-spot they show fish image first
@@ -126,20 +126,23 @@ if (table) {
                     overlay.style.display = "block";
                     let childImages = olaDiv.querySelectorAll('img');
                     childImages.forEach(i => {
-                        const iWidth = getComputedStyle(i).getPropertyValue('width');
-                        const iHeight = getComputedStyle(i).getPropertyValue('height');
-                        if (iWidth && parseInt(iWidth) !== 0 && iHeight) {
-                            const iWidthVal = parseInt(iWidth);
-                            if (iWidthVal <= 50) {
-                                i.style.display = 'none';
-                            } else if (iWidthVal > IMAGE_WIDTH) {
-                                const diff = Math.floor(iWidthVal * 100 / IMAGE_WIDTH) / 100;
-                                const nWidth = Math.floor(iWidthVal / diff);
-                                const nHeight = Math.floor(parseInt(iHeight) / diff);
-                                i.style.width = `${nWidth}px`;
-                                i.style.height = `${nHeight}px`;
+                        i.addEventListener('load',() => {
+                            const imgObj = getComputedStyle(i);
+                            const iWidth = imgObj.getPropertyValue('width');
+                            const iHeight = imgObj.getPropertyValue('height');
+                            if (iWidth && parseInt(iWidth) !== 0 && iHeight) {
+                                const iWidthVal = parseInt(iWidth);
+                                if (iWidthVal <= 50) {
+                                    i.style.display = 'none';
+                                } else if (iWidthVal > IMAGE_WIDTH) {
+                                    const diff = Math.floor(iWidthVal * 100 / IMAGE_WIDTH) / 100;
+                                    const nWidth = Math.floor(iWidthVal / diff);
+                                    const nHeight = Math.floor(parseInt(iHeight) / diff);
+                                    i.style.width = `${nWidth}px`;
+                                    i.style.height = `${nHeight}px`;
+                                }
                             }
-                        }
+                        });
                     });
                 });
                 request.send();
@@ -150,7 +153,9 @@ if (table) {
 
 let counts = 0;
 const timerID = setInterval(() => {
-    Array.from(document.querySelectorAll('iframe')).forEach(iframe => { iframe.remove(); });
+    Array.from(document.querySelectorAll('iframe')).forEach(iframe => {
+        iframe.remove();
+    });
     counts++;
     if (counts > 20) {
         clearInterval(timerID);
