@@ -1,5 +1,7 @@
 // search page is slightly different it does not put sortable on table
 
+const IMAGE_WIDTH = 750;
+
 // change width of all the tables for wider screens
 Array.from(document.querySelectorAll('table')).forEach(tbl => {
     tbl.width = '95%';
@@ -69,7 +71,7 @@ if (table) {
                     const windowHeight = winHeight - 100;
 
                     overlay.style.height = windowHeight + "px";
-                    overlay.style.width = "750px";
+                    overlay.style.width = `${IMAGE_WIDTH}px`;
                     overlay.style.overflow = "hidden";
                     overlay.style.position = "absolute";
                     overlay.style.top = (50 + (+window.pageYOffset)) + "px";
@@ -123,13 +125,18 @@ if (table) {
                     });
                     let childImages = olaDiv.querySelectorAll('img');
                     childImages.forEach(i => {
-                        let iWidth = getComputedStyle(i).getPropertyValue('width');
-                        if (iWidth && parseInt(iWidth) !== 0 ) {
-                            if (parseInt(iWidth) <= 50) {
+                        const iWidth = getComputedStyle(i).getPropertyValue('width');
+                        const iHeight = getComputedStyle(i).getPropertyValue('height');
+                        if (iWidth && parseInt(iWidth) !== 0 && iHeight) {
+                            const iWidthVal = parseInt(iWidth);
+                            if (iWidthVal <= 50) {
                                 i.style.display = 'none';
-                            } else {
-                                //i.style.width = '250px';
-                                //i.style.display = 'block';
+                            } else if (iWidthVal > IMAGE_WIDTH) {
+                                const diff = Math.floor(iWidthVal * 100 / IMAGE_WIDTH) / 100;
+                                const nWidth = Math.floor(iWidthVal / diff);
+                                const nHeight = Math.floor(parseInt(iHeight) / diff);
+                                i.style.width = `${nWidth}px`;
+                                i.style.height = `${nHeight}px`;
                             }
                         }
                     });
