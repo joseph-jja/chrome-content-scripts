@@ -49,12 +49,16 @@ if (table) {
     table.onclick = function(e) {
 
         if (e.target.nodeName.toLowerCase() === 'td') {
-            let row = e.target.parentNode;
+            const target = e.target, 
+                row = target.parentNode;
             row.querySelectorAll('td').forEach(function(m) {
                 m.style.background = 'yellow';
             });
 
-            let img = e.target.parentNode.querySelector('img[alt="PIC "]');
+            let img = row.querySelector('img[alt="PIC "]');
+            if (!img) {
+                img = row.querySelectorAll('td')[0];
+            }
             if (img) {
                 let url = img.parentNode.href;
                 if (!url) {
