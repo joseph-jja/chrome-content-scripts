@@ -3,6 +3,14 @@ const hostname = window.location.host;
 //const workerPath = chrome.runtime.getURL('worker.js');
 //const workerThread = new Worker(workerPath);
 
+function checkID(eleObj, value) {
+    return (eleObj.id && eleObj.id.indexOf(value) > -1);
+}
+
+function checkClass(eleObj, value) {
+    return (eleObj.className && typeof eleObj.className === 'string' && eleObj.id.indexOf(value) > -1);
+}
+
 let counts = 0;
 const timerID = setInterval(() => {
     Array.from(document.querySelectorAll('iframe')).forEach(iframe => { 
@@ -17,11 +25,11 @@ const timerID = setInterval(() => {
         ele.remove();
     }
     const allElements = Array.from(document.querySelectorAll('*'));
-    allElements.forEach(ele => {
-        if (ele.id && (ele.id.indexOf('ads') > -1) || ele.className.indexOf('ads') > -1) {
-            ele.style.display = 'none';
-        } else if (ele.id && (ele.id.indexOf('avert') > -1) || ele.className.indexOf('avert') > -1) {
-            ele.style.display = 'none';
+    allElements.forEach(eleObj => {
+        if (checkID(eleObj, 'ads') || checkClass(eleObj, 'ads')) {
+            eleObj.style.display = 'none';
+        } else if (checkID(eleObj, 'avert') || checkClass(eleObj, 'avert')) {
+            eleObj.style.display = 'none';
         }
     });    
 }, 1000);
