@@ -1,17 +1,17 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "aquabid",
-    "version": "0.4.4",
+    "version": "1.0.0",
     "update_url": "https://raw.githubusercontent.com/joseph-jja/chrome-content-scripts/master/aquabid/update.xml",
 
-    "browser_action": {
+    "action": {
         "default_icon": {
             "32": "aquabid_logo.png"
         }
     },
     
     "background": {
-        "scripts": ["background.js"]
+        "service_worker": "background.js"
      },
 
     "content_scripts": [{
@@ -25,8 +25,10 @@
     "permissions": [
         "tabs",
         "webNavigation",
-        "webRequest",
-        "webRequestBlocking",
+        "webRequest"
+    ],
+
+    "host_permissions": [
         "*://*.aquabid.com/*"
     ]
 }

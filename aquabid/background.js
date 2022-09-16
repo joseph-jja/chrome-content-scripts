@@ -1,4 +1,4 @@
-const requests = chrome.webRequest,
+/*const requests = chrome.webRequest,
     navRequests = chrome.webNavigation,
     URL_FILTER = {
         urls: ['<all_urls>']
@@ -25,4 +25,5 @@ navRequests.onCreatedNavigationTarget.addListener((details) => {
 }, URL_FILTER);
 
 requests.onBeforeRequest.addListener(checkDetails, URL_FILTER, ['blocking']);
+*/
 
