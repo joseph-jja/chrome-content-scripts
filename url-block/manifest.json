@@ -1,7 +1,7 @@
 {
     "name": "URL Blocker",
-    "manifest_version": 2,
-    "version": "0.6.1",
+    "manifest_version": 3,
+    "version": "1.0.0",
     "content_scripts": [{
         "matches": ["http://*/*", "https://*/*"],
         "exclude_matches": [
@@ -11,23 +11,27 @@
         "all_frames": true,
         "js": ["index.js"]
     }],
-    "browser_action": {
-        "default_icon": {
-            "32": "images/go32.png"
-        },
-        "default_title": "URL Blocker",
-        "default_popup": "options.html"
-    },
     "background": {
-        "scripts": ["urlUtils.js", "background.js"]
+        "service_worker": "background.js"
     },
+    "declarative_net_request" : {
+        "rule_resources" : [{
+          "id": "ruleset_1",
+          "enabled": true,
+          "path": "rules/ruleset_1.json"
+        }]
+      },
     "permissions": [
         "tabs",
         "webNavigation",
         "webRequest",
-        "webRequestBlocking",
-        "<all_urls>",
-        "storage"
+        "storage",
+        "declarativeNetRequest",
+        "declarativeNetRequestWithHostAccess",
+        "declarativeNetRequestFeedback"
+    ],
+    "host_permissions": [
+        "*://*/*"
     ],
     "options_page": "options.html",
     "update_url": "https://raw.githubusercontent.com/joseph-jja/chrome-content-scripts/master/url-block/update.xml"
