@@ -4,7 +4,7 @@ const hostname = window.location.host;
 //const workerThread = new Worker(workerPath);
 
 function checkID(eleObj, value) {
-    return (eleObj.id && eleObj.id.indexOf(value) > -1);
+    return (eleObj && eleObj.id && eleObj.id.indexOf(value) > -1);
 }
 
 function checkClass(eleObj, value) {
