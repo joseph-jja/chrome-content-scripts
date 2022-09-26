@@ -4,11 +4,11 @@ const hostname = window.location.host;
 //const workerThread = new Worker(workerPath);
 
 function checkID(eleObj, value) {
-    return (eleObj && eleObj.id && eleObj.id.indexOf(value) > -1);
+    return (eleObj && eleObj.id && eleObj.id.indexOf && eleObj.id.indexOf(value) > -1);
 }
 
 function checkClass(eleObj, value) {
-    return (eleObj.className && typeof eleObj.className === 'string' && eleObj.id.indexOf(value) > -1);
+    return (typeof eleObj !== 'undefined' && eleObj.className && typeof eleObj.className === 'string' && eleObj.id.indexOf && eleObj.id.indexOf(value) > -1);
 }
 
 let counts = 0;
