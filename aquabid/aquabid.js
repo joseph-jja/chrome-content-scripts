@@ -169,6 +169,6 @@ const timerID = setInterval(() => {
     }
 }, 1000);
 
-chrome.tabs.onUpdated.addListener((tabId, status) => {
-    console.log('Tab Status: ', status);
-});
+//chrome.tabs.onUpdated.addListener((tabId, status) => {
+//    console.log('Tab Status: ', status);
+//});
