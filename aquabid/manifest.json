@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "aquabid",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "update_url": "https://raw.githubusercontent.com/joseph-jja/chrome-content-scripts/master/aquabid/update.xml",
 
     "action": {
@@ -29,7 +29,6 @@
     ],
 
     "host_permissions": [
-        "https://www.aquabid.com/*",
-        "https://aquabid.com/*"
+        "*://*.aquabid.com/*"
     ]
 }
