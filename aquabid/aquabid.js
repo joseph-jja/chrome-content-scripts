@@ -1,6 +1,6 @@
 // search page is slightly different it does not put sortable on table
 const IMAGE_WIDTH = 750;
-setTimeout(() => {
+//setTimeout(() => {
     // change width of all the tables for wider screens
     Array.from(document.querySelectorAll('table')).forEach(tbl => {
         tbl.width = '95%';
@@ -9,7 +9,7 @@ setTimeout(() => {
     Array.from(document.getElementsByTagName('*')).forEach(ele => {
         ele.style.fontSize = '14pt';
     });
-}, 1000);
+//}, 1000);
 
 
 var table = document.querySelector('.sortable tbody');
