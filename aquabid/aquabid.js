@@ -1,5 +1,5 @@
 // search page is slightly different it does not put sortable on table
-
+window.addEventListener('DOMContentLoaded', () => {
 const IMAGE_WIDTH = 750;
 
 // change width of all the tables for wider screens
@@ -169,3 +169,4 @@ const timerID = setInterval(() => {
         ele.remove();
     }
 }, 1000);
+});
