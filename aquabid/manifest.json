@@ -29,6 +29,7 @@
     ],
 
     "host_permissions": [
-        "*://*.aquabid.com/*"
+        "https://www.aquabid.com/*",
+        "https://aquabid.com/*"
     ]
 }
