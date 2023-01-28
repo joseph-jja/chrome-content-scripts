@@ -23,9 +23,7 @@
     }],
 
     "permissions": [
-        "tabs",
-        "webNavigation",
-        "webRequest"
+        "tabs"
     ],
 
     "host_permissions": [
