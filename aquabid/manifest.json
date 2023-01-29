@@ -15,7 +15,7 @@
      },
 
     "content_scripts": [{
-        "matches": ["http://www.aquabid.com/*", "https://www.aquabid.com/*"],
+        "matches": ["https://aquabid.com/*", "https://www.aquabid.com/*"],
         "all_frames": true,
         "css": ["styles.css"],
         "js": ["aquabid.js"],
