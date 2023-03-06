@@ -1,11 +1,11 @@
-// const requests = chrome.webRequest,
+const requests = chrome.webRequest,
 //     navRequests = chrome.webNavigation,
 //     GO_ICON = 'images/go32.png',
 //     STOP_ICON = 'images/stop32.png',
-//     URL_FILTER = {
-//         urls: ['<all_urls>']
-//     },
-//     DEFAULT_TAB_URL = 'chrome://newtab/';
+     URL_FILTER = {
+         urls: ['<all_urls>']
+     },
+     DEFAULT_TAB_URL = 'chrome://newtab/';
 
 // let icon = GO_ICON,
 //     activeTabsList = {},
@@ -84,55 +84,19 @@
 //     delete allowedDetails[tabID];
 // });
 
-// function checkDetails(details) {
+function checkDetails(details) {
 
-//     if (!isEnabled) {
-//         return {
-//             cancel: false
-//         }
-//     }
+    console.log(details.url, details.responseHeaders);
 
-//     // about blank allow
-//     if (details.initiator === 'about:blank' || details.url === 'about:blank') {
-//         return {
-//             cancel: false
-//         }
-//     }
-
-//     // get host and domainless host
-//     const pageUrlData = parseHostProtocol(details.initiator),
-//         requestedUrlData = parseHostProtocol(details.url);
-
-//     const pageHost = pageUrlData.host,
-//         pageDomain = pageUrlData.domainlessHost,
-//         requestedHost = requestedUrlData.host,
-//         requestedDomain = requestedUrlData.domainlessHost,
-//         requestedFQDN = requestedUrlData.fqdnDomainHost,
-//         tabID = details.tabId;
-
-//     if (alwaysBlocked.includes(requestedFQDN)) {
-//         return {
-//             cancel: true
-//         }
-//     }
-
-//     if (blocked[pageDomain] && blocked[pageDomain].includes(requestedFQDN)) {
-//         return {
-//             cancel: true
-//         }
-//     }
-
-//     return {
-//         cancel: false
-//     };
-// }
+    return undefined;
+}
 
 // navRequests.onBeforeNavigate.addListener(checkDetails);
 // navRequests.onCreatedNavigationTarget.addListener((details) => {
 //     return checkDetails(details);
 // }, URL_FILTER);
 
-// requests.onBeforeRequest.addListener(checkDetails, URL_FILTER, ['blocking']);
+requests.onHeadersReceived.addListener(checkDetails, URL_FILTER, ['responseHeaders', 'extraHeaders']);
 
 // chrome.browserAction.setTitle({
 //     'title': 'URL Blocker: Enabled'
