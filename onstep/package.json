@@ -1,0 +1,36 @@
+{
+  "name": "onstep",
+  "version": "1.0.0",
+  "description": "OnStep Desktop UI",
+  "main": "js/server.js",
+  "type": "module",
+  "imports": {
+    "#server/*": "./js/*",
+    "#tests/*": "./tests/*"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "npx webpack --config config/webpack.js",
+    "beautify": "find js/ -type f -name \"*.js\" -exec npx js-beautify -r {} \\;"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "35.0.0",
+    "express": "4.21.2",
+    "react": "19.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.26.9",
+    "@babel/preset-env": "7.26.9",
+    "@babel/preset-react": "7.26.3",
+    "babel-loader": "10.0.0",
+    "css-loader": "7.1.2",
+    "js-beautify": "1.15.4",
+    "react-dom": "19.0.0",
+    "style-loader": "4.0.0",
+    "webpack": "^5.98.0",
+    "webpack-cli": "6.0.1"
+  }
+}
