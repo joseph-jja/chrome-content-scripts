@@ -19,6 +19,5 @@ button {
     border: 2px solid red;
 }
 .errorField {
-    border: 1px solid red;
     display: block;
 }

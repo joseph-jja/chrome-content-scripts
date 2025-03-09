@@ -1,7 +1,7 @@
 import React from 'react';
 
-import CustomButton from 'js/components/CustomButton.jsx';
-import Container from 'js/components/Container.jsx';
+import CustomButton from 'js/components/base/CustomButton.jsx';
+import Container from 'js/components/base/Container.jsx';
 import Setup from 'js/tabs/Setup.jsx';
 
 export default function MainApp() {
