@@ -8,7 +8,7 @@ const { useState } = React;
 
 const HOST_PORT_RE = /\d+\.\d+\.\d+\.\d+\:\d*/;
 
-export default function HostConnection() {
+export default function DateTime() {
     const [hostPort, setHostPort] = useState(null);
     const [hostPortError, setHostPortError] = useState('');
 
@@ -36,7 +36,6 @@ export default function HostConnection() {
                 <br/>
                 <CustomButton id="host-setup" 
                     onButtonClick={sendConnectCommand}>Connect</CustomButton>
-
             </div>
         </>
     );
