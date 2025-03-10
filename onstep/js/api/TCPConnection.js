@@ -2,7 +2,7 @@ import {
     Socket
 } from 'node:net';
 
-export default class WifiConnection {
+export default class TCPConnection {
 
     constructor() {
         this.client = new Socket();
