@@ -2,7 +2,7 @@ import {
     createConnection
 } from 'node:net';
 
-export default class WifiConnection() {
+export default class WifiConnection {
 
     constructor() {
         this.client = undefined;

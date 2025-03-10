@@ -6,7 +6,7 @@ import {
 } from 'electron';
 import express from 'express';
 
-//import WifiConnection from '#server/api/WifiConnection.js';
+import WifiConnection from '#server/api/WifiConnection.js';
 import { LISTEN_PORT } from '#server/config.js';
 
 const basedir = process.cwd();
