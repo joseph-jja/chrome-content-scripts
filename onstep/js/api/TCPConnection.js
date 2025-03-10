@@ -6,6 +6,7 @@ export default class TCPConnection {
 
     constructor() {
         this.client = new Socket();
+        this.data = [];
     }
 
     connect(host, port) {
@@ -21,18 +22,21 @@ export default class TCPConnection {
             this.client.on('error', (err) => {
                 reject(err);
             });
+            
+            this.client.on('data', (data) => {
+                this.data.push(data.tostring());
+            });
         });
     }
 
     sendCommand(command) {
         return new Promise((resolve, reject) => {
+            this.data = [];
             if (!this.client) {
                 return reject('Not connected!');
             }
-
-            this.client.once('data', (data) => {
-
-                resolve(data);
+            this.once('finish', () => {
+                resolve(this.data.concat(''));
             });
             this.client.write(command);
         });
@@ -43,6 +47,8 @@ export default class TCPConnection {
             if (!this.client) {
                 return reject('Not connected!');
             }
+            this.client.off('error');
+            this.client.off('data');
             this.client.end();
         });
     }
