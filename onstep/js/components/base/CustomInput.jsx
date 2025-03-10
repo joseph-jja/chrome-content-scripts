@@ -8,14 +8,15 @@ export default function CustomInput(props) {
         name,
         inputValue = '',
         onInputChange,
-        labelText = ''
+        labelText = '',
+        size
     } = props;
 
     return (
         <>
             <label for={name}>{labelText}:&nbsp;</label>  
             <input type={type} id={id} 
-                name={name}
+                name={name} size={size}
                 onChange={onInputChange} value={inputValue}/>
         </>
     );
