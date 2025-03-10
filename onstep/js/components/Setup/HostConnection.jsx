@@ -30,7 +30,7 @@ export default function HostConnection() {
         <>
             <div>
                 <CustomInput type="text" labelText="Enter Host:Port (xxx.xxx.xxx.xxx:yyyy)"
-                    id="host-port" name="host_port" inputValue={hostPort}
+                    id="host-port" name="host_port" inputValue={hostPort} size="22"
                     onInputChange={setHostPortField}/>
                 <ErrorMessage>{hostPortError}</ErrorMessage>
                 <br/>

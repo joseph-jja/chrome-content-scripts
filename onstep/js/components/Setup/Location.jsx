@@ -57,17 +57,17 @@ export default function Location() {
     return (
         <>
             <div>
-                <CustomInput type="text" labelText="Set Latitude Hour"
+                <CustomInput type="text" labelText="Set Latitude Hour" size="4"
                     id="latitudeHour" name="latitudeHour" inputValue={latitudeHour}
                     onInputChange={setField}/>
-                <CustomInput type="text" labelText="Minute"
+                <CustomInput type="text" labelText="Minute" size="4"
                     id="latitudeMinute" name="latitudeMinute" inputValue={latitudeMinute}
                     onInputChange={setField}/>
                 <ErrorMessage>{latitudeError}</ErrorMessage>
-                <CustomInput type="text" labelText="Set Longitude Hour"
+                <CustomInput type="text" labelText="Set Longitude Hour" size="4"
                     id="longitudeHour" name="longitudeHour" inputValue={longitudeHour}
                     onInputChange={setField}/>
-                <CustomInput type="text" labelText="Minute"
+                <CustomInput type="text" labelText="Minute" size="4"
                     id="longitudeMinute" name="longitudeMinute" inputValue={longitudeMinute}
                     onInputChange={setField}/>
                 <ErrorMessage>{longitudeError}</ErrorMessage>
