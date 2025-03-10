@@ -17,6 +17,10 @@ export default class TCPConnection {
             this.client.connect(port, host, () => {
                 return resolve('Success');
             });
+            
+            this.client.on('error', (err) => {
+                reject(err);
+            });
         });
     }
 
@@ -25,13 +29,9 @@ export default class TCPConnection {
             if (!this.client) {
                 return reject('Not connected!');
             }
-            this.client.once('error', (err) => {
-                this.client.off('data');
-                reject(err);
-            });
 
             this.client.once('data', (data) => {
-                this.client.off('error');
+
                 resolve(data);
             });
             this.client.write(command);
