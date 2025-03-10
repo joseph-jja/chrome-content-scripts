@@ -8,27 +8,42 @@ const { useState } = React;
 
 // TODO figure out how this would work cross platform
 export default function Location() {
-    const [latitude, setLatitude] = useState(null);
-    const [longitude, setLongitude] = useState(null);
+    const [latitudeHour, setLatitudeHour] = useState(null);
+    const [latitudeMinute, setLatitudeMinute] = useState(null);
+    const [longitudeHour, setLongitudeHour] = useState(null);
+    const [longitudeMinute, setLongitudeMinute] = useState(null);
     const [latitudeError, setLatitudeError] = useState('');    
     const [longitudeError, setLongitudeError] = useState('');
     
-    const setLatitudeField = (event) => {
-        setLatitude(event?.target?.value);
-    }
-    const setLongitudeField = (event) => {
-        setLongitude(event?.target?.value);
+    const setField = (event) => {
+        const fieldName = event?.target?.name;
+        if (!fieldName) {
+            return;
+        }
+        const value = event?.target?.value;
+        if (!value) {
+            return;
+        }
+        if (fieldName === latitudeHour) {
+            setLatitudeHour(value);
+        } else if (fieldName === latitudeMinute) {
+            setLatitudeMinute(value);
+        } else if (fieldName === longitudeHour) {
+            setLongitudeHour(value);
+        } else if (fieldName === longitudeMinute) {
+            setLongitudeMinute(value);
+        }
     }
 
     const sendSaveCommand = () => {
         let haveLat = false, haveLong = false;
-        if (latitude && latitude.length > 0) {
+        if (latitudeHour && latitudeHour.length > 0 && latitudeMinute && latitudeMinute.length > 0) {
             setLatitudeError('');
             haveLat = true;
         } else {
             setLatitudeError('Invalid latitude entered!');
         }
-        if (longitude && longitude.length > 0) {
+        if (longitudeHour && longitudeHour.length > 0 && longitudeMinute && longitudeMinute.length > 0) {
             setLongitudeError('');
             haveLong = true;
         } else {
@@ -42,13 +57,19 @@ export default function Location() {
     return (
         <>
             <div>
-                <CustomInput type="text" labelText="Set Latitude"
-                    id="latitude" name="latitude" inputValue={latitude}
-                    onInputChange={setLatitudeField}/>
+                <CustomInput type="text" labelText="Set Latitude Hour"
+                    id="latitudeHour" name="latitudeHour" inputValue={latitudeHour}
+                    onInputChange={setField}/>
+                <CustomInput type="text" labelText="Minute"
+                    id="latitudeMinute" name="latitudeMinute" inputValue={latitudeMinute}
+                    onInputChange={setField}/>
                 <ErrorMessage>{latitudeError}</ErrorMessage>
-                <CustomInput type="text" labelText="Set Longitude"
-                    id="host-port" name="host_port" inputValue={longitude}
-                    onInputChange={setLongitudeField}/>
+                <CustomInput type="text" labelText="Set Longitude Hour"
+                    id="longitudeHour" name="longitudeHour" inputValue={longitudeHour}
+                    onInputChange={setField}/>
+                <CustomInput type="text" labelText="Minute"
+                    id="longitudeMinute" name="longitudeMinute" inputValue={longitudeMinute}
+                    onInputChange={setField}/>
                 <ErrorMessage>{longitudeError}</ErrorMessage>
                 <br/>
                 <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Update</CustomButton>
