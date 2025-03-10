@@ -13,7 +13,7 @@ export default function CustomInput(props) {
 
     return (
         <>
-            <label>{labelText}:&nbsp;</label>  
+            <label for={name}>{labelText}:&nbsp;</label>  
             <input type={type} id={id} 
                 name={name}
                 onChange={onInputChange} value={inputValue}/>
