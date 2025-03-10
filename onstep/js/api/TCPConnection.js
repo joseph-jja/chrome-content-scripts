@@ -1,12 +1,14 @@
 import {
     Socket
 } from 'node:net';
+import { EventEmitter } from 'node:events';
 
-export default class TCPConnection {
+export default class TCPConnection extends EventEmitter {
 
     constructor() {
         this.client = new Socket();
         this.data = [];
+        this.isConnected = false;
     }
 
     connect(host, port) {
@@ -16,6 +18,7 @@ export default class TCPConnection {
             }
            
             this.client.connect(port, host, () => {
+                this.isConnected = true;
                 return resolve('Success');
             });
             
@@ -23,8 +26,12 @@ export default class TCPConnection {
                 reject(err);
             });
             
-            this.client.on('data', (data) => {
-                this.data.push(data.tostring());
+            this.client.on('data', (msg) => {
+                const results = msg.toString()
+                this.data.push(results);
+                if (results.includes('#')) {
+                    this.emit('readEnd');
+                }
             });
         });
     }
@@ -35,7 +42,7 @@ export default class TCPConnection {
             if (!this.client) {
                 return reject('Not connected!');
             }
-            this.once('finish', () => {
+            this.once('readEnd', () => {
                 resolve(this.data.concat(''));
             });
             this.client.write(command);
@@ -50,6 +57,7 @@ export default class TCPConnection {
             this.client.off('error');
             this.client.off('data');
             this.client.end();
+            this.isConnected = false;
         });
     }
 }

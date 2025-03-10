@@ -58,6 +58,9 @@ ipcMain.on('close', () => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
+        if (Connection.isConnected) {
+            Connection.disconnect();
+        }
         app.quit();
     }
 });
@@ -80,7 +83,19 @@ server.get('/setup', (req, res) => {
 });
 
 server.get('/command', (req, res) => {
-    res.send('Hello World!');
+    const command = req.query?.command;
+    if (Connection.isConnected && command) {
+        Connection.connect(host, port).then(resp => {
+            console.log('Success to connect');
+            res.send('Connected ' + resp);        
+        }).catch(e => {        
+            console.log('Failed to connect');
+            res.send('Connection failed ' + e);
+        });
+        return;
+        return;
+    }
+    res.send('Not connected or no command sent!');
 });
 
 server.listen(LISTEN_PORT, () => {
