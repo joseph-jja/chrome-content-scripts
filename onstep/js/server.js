@@ -38,7 +38,7 @@ const createWindow = () => {
         win = null;
     });
 
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
@@ -63,7 +63,20 @@ app.on('window-all-closed', () => {
 });
 
 server.get('/setup', (req, res) => {
-    res.send('pretend connected');
+    const hostPort = req.query?.command;
+    if (hostPort) {
+        const [host, port] = hostPort.split(':');
+        console.log('Trying to connect');
+        /*Connection.connect(host, port).then(resp => {
+            console.log('Success to connect');
+            res.send('Connected ' + resp);        
+        }).catch(e => {        
+            console.log('Failed to connect');
+            res.send('Connection failed ' + e);
+        });
+        return;*/    
+    }
+    res.send(`Connection failed, invalid host and port values ${hostPort}`);
 });
 
 
