@@ -6,14 +6,14 @@ import {
 } from 'electron';
 import express from 'express';
 
-import WifiConnection from '#server/api/WifiConnection.js';
+import TCPConnection from '#server/api/TCPConnection.js';
 import { LISTEN_PORT } from '#server/config.js';
 
 const basedir = process.cwd();
 
 const server = express();
 
-const Connection = new WifiConnection();
+const Connection = new TCPConnection();
 
 const menu = Menu.buildFromTemplate([]);
 Menu.setApplicationMenu(menu)
@@ -67,18 +67,17 @@ server.get('/setup', (req, res) => {
     if (hostPort) {
         const [host, port] = hostPort.split(':');
         console.log('Trying to connect');
-        /*Connection.connect(host, port).then(resp => {
+        Connection.connect(host, port).then(resp => {
             console.log('Success to connect');
             res.send('Connected ' + resp);        
         }).catch(e => {        
             console.log('Failed to connect');
             res.send('Connection failed ' + e);
         });
-        return;*/    
+        return;  
     }
     res.send(`Connection failed, invalid host and port values ${hostPort}`);
 });
-
 
 server.get('/command', (req, res) => {
     res.send('Hello World!');
