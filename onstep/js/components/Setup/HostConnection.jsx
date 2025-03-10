@@ -3,6 +3,7 @@ import React from 'react';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
+import { setupConnection } from 'js/api/request.js';
 
 const { useState } = React;
 
@@ -21,6 +22,11 @@ export default function HostConnection() {
             setHostPortError('');
             // now we need to call fetch
             // and send to server
+            setupConnection(hostPort).then(data => {
+                setHostPortError(data);    
+            }).catch(e => {
+                setHostPortError(e);
+            });
         } else {
             setHostPortError('Invalid host and port entered!');
         }

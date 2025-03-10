@@ -13,6 +13,8 @@ const basedir = process.cwd();
 
 const server = express();
 
+const Connection = new WifiConnection();
+
 const menu = Menu.buildFromTemplate([]);
 Menu.setApplicationMenu(menu)
 
@@ -36,7 +38,7 @@ const createWindow = () => {
         win = null;
     });
 
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
@@ -61,7 +63,7 @@ app.on('window-all-closed', () => {
 });
 
 server.get('/setup', (req, res) => {
-    res.send('!');
+    res.send('pretend connected');
 });
 
 
