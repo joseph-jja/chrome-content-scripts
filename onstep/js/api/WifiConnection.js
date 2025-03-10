@@ -5,7 +5,7 @@ import {
 export default class WifiConnection {
 
     constructor() {
-        this.client = undefined;
+        this.client = new Socket();
     }
 
     connect(host, port) {
@@ -13,7 +13,7 @@ export default class WifiConnection {
             if (!host || !port) {
                 return reject('Invalid host and or port!');
             }
-            this.client = new Socket();
+           
             this.client.connect(port, host, () => {
                 return resolve('Success');
             });
