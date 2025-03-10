@@ -1,5 +1,5 @@
 import {
-    createConnection
+    Socket
 } from 'node:net';
 
 export default class WifiConnection {
@@ -13,10 +13,8 @@ export default class WifiConnection {
             if (!host || !port) {
                 return reject('Invalid host and or port!');
             }
-            this.client = createConnection({
-                host: host,
-                port: port
-            }, () => {
+            this.client = new Socket();
+            this.client.connect(port, host, () => {
                 return resolve('Success');
             });
         });
