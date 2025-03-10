@@ -1,6 +1,8 @@
-import { createConnection } from 'node:net';
+import {
+    createConnection
+} from 'node:net';
 
-export class WifiConnection() {
+export default class WifiConnection() {
 
     constructor() {
         this.client = undefined;
@@ -34,7 +36,7 @@ export class WifiConnection() {
                 this.client.off('error');
                 resolve(data);
             });
-		    this.client.write(command);
+            this.client.write(command);
         });
     }
 

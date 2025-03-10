@@ -6,11 +6,12 @@ import {
 } from 'electron';
 import express from 'express';
 
+//import WifiConnection from '#server/api/WifiConnection.js';
+import { LISTEN_PORT } from '#server/config.js';
+
 const basedir = process.cwd();
 
 const server = express();
-
-const SERVER_PORT = 10025;
 
 const menu = Menu.buildFromTemplate([]);
 Menu.setApplicationMenu(menu)
@@ -68,6 +69,6 @@ server.get('/command', (req, res) => {
     res.send('Hello World!');
 });
 
-server.listen(SERVER_PORT, () => {
-    console.log(`Example app listening on port ${SERVER_PORT}`);
+server.listen(LISTEN_PORT, () => {
+    console.log(`Example app listening on port ${LISTEN_PORT}`);
 });
