@@ -24,13 +24,13 @@ export default function Location() {
         if (!value) {
             return;
         }
-        if (fieldName === latitudeHour) {
+        if (fieldName === 'latitudeHour') {
             setLatitudeHour(value);
-        } else if (fieldName === latitudeMinute) {
+        } else if (fieldName === 'latitudeMinute') {
             setLatitudeMinute(value);
-        } else if (fieldName === longitudeHour) {
+        } else if (fieldName === 'longitudeHour') {
             setLongitudeHour(value);
-        } else if (fieldName === longitudeMinute) {
+        } else if (fieldName === 'longitudeMinute') {
             setLongitudeMinute(value);
         }
     }
