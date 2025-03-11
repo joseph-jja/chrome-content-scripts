@@ -6,7 +6,7 @@ import { EventEmitter } from 'node:events';
 export default class SocketConnection extends EventEmitter {
 
     constructor() {
-    super();
+        super();
         this.client = new Socket();
         this.data = [];
         this.isConnected = false;
@@ -43,8 +43,9 @@ export default class SocketConnection extends EventEmitter {
             if (!this.client) {
                 return reject('Not connected!');
             }
+            
             this.once('readEnd', () => {
-                resolve(this.data.concat(''));
+                resolve(this.data.join(''));
             });
             this.client.write(command);
         });
@@ -55,8 +56,8 @@ export default class SocketConnection extends EventEmitter {
             if (!this.client) {
                 return reject('Not connected!');
             }
-            this.client.off('error');
-            this.client.off('data');
+            this.client.removeAllListeners('error');
+            this.client.removeAllListeners('data');
             this.client.end();
             this.isConnected = false;
         });
