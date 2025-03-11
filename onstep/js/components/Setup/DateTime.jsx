@@ -10,7 +10,7 @@ const formatDate = (dateIn = new Date()) => {
     const month = `${dateIn.getMonth() + 1}`;
     const day = `${dateIn.getDay()}`;    
     const year = `${dateIn.getFullYear()}`;
-    return `${month.padStart(2, '0')}/${day.padStart(2, '0')}/${year.substring(0, 2)}`;
+    return `${month.padStart(2, '0')}/${day.padStart(2, '0')}/${year.substring(2)}`;
 };
 
 const formatTime = (dateIn = new Date()) => {
