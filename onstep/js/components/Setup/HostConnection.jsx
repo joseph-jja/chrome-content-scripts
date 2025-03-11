@@ -3,7 +3,10 @@ import React from 'react';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
-import { setupConnection } from 'js/api/request.js';
+import {
+    setupConnection,
+    teardownConnection
+} from 'js/api/request.js';
 
 const { useState } = React;
 
@@ -32,6 +35,14 @@ export default function HostConnection() {
         }
     }
     
+    const sendDisconnectCommand = () => {
+        teardownConnection().then(data => {
+            setHostPortError(data);    
+        }).catch(e => {
+            setHostPortError(e);
+        });
+    }
+        
     return (
         <>
             <div>
@@ -40,9 +51,10 @@ export default function HostConnection() {
                     onInputChange={setHostPortField}/>
                 <ErrorMessage>{hostPortError}</ErrorMessage>
                 <br/>
-                <CustomButton id="host-setup" 
+                <CustomButton id="host-connect" 
                     onButtonClick={sendConnectCommand}>Connect</CustomButton>
-
+                <CustomButton id="host-disconnect" 
+                    onButtonClick={sendDisconnectCommand}>Disconnect</CustomButton>
             </div>
         </>
     );

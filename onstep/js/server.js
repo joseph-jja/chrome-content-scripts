@@ -59,10 +59,10 @@ ipcMain.on('close', () => {
 });
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        if (Connection.isConnected) {
-            Connection.disconnect();
-        }
+    if (Connection.isConnected) {
+        Connection.disconnect();
+    }
+    if (process.platform !== 'darwin') {    
         app.quit();
     }
 });
@@ -99,6 +99,13 @@ server.get('/command', (req, res) => {
         }
     }
     res.send('Not connected, no command or invalid command sent!');
+});
+
+server.get('/disconnect', (req, res) => {
+    if (Connection.isConnected) {
+        Connection.disconnect();
+    }
+    res.send('Disconnected!');
 });
 
 server.listen(LISTEN_PORT, () => {
