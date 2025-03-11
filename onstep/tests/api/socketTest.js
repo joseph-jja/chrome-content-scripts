@@ -5,8 +5,8 @@ import SocketConnection from '#server/api/SocketConnection.js';
 const Connection = new SocketConnection();
 
 
-const host = '192.168.1.2',
-    port = 20000;
+const host = '192.168.0.1',
+    port = 9999;
     
 Connection.connect(host, port).then(async resp => {
     console.log('Success to connect');

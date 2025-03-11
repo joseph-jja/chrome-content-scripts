@@ -7,7 +7,9 @@ import {
 import express from 'express';
 
 import SocketConnection from '#server/api/SocketConnection.js';
-import { LISTEN_PORT } from '#server/config.js';
+import {
+    LISTEN_PORT
+} from '#server/config.js';
 
 const basedir = process.cwd();
 
@@ -72,12 +74,12 @@ server.get('/setup', (req, res) => {
         console.log('Trying to connect');
         Connection.connect(host, port).then(resp => {
             console.log('Success to connect');
-            res.send('Connected ' + resp);        
-        }).catch(e => {        
+            res.send('Connected ' + resp);
+        }).catch(e => {
             console.log('Failed to connect');
             res.send('Connection failed ' + e);
         });
-        return;  
+        return;
     }
     res.send(`Connection failed, invalid host and port values ${hostPort}`);
 });
@@ -85,17 +87,18 @@ server.get('/setup', (req, res) => {
 server.get('/command', (req, res) => {
     const command = req.query?.command;
     if (Connection.isConnected && command) {
-        Connection.connect(host, port).then(resp => {
-            console.log('Success to connect');
-            res.send('Connected ' + resp);        
-        }).catch(e => {        
-            console.log('Failed to connect');
-            res.send('Connection failed ' + e);
-        });
-        return;
-        return;
+        if (command.startsWith(':') && command.endsWith('#')) {
+            Connection.sendCommand(command).then(resp => {
+                console.log('Command response: ' + resp);
+                res.send('Command response: ' + resp);
+            }).catch(e => {
+                console.log('Failed to send command');
+                res.send('Command failed: ' + e);
+            });
+            return;
+        }
     }
-    res.send('Not connected or no command sent!');
+    res.send('Not connected, no command or invalid command sent!');
 });
 
 server.listen(LISTEN_PORT, () => {

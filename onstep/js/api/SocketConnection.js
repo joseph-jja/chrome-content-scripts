@@ -1,7 +1,9 @@
 import {
     Socket
 } from 'node:net';
-import { EventEmitter } from 'node:events';
+import {
+    EventEmitter
+} from 'node:events';
 
 export default class SocketConnection extends EventEmitter {
 
@@ -17,16 +19,16 @@ export default class SocketConnection extends EventEmitter {
             if (!host || !port) {
                 return reject('Invalid host and or port!');
             }
-           
+
             this.client.connect(port, host, () => {
                 this.isConnected = true;
                 return resolve('Success');
             });
-            
+
             this.client.on('error', (err) => {
                 reject(err);
             });
-            
+
             this.client.on('data', (msg) => {
                 const results = msg.toString()
                 this.data.push(results);
@@ -43,7 +45,7 @@ export default class SocketConnection extends EventEmitter {
             if (!this.client) {
                 return reject('Not connected!');
             }
-            
+
             this.once('readEnd', () => {
                 resolve(this.data.join(''));
             });
