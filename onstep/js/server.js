@@ -6,14 +6,14 @@ import {
 } from 'electron';
 import express from 'express';
 
-import TCPConnection from '#server/api/TCPConnection.js';
+import NETConnection from '#server/api/NETConnection.js';
 import { LISTEN_PORT } from '#server/config.js';
 
 const basedir = process.cwd();
 
 const server = express();
 
-const Connection = new TCPConnection();
+const Connection = new NETConnection();
 
 const menu = Menu.buildFromTemplate([]);
 Menu.setApplicationMenu(menu)
