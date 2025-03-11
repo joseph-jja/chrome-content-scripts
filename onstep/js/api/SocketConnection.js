@@ -6,6 +6,7 @@ import { EventEmitter } from 'node:events';
 export default class SocketConnection extends EventEmitter {
 
     constructor() {
+    super();
         this.client = new Socket();
         this.data = [];
         this.isConnected = false;
