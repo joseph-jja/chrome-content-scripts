@@ -3,7 +3,7 @@ import {
 } from 'node:net';
 import { EventEmitter } from 'node:events';
 
-export default class NETConnection extends EventEmitter {
+export default class SocketConnection extends EventEmitter {
 
     constructor() {
         this.client = new Socket();
