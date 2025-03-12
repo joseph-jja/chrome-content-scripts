@@ -6,6 +6,7 @@ import {
 } from 'electron';
 import express from 'express';
 
+//import SerialPort from '#server/api/SerialPort.js';
 import SocketConnection from '#server/api/SocketConnection.js';
 import {
     LISTEN_PORT
@@ -82,6 +83,15 @@ server.get('/setup', (req, res) => {
             res.send('Connection failed ' + e);
         });
         return;
+    } else if (hostPort.startsWith('/dev/')) {
+          console.log('Trying to connect to tty device');
+          //Connection.connectDevice(hostPort).then(resp => {
+          //    console.log('Success to connect');
+          //    res.send('Connected ' + resp);
+          //}).catch(e => {
+          //    console.log('Failed to connect');
+              res.send('Connection failed ');// + e);
+          //});
     }
     res.send(`Connection failed, invalid host and port values ${hostPort}`);
 });
