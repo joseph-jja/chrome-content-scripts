@@ -7,6 +7,14 @@ import {
 
 export default class SocketConnection extends EventEmitter {
 
+    static dataListener(msg) {
+        const results = msg.toString()
+        this.data.push(results);
+        if (results.includes('#')) {
+            this.emit('readEnd');
+        }
+    };
+
     constructor() {
         super();
         this.client = new Socket();
@@ -29,16 +37,10 @@ export default class SocketConnection extends EventEmitter {
                 reject(err);
             });
 
-            this.client.on('data', (msg) => {
-                const results = msg.toString()
-                this.data.push(results);
-                if (results.includes('#')) {
-                    this.emit('readEnd');
-                }
-            });
+            this.client.on('data', SocketConnection.dataListener);
         });
     }
-
+    
     sendCommand(command) {
         return new Promise((resolve, reject) => {
             this.data = [];

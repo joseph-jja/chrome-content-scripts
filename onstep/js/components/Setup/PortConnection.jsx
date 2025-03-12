@@ -10,50 +10,50 @@ import {
 
 const { useState } = React;
 
-const HOST_PORT_RE = /\d+\.\d+\.\d+\.\d+\:\d*/;
+const SERIAL_PORT_RE = /\/dev\//;
 
-export default function HostConnection() {
-    const [hostPort, setHostPort] = useState(null);
-    const [hostPortError, setHostPortError] = useState('');
+export default function PortConnection() {
+    const [serialPort, setSerialPort] = useState(null);
+    const [serialPortError, setSerialPortError] = useState('');
 
-    const setHostPortField = (event) => {
-        setHostPort(event?.target?.value);
+    const setSerialPortField = (event) => {
+        setSerialPort(event?.target?.value);
     }
 
     const sendConnectCommand = () => {
-        if (hostPort && hostPort.match(HOST_PORT_RE)) {
-            setHostPortError('');
+        if (serialPort && serialPort.match(SERIAL_PORT_RE)) {
+            setSerialPortError('');
             // now we need to call fetch
             // and send to server
-            setupConnection(hostPort).then(data => {
-                setHostPortError(data);    
+            setupConnection(serialPort).then(data => {
+                setSerialPortError(data);    
             }).catch(e => {
-                setHostPortError(e);
+                setSerialPortError(e);
             });
         } else {
-            setHostPortError('Invalid host and port entered!');
+            setSerialPortError('Invalid serial port entered!');
         }
     }
     
     const sendDisconnectCommand = () => {
         teardownConnection().then(data => {
-            setHostPortError(data);    
+            setSerialPortError(data);    
         }).catch(e => {
-            setHostPortError(e);
+            setSerialPortError(e);
         });
     }
         
     return (
         <>
             <div>
-                <CustomInput type="text" labelText="Enter Host:Port (xxx.xxx.xxx.xxx:yyyy)"
-                    id="host-port" name="host_port" inputValue={hostPort} size="22"
-                    onInputChange={setHostPortField}/>
-                <ErrorMessage>{hostPortError}</ErrorMessage>
+                <CustomInput type="text" labelText="Enter Serial Port (/dev/xxxx)"
+                    id="serial-port" name="serial_port" inputValue={serialPort} size="22"
+                    onInputChange={setSerialPortField}/>
+                <ErrorMessage>{serialPortError}</ErrorMessage>
                 <br/>
-                <CustomButton id="host-connect" 
+                <CustomButton id="serial-connect" 
                     onButtonClick={sendConnectCommand}>Connect</CustomButton>
-                <CustomButton id="host-disconnect" 
+                <CustomButton id="serial-disconnect" 
                     onButtonClick={sendDisconnectCommand}>Disconnect</CustomButton>
             </div>
         </>
