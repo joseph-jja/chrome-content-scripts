@@ -9,7 +9,7 @@ import Movement from 'js/tabs/Movement.jsx';
 const { useState } = React;
 
 export default function MainApp() {
-    const [tabField, setTabField] = useState(<Setup/>);
+    const [tabField, setTabField] = useState('setup');
 
     function closeApp() {
         //e.preventDefault();
@@ -17,20 +17,7 @@ export default function MainApp() {
     }
 
     function showSetupTag(event) {
-        const componentId = event?.target?.id;
-        let tab = <Setup/>;
-        switch (componentId) {
-            case 'tracking':
-                tab = <Tracking/>;
-                break;
-            case 'movement':
-                tab = <Movement/>;
-                break;
-            default:
-                tab = <Setup/>;
-                break;
-        }
-        setTabField(tab);
+        setTabField(event?.target?.id);
     }
 
     return ( 
@@ -42,7 +29,11 @@ export default function MainApp() {
                 Close App
             </CustomButton>
             <Container id="main-container">
-                {tabField}
+                {
+                    tabField === 'tracking' ? <Tracking/> :
+                        tabField === 'movement' ? <Movement/> :
+                        <Setup/>
+                }
             </Container> 
         </>
     );
