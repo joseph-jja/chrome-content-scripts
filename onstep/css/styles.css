@@ -4,7 +4,7 @@ body {
 }
 #app-container {
     color: red;
-    border: 1px solid red;
+    border-top: 1px solid red;
     height: 400px;
 }
 button {

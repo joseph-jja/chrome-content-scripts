@@ -12,7 +12,6 @@ export default function MainApp() {
     const [tabField, setTabField] = useState('setup');
 
     function closeApp() {
-        //e.preventDefault();
         window.close();
     }
 
