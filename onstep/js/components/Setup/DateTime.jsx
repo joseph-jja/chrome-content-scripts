@@ -39,6 +39,8 @@ export default function DateTime() {
             setDateTimeErrorField('');
             // now we need to call fetch
             // and send to server
+            // 	:SCMM/DD/YY#
+            // 	:SLHH:MM:SS#
         } else {
             setDateTimeErrorField('Invalid date and / or time entered!');
         }
