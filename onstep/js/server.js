@@ -98,6 +98,7 @@ server.get('/command', (req, res) => {
             return;
         }
     }
+    //console.log('Not connected, no command or invalid command sent!');
     res.send('Not connected, no command or invalid command sent!');
 });
 

@@ -16,8 +16,7 @@ const VALID_LAT_LONG_RE = /[\+|\-]?\d+\:\d+/;
 export default function Location() {
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
-    const [latitudeError, setLatitudeError] = useState('');    
-    const [longitudeError, setLongitudeError] = useState('');
+    const [latitudeLongitudeError, setLatitudeLongitudeError] = useState('');    
     
     const setField = (event) => {
         const fieldName = event?.target?.name;
@@ -35,16 +34,10 @@ export default function Location() {
     const sendSaveCommand = async () => {
         let haveLat = false, haveLong = false;
         if (latitude && latitude.length >= 0 && latitude.match(VALID_LAT_LONG_RE)) {
-            setLatitudeError('');
             haveLat = true;
-        } else {
-            setLatitudeError('Invalid latitude entered!');
         }
         if (longitude && longitude.length >= 0 && longitude.match(VALID_LAT_LONG_RE)) {
-            setLongitudeError('');
             haveLong = true;
-        } else {
-            setLongitudeError('Invalid longitude entered!');
         }
         if (haveLat && haveLong) {
             // send message
@@ -53,12 +46,16 @@ export default function Location() {
             const [latErr, latResults] = await PromiseWrapper(sendCommand(`:Sts${latitude}#`));
             if (latResults && latResults === 0) {
                 const [longErr, longResults] = await PromiseWrapper(sendCommand(`:Sg${longitude}#`));
-                if (!longResults || longResults !== 0) {
-                    setLongitudeError(longErr || longResults);
+                if (longResults && longResults === 0) {
+                    setLatitudeLongitudeError('');
+                } else {
+                    setLatitudeLongitudeError(longErr || longResults);
                 }
             } else {
-                setLatitudeError(latErr || latResults);
+                setLatitudeLongitudeError(latErr || latResults);
             }
+        } else {
+            setLatitudeLongitudeError('Invalid latitude and / longitude or entered!');
         }
     }
     
@@ -68,11 +65,10 @@ export default function Location() {
                 <CustomInput type="text" labelText="Set Latitude (xxx:yyy)" size="8"
                     id="latitude" name="latitude" inputValue={latitude}
                     onInputChange={setField}/>
-                <ErrorMessage>{latitudeError}</ErrorMessage>
                 <CustomInput type="text" labelText="Set Longitude (+/-xxx:yyy)" size="8"
                     id="longitude" name="longitude" inputValue={longitude}
                     onInputChange={setField}/>
-                <ErrorMessage>{longitudeError}</ErrorMessage>
+                <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
                 <br/>
                 <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Latitude and Longitude</CustomButton>
             </div>
