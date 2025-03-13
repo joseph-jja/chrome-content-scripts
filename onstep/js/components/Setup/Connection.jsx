@@ -35,7 +35,7 @@ export default function Connection() {
             }).catch(e => {
                 setHostPortError(e);
             });
-        } else if (serialPort && serialPort.match(SERIAL_PORT_RE))) {
+        } else if (serialPort && serialPort.match(SERIAL_PORT_RE)) {
             setSerialOrHostPortError('');
             // now we need to call fetch
             // and send to server
