@@ -11,35 +11,52 @@ export default class SerialPort extends EventEmitter {
 
     connect(ttyDevice) {
         return new Promise((resolve, reject) => {
-        
-           //    const fd = await fs.open('/dev/ttyACM0', 'r+');
-        });
-    }
-    
-    sendCommand(command) {
-        return new Promise((resolve, reject) => {
-        
-            //await fd.write(':GC#');
-            /*
-            const  data = await fd.read();
-    const buffer = new Int8Array(data.buffer);
-    let result = '',
-        i = 0,
-        end = buffer.length;
-    while (!result.includes('#') && i < end) {
-        const charData = String.fromCharCode( buffer[ i ] );
-        console.log(charData, charData.length);
-        result += charData;
-        i++;
-    }   
-        */
+        if (!ttyDevice) {
+            return reject('Invalid host and or port!');
+        }
+
+        fs.open(ttyDevice, 'r+').then(fd => {
+            this.socket = fd;
+            this.isConnected = true;
+            resolve('Success');
+          }).catch(e => {
+              reject(e);
+          });
         });
     }
 
+    sendCommand(command) {
+        return new Promise((resolve, reject) => {
+            this.data = [];
+            if (!this.socket) {
+                return reject('Not connected!');
+            }
+
+            fd.write(':GC#').then(async res => {
+                 const  data = await fd.read();
+                 const buffer = new Int8Array(data.buffer);
+                  let result = '',
+                      i = 0,
+                      end = buffer.length;
+                  while (!result.includes('#') && i < end) {
+                      const charData = String.fromCharCode( buffer[ i ] );
+                      console.log(charData, charData.length);
+                      result += charData;
+                      i++;
+                  }   
+                  resolve(result);
+            }).catch(e => {
+                reject(e);
+            });
+      });
+
     disconnect() {
         return new Promise((resolve, reject) => {
-        
-        //fd.close();
+            if (!this.socket) {
+                return reject('Not connected!');
+            }
+            this.socket.close();
+            this.isConnected = false;
         });
     }
 }
