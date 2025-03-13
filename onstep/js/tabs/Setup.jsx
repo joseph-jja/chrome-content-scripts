@@ -1,7 +1,6 @@
 import React from 'react';
 
-import HostConnection from 'js/components/Setup/HostConnection.jsx';
-import COMPortConnection from 'js/components/Setup/COMPortConnection.jsx';
+import Connection from 'js/components/Setup/Connection.jsx';
 import Location from 'js/components/Setup/Location.jsx';
 import DateTime from 'js/components/Setup/DateTime.jsx';
 
@@ -9,9 +8,7 @@ import DateTime from 'js/components/Setup/DateTime.jsx';
 export default function Setup() {
     return (
         <>
-            <HostConnection/>
-            { window.electron.operatingSystem() === 'linux' ?
-                <COMPortConnection/> : null }
+            <Connection/>
             <Location/>
             <DateTime/>
         </>
