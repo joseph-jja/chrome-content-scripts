@@ -71,7 +71,7 @@ export default function Location() {
                     onInputChange={setField}/>
                 <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
                 <br/>
-                <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Latitude and Longitude</CustomButton>
+                <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Location</CustomButton>
             </div>
         </>
     )
