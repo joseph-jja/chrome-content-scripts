@@ -18,7 +18,7 @@ const formatTime = (dateIn = new Date()) => {
     const hours = `${dateIn.getHours() + 1}`;
     const minutes = `${dateIn.getMinutes()}`;    
     const seconds = `${dateIn.getSeconds()}`;    
-    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0'):${seconds.padStart(2, '0')}`;
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
 };
 
 const DATE_RE = /\d\d\/\d\d\/\d\d/
