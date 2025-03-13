@@ -21,8 +21,8 @@ const formatTime = (dateIn = new Date()) => {
     return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
 };
 
-const DATE_RE = /\d\d\/\d\d\/\d\d/
-const DATE_RE = /\d\d\:\d\d\
+const DATE_RE = /\d\d\/\d\d\/\d\d/;
+const DATE_RE = /\d\d\:\d\d\;
 
 export default function DateTime() {
     const [dateField, setDateField] = useState(formatDate(new Date()));
