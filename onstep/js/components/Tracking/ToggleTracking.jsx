@@ -11,23 +11,24 @@ const { useState } = React;
 
 // TODO figure out how this would work cross platform
 export default function ToggleTracking() {
-    const [trackingToggle, setTrackingToggle] = useState(null);
+    const [trackingToggle, setTrackingToggle] = useState('tracking-disable');
     const [trackingError, setTrackingError] = useState(null);
 
     const setTracking = async (event) => {
-        const targetObj = event?.target?.id;
+        const targetId = event?.target?.id;
         let cmd;
-        if (targetObj === 'tracking-enable') {
+        if (targetId === 'tracking-enable') {
             cmd = ':Te#';
-            setTrackingToggle(targetObj);
-        } else if (targetObj === 'tracking-disable') {
+            setTrackingToggle(targetId);
+        } else if (targetId === 'tracking-disable') {
             cmd = ':Td#';
-            setTrackingToggle(targetObj);
+            setTrackingToggle(targetId);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
                 setTrackingError(err || results);
+                setTrackingToggle('tracking-disable');
             } else {
                 setTrackingError('');
             }
@@ -37,9 +38,15 @@ export default function ToggleTracking() {
     return ( 
         <div class="wrapper">
             <CustomButton id="tracking-enable" 
-                onButtonClick={setTracking}>Enable Tracking</CustomButton>
+                enabled={trackingToggle === 'tracking-enable'}
+                onButtonClick={setTracking}>
+                Enable Tracking
+            </CustomButton>
             <CustomButton id="tracking-disable" 
-                onButtonClick={setTracking}>Disable Tracking</CustomButton>
+                enabled={trackingToggle === 'tracking-disable'}
+                onButtonClick={setTracking}>
+                Disable Tracking
+            </CustomButton>
             <ErrorMessage>{trackingError}</ErrorMessage>                
         </div>
     );

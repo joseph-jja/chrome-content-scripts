@@ -12,6 +12,7 @@ button {
     border: 2px solid red;
     background-color: black;
     color: red;
+    padding: 0.5em;
 }
 #main-container {
     padding: 2px;
@@ -20,10 +21,18 @@ button {
 }
 .errorField {
     display: block;
+    font-weight: bold;
+}
+.messageField {
+    display: block;
 }
 div.wrapper {
     margin: 0.5em;
 }
 label {
     margin-right: 0.5em:
+}
+.active_button {
+    border: 5px solid red;
+    border-radius: 5px;
 }

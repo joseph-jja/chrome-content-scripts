@@ -21,9 +21,16 @@ export default function MainApp() {
 
     return ( 
         <>
-            <CustomButton id="setup" onButtonClick={showSetupTag}>Setup</CustomButton> 
-            <CustomButton id="tracking"onButtonClick={showSetupTag}>Tracking</CustomButton>
-            <CustomButton id="movement"onButtonClick={showSetupTag}>Movment</CustomButton>
+            <CustomButton id="setup" 
+                enabled={tabField === 'setup'}
+                onButtonClick={showSetupTag}>Setup</CustomButton> 
+            <CustomButton id="tracking"
+                enabled={tabField === 'tracking'}
+                onButtonClick={showSetupTag}>Tracking</CustomButton>
+            <CustomButton id="movement"
+                enabled={tabField === 'movement'}
+                onButtonClick={showSetupTag}>Movment</CustomButton>
+                
             <CustomButton id="close" onButtonClick={() => closeApp()}>
                 Close App
             </CustomButton>
