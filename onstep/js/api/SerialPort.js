@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 
 export default class SerialPort extends EventEmitter {
-    
+
     constructor() {
         super();
         this.socket = undefined;
@@ -11,17 +11,17 @@ export default class SerialPort extends EventEmitter {
 
     connect(ttyDevice) {
         return new Promise((resolve, reject) => {
-        if (!ttyDevice) {
-            return reject('Invalid host and or port!');
-        }
+            if (!ttyDevice) {
+                return reject('Invalid ttyp device!');
+            }
 
-        fs.open(ttyDevice, 'r+').then(fd => {
-            this.socket = fd;
-            this.isConnected = true;
-            resolve('Success');
-          }).catch(e => {
-              reject(e);
-          });
+            fs.open(ttyDevice, 'r+').then(fd => {
+                this.socket = fd;
+                this.isConnected = true;
+                resolve('Success');
+            }).catch(e => {
+                reject(e);
+            });
         });
     }
 
@@ -32,23 +32,24 @@ export default class SerialPort extends EventEmitter {
                 return reject('Not connected!');
             }
 
-            fd.write(':GC#').then(async res => {
-                 const  data = await fd.read();
-                 const buffer = new Int8Array(data.buffer);
-                  let result = '',
-                      i = 0,
-                      end = buffer.length;
-                  while (!result.includes('#') && i < end) {
-                      const charData = String.fromCharCode( buffer[ i ] );
-                      console.log(charData, charData.length);
-                      result += charData;
-                      i++;
-                  }   
-                  resolve(result);
+            fd.write(command).then(async res => {
+                const data = await fd.read();
+                const buffer = new Int8Array(data?.buffer);
+                let result = '',
+                    i = 0,
+                    end = buffer?.length || 0;
+                while (!result.includes('#') && i < end) {
+                    const charData = String.fromCharCode(buffer[i]);
+                    //console.log(charData, charData.length);
+                    result += charData;
+                    i++;
+                }
+                resolve(result);
             }).catch(e => {
                 reject(e);
             });
-      });
+        });
+    }
 
     disconnect() {
         return new Promise((resolve, reject) => {
@@ -57,6 +58,7 @@ export default class SerialPort extends EventEmitter {
             }
             this.socket.close();
             this.isConnected = false;
+            resolve('Closed');
         });
     }
 }
@@ -83,4 +85,3 @@ async function doStuff() {
 }*/
 
 //doStuff();
-
