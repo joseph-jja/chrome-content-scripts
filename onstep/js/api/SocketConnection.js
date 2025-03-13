@@ -64,6 +64,7 @@ export default class SocketConnection extends EventEmitter {
             this.client.removeAllListeners('data');
             this.client.end();
             this.isConnected = false;
+            resolve('Closed');
         });
     }
 }
