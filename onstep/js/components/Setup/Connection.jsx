@@ -41,6 +41,9 @@ export default function Connection() {
             // and send to server
             setupConnection(hostPort).then(data => {
                 setHostPortError(data);  
+            }).catch(e => {
+                setHostPortError(e);
+            });
         } else {
             setSerialOrHostPortError('Invalid host and port or COM / tty port entered!');
         }
