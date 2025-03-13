@@ -62,8 +62,8 @@ export default function Connection() {
             <CustomInput type="text" labelText="Enter Host:Port (xxx.xxx.xxx.xxx:yyyy)"
                     id="host-port" name="host_port" inputValue={hostPort} size="22"
                     onInputChange={setHostPortField}/>
+            { window.electron.operatingSystem() === 'linux' ? <br/> : null }
             { window.electron.operatingSystem() === 'linux' ? 
-                <br/>
                 <CustomInput type="text" labelText="Enter Serial Port (/dev/xxxx)"
                     id="serial-port" name="serial_port" inputValue={serialPort} size="22"
                     onInputChange={setSerialPortField}/>  : null }
