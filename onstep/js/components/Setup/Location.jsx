@@ -1,12 +1,12 @@
 import React from 'react';
 
+import Container from 'js/components/base/Container.jsx';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
-    sendCommand
-} from 'js/api/request.js';
-import PromiseWrapper from 'js/utils/PromiseWrapper.js';
+    daisyChainBooleanCommands
+} from 'js/utils/commandUtils.js';
 
 const { useState } = React;
 
@@ -43,24 +43,15 @@ export default function Location() {
             // send message
             // latitude => :StsDD*MM#
             // longitude => :SgDDD*MM#
-            const [latErr, latResults] = await PromiseWrapper(sendCommand(`:Sts${latitude}#`));
-            if (latResults && latResults === 0) {
-                const [longErr, longResults] = await PromiseWrapper(sendCommand(`:Sg${longitude}#`));
-                if (longResults && longResults === 0) {
-                    setLatitudeLongitudeError('');
-                } else {
-                    setLatitudeLongitudeError(longErr || longResults);
-                }
-            } else {
-                setLatitudeLongitudeError(latErr || latResults);
-            }
+            const results = await daisyChainBooleanCommands([`:Sts${latitude}#`, `:Sg${longitude}#`]);
+            setLatitudeLongitudeError(results);
         } else {
             setLatitudeLongitudeError('Invalid latitude and / longitude or entered!');
         }
     }
     
     return (
-        <div class="wrapper">
+        <Container class="wrapper">
             <CustomInput type="text" labelText="Set Latitude (xxx:yyy)" size="8"
                 id="latitude" name="latitude" inputValue={latitude}
                 onInputChange={setField}/>
@@ -71,7 +62,7 @@ export default function Location() {
             <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
             <br/>
             <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Location</CustomButton>
-        </div>
+        </Container>
     )
 }
             

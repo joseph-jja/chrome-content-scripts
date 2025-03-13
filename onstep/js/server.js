@@ -102,9 +102,10 @@ server.get('/setup', (req, res) => {
 server.get('/command', (req, res) => {
     const command = req.query?.command;
     if (Connection?.isConnected && command) {
-        if (command.startsWith(':') && command.endsWith('#')) {
-            Connection.sendCommand(command).then(resp => {
-                console.log('Command response: ' + resp);
+        const decodedCommand = decodeURIComponent(command); 
+        if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
+            Connection.sendCommand(decodedCommand).then(resp => {
+                console.log('Command sent ', decodedCommand, ' response: ' + resp);
                 res.send('Command response: ' + resp);
             }).catch(e => {
                 console.log('Failed to send command');

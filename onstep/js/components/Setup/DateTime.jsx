@@ -1,18 +1,18 @@
 import React from 'react';
 
+import Container from 'js/components/base/Container.jsx';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
-    sendCommand
-} from 'js/api/request.js';
-import PromiseWrapper from 'js/utils/PromiseWrapper.js';
+    daisyChainBooleanCommands
+} from 'js/utils/commandUtils.js';
 
 const { useState } = React;
 
 const formatDate = (dateIn = new Date()) => {
     const month = `${dateIn.getMonth() + 1}`;
-    const day = `${dateIn.getDay()}`;    
+    const day = `${dateIn.getDate()}`;    
     const year = `${dateIn.getFullYear()}`;
     return `${month.padStart(2, '0')}/${day.padStart(2, '0')}/${year.substring(2)}`;
 };
@@ -53,24 +53,15 @@ export default function DateTime() {
             // and send to server
             // 	:SCMM/DD/YY#
             // 	:SLHH:MM:SS#
-            const [dateErr, dateResults] = await PromiseWrapper(sendCommand(`:SC${dateField}#`));
-            if (dateResults && dateResults === 0) {
-                const [timeErr, timeResults] = await PromiseWrapper(sendCommand(`:SL${timeField}#`));
-                if (timeResults && timeResults === 0) {
-                    setLatitudeLongitudeError('');
-                } else {
-                    setLatitudeLongitudeError(timeErr || timeResults);
-                }
-            } else {
-                setLatitudeLongitudeError(dateErr || dateResults);
-            }
+            const results = await daisyChainBooleanCommands([`:SC${dateField}#`, `:SL${timeField}#`]);
+            setDateTimeErrorField(results);
         } else {
             setDateTimeErrorField('Invalid date and / or time entered!');
         }
     }
     
     return (
-        <div class="wrapper">
+        <Container class="wrapper">
             <CustomInput type="text" labelText="Enter Date (MM/DD/YY)" size="12"
                 id="date-field" name="date_field" inputValue={dateField}
                 onInputChange={setDateFieldFromForm}/>
@@ -80,9 +71,9 @@ export default function DateTime() {
                 onInputChange={setTimeFieldFromForm}/>
             <ErrorMessage>{dateTimeErrorField}</ErrorMessage>
             <br/>
-            <CustomButton id="host-setup" 
+            <CustomButton id="date-time-fields" 
                  onButtonClick={setDateTime}>Set Date & Time</CustomButton>
-        </div>
+        </Container>
     );
 }
 

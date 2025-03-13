@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Container from 'js/components/base/Container.jsx';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
@@ -27,9 +28,9 @@ export default function Connection() {
 
     const remoteConnect= (connectString) => {
         setupConnection(connectString).then(data => {
-            setHostPortError(data);    
+            setSerialOrHostPortError(data);    
         }).catch(e => {
-            setHostPortError(e);
+            setSerialOrHostPortError(e);
         });
     }
     
@@ -51,14 +52,14 @@ export default function Connection() {
     
     const sendDisconnectCommand = () => {
         teardownConnection().then(data => {
-            setHostPortError(data);    
+            setSerialOrHostPortError(data);    
         }).catch(e => {
-            setHostPortError(e);
+            setSerialOrHostPortError(e);
         });
     }
     
     return (
-        <div class="wrapper">
+        <Container class="wrapper">
             <CustomInput type="text" labelText="Enter Host:Port (xxx.xxx.xxx.xxx:yyyy)"
                     id="host-port" name="host_port" inputValue={hostPort} size="22"
                     onInputChange={setHostPortField}/>
@@ -73,6 +74,6 @@ export default function Connection() {
                 onButtonClick={sendConnectCommand}>Connect</CustomButton>
             <CustomButton id="serial-disconnect" 
                 onButtonClick={sendDisconnectCommand}>Disconnect</CustomButton>
-        </div>
+        </Container>
     );
 }

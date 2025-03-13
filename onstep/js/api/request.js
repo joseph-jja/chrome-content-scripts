@@ -5,7 +5,7 @@ import {
 async function request(url, command = '') {
 
     return new Promise((resolve, reject) => {
-        fetch(`${REMOTE_HOST}/${url}?command=${command}`).then(async response => {
+        fetch(`${REMOTE_HOST}/${url}?command=${encodeURIComponent(command)}`).then(async response => {
             const data = await response.text();
             resolve(data);
         }).catch(e => {

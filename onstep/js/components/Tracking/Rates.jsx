@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Container from 'js/components/base/Container.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
@@ -38,7 +39,7 @@ export default function Rates() {
     };
 
     return ( 
-        <div class="wrapper">
+        <Container class="wrapper">
             <CustomButton id="tracking-increase" 
                 onButtonClick={setTrackingRateValue}>Increase Tracking</CustomButton>
             <CustomButton id="tracking-reset" 
@@ -46,6 +47,6 @@ export default function Rates() {
             <CustomButton id="tracking-decrease" 
                 onButtonClick={setTrackingRateValue}>Decrease Tracking</CustomButton>
             <ErrorMessage>{trackingRateError}</ErrorMessage>                
-        </div>
+        </Container>
     );
 }

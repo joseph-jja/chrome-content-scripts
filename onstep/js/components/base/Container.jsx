@@ -4,8 +4,9 @@ export default function Container(props) {
 
     const {
         id,
+        className,
         children
     } = props;
 
-    return (<div id={id}>{children}</div>);
+    return (<div id={id} class={className}>{children}</div>);
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Container from 'js/components/base/Container.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
@@ -36,7 +37,7 @@ export default function ToggleTracking() {
     };
 
     return ( 
-        <div class="wrapper">
+        <Container class="wrapper">
             <CustomButton id="tracking-enable" 
                 enabled={trackingToggle === 'tracking-enable'}
                 onButtonClick={setTracking}>
@@ -48,7 +49,7 @@ export default function ToggleTracking() {
                 Disable Tracking
             </CustomButton>
             <ErrorMessage>{trackingError}</ErrorMessage>                
-        </div>
+        </Container>
     );
 
 }
