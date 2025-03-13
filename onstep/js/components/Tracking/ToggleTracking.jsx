@@ -20,7 +20,7 @@ export default function ToggleTracking() {
         if (targetObj === 'tracking-enable') {
             cmd = ':Te#';
             setTrackingToggle(targetObj);
-        } else if (targetObj === 'tracking-disnable') {
+        } else if (targetObj === 'tracking-disable') {
             cmd = ':Td#';
             setTrackingToggle(targetObj);
         }
@@ -28,6 +28,8 @@ export default function ToggleTracking() {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
                 setTrackingError(err || results);
+            } else {
+                setTrackingError('');
             }
         }
     };
@@ -36,7 +38,7 @@ export default function ToggleTracking() {
         <div class="wrapper">
             <CustomButton id="tracking-enable" 
                 onButtonClick={setTracking}>Enable Tracking</CustomButton>
-            <CustomButton id="tracking-disnable" 
+            <CustomButton id="tracking-disable" 
                 onButtonClick={setTracking}>Disable Tracking</CustomButton>
             <ErrorMessage>{trackingError}</ErrorMessage>                
         </div>
