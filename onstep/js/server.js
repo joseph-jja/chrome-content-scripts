@@ -119,6 +119,7 @@ server.get('/command', (req, res) => {
 server.get('/disconnect', (req, res) => {
     if (Connection.isConnected) {
         Connection.disconnect();
+        Connection = null;
     }
     res.send('Disconnected!');
 });
