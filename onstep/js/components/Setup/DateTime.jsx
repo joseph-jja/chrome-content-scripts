@@ -39,7 +39,7 @@ export default function DateTime() {
         setTimeField(value);
     }
 
-    const setDateTime = () => {
+    const setDateTime = async () => {
         if (dateField && dateField.match(DATE_RE)) {
             setDateTimeErrorField('');
             // for time we will always default
