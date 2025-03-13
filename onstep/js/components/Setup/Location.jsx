@@ -65,6 +65,7 @@ export default function Location() {
                 <CustomInput type="text" labelText="Set Latitude (xxx:yyy)" size="8"
                     id="latitude" name="latitude" inputValue={latitude}
                     onInputChange={setField}/>
+                <br/>
                 <CustomInput type="text" labelText="Set Longitude (+/-xxx:yyy)" size="8"
                     id="longitude" name="longitude" inputValue={longitude}
                     onInputChange={setField}/>
