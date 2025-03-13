@@ -25,25 +25,25 @@ export default function Connection() {
         setHostPort(event?.target?.value);
     }
 
+    const remoteConnect= (connectString) => {
+        setupConnection(connectString).then(data => {
+            setHostPortError(data);    
+        }).catch(e => {
+            setHostPortError(e);
+        });
+    }
+    
     const sendConnectCommand = () => {
         if (hostPort && hostPort.match(HOST_PORT_RE)) { 
             setSerialOrHostPortError('');
             // now we need to call fetch
             // and send to server
-            setupConnection(hostPort).then(data => {
-                setHostPortError(data);    
-            }).catch(e => {
-                setHostPortError(e);
-            });
+            remoteConnect(hostPort);
         } else if (serialPort && serialPort.match(SERIAL_PORT_RE)) {
             setSerialOrHostPortError('');
             // now we need to call fetch
             // and send to server
-            setupConnection(hostPort).then(data => {
-                setHostPortError(data);  
-            }).catch(e => {
-                setHostPortError(e);
-            });
+            remoteConnect(serialPort);
         } else {
             setSerialOrHostPortError('Invalid host and port or COM / tty port entered!');
         }
