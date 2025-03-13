@@ -3,6 +3,7 @@ import React from 'react';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
+import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
 const { useState } = React;
 
@@ -16,8 +17,12 @@ const formatDate = (dateIn = new Date()) => {
 const formatTime = (dateIn = new Date()) => {
     const hours = `${dateIn.getHours() + 1}`;
     const minutes = `${dateIn.getMinutes()}`;    
-    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    const seconds = `${dateIn.getSeconds()}`;    
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0'):${seconds.padStart(2, '0')}`;
 };
+
+const DATE_RE = /\d\d\/\d\d\/\d\d/
+const DATE_RE = /\d\d\:\d\d\
 
 export default function DateTime() {
     const [dateField, setDateField] = useState(formatDate(new Date()));
@@ -35,12 +40,27 @@ export default function DateTime() {
     }
 
     const setDateTime = () => {
-        if (dateField && timeField) {
+        if (dateField) {
             setDateTimeErrorField('');
+            // for time we will always default
+            if (!timeField) {
+                setTimeField(newDate);
+            }
             // now we need to call fetch
             // and send to server
             // 	:SCMM/DD/YY#
             // 	:SLHH:MM:SS#
+            const [dateErr, dateResults] = await PromiseWrapper(sendCommand(`:SC${dateField}#`));
+            if (dateResults && dateResults === 0) {
+                const [timeErr, timeResults] = await PromiseWrapper(sendCommand(`:SL${timeField}#`));
+                if (timeResults && timeResults === 0) {
+                    setLatitudeLongitudeError('');
+                } else {
+                    setLatitudeLongitudeError(timeErr || timeResults);
+                }
+            } else {
+                setLatitudeLongitudeError(dateErr || dateResults);
+            }
         } else {
             setDateTimeErrorField('Invalid date and / or time entered!');
         }
@@ -52,7 +72,7 @@ export default function DateTime() {
                 <CustomInput type="text" labelText="Enter Date (MM/DD/YY)"
                     id="date-field" name="date_field" inputValue={dateField}
                     onInputChange={setDateFieldFromForm}/>
-                <CustomInput type="text" labelText="Enter Time (MM/DD/YY)"
+                <CustomInput type="text" labelText="Enter Time (HH:MM:SS)"
                     id="time-field" name="time_field" inputValue={timeField}
                     onInputChange={setTimeFieldFromForm}/>
                 <ErrorMessage>{dateTimeErrorField}</ErrorMessage>
