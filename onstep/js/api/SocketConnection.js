@@ -34,7 +34,7 @@ export default class SocketConnection extends EventEmitter {
             });
 
             this.client.on('error', (err) => {
-                reject(err);
+                return reject(err);
             });
 
             this.client.on('data', SocketConnection.dataListener);
@@ -49,7 +49,7 @@ export default class SocketConnection extends EventEmitter {
             }
 
             this.once('readEnd', () => {
-                resolve(this.data.join(''));
+                return resolve(this.data.join(''));
             });
             this.client.write(command);
         });
@@ -64,7 +64,7 @@ export default class SocketConnection extends EventEmitter {
             this.client.removeAllListeners('data');
             this.client.end();
             this.isConnected = false;
-            resolve('Closed');
+            return resolve('Closed');
         });
     }
 }
