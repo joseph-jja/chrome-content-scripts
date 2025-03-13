@@ -22,7 +22,7 @@ const formatTime = (dateIn = new Date()) => {
 };
 
 const DATE_RE = /\d\d\/\d\d\/\d\d/;
-const TIME_RE = /\d\d\:\d\d\;
+const TIME_RE = /\d\d:\d\d/;
 
 export default function DateTime() {
     const [dateField, setDateField] = useState(formatDate(new Date()));
