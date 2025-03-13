@@ -60,20 +60,18 @@ export default function Location() {
     }
     
     return (
-        <>
-            <div>
-                <CustomInput type="text" labelText="Set Latitude (xxx:yyy)" size="8"
-                    id="latitude" name="latitude" inputValue={latitude}
-                    onInputChange={setField}/>
-                <br/>
-                <CustomInput type="text" labelText="Set Longitude (+/-xxx:yyy)" size="8"
-                    id="longitude" name="longitude" inputValue={longitude}
-                    onInputChange={setField}/>
-                <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
-                <br/>
-                <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Location</CustomButton>
-            </div>
-        </>
+        <div class="wrapper">
+            <CustomInput type="text" labelText="Set Latitude (xxx:yyy)" size="8"
+                id="latitude" name="latitude" inputValue={latitude}
+                onInputChange={setField}/>
+            <br/>
+            <CustomInput type="text" labelText="Set Longitude (+/-xxx:yyy)" size="8"
+                id="longitude" name="longitude" inputValue={longitude}
+                onInputChange={setField}/>
+            <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
+            <br/>
+            <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Location</CustomButton>
+        </div>
     )
 }
             

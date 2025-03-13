@@ -3,6 +3,9 @@ import React from 'react';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
+import {
+    sendCommand
+} from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
 const { useState } = React;
@@ -67,20 +70,19 @@ export default function DateTime() {
     }
     
     return (
-        <>
-            <div>
-                <CustomInput type="text" labelText="Enter Date (MM/DD/YY)"
-                    id="date-field" name="date_field" inputValue={dateField}
-                    onInputChange={setDateFieldFromForm}/>
-                <CustomInput type="text" labelText="Enter Time (HH:MM:SS)"
-                    id="time-field" name="time_field" inputValue={timeField}
-                    onInputChange={setTimeFieldFromForm}/>
-                <ErrorMessage>{dateTimeErrorField}</ErrorMessage>
-                <br/>
-                <CustomButton id="host-setup" 
-                    onButtonClick={setDateTime}>Set Date & Time</CustomButton>
-            </div>
-        </>
+        <div class="wrapper">
+            <CustomInput type="text" labelText="Enter Date (MM/DD/YY)" size="12"
+                id="date-field" name="date_field" inputValue={dateField}
+                onInputChange={setDateFieldFromForm}/>
+            <br/>
+            <CustomInput type="text" labelText="Enter Time (HH:MM:SS)" size="12"
+                id="time-field" name="time_field" inputValue={timeField}
+                onInputChange={setTimeFieldFromForm}/>
+            <ErrorMessage>{dateTimeErrorField}</ErrorMessage>
+            <br/>
+            <CustomButton id="host-setup" 
+                 onButtonClick={setDateTime}>Set Date & Time</CustomButton>
+        </div>
     );
 }
 

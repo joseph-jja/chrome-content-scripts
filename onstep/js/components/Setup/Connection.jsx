@@ -58,7 +58,7 @@ export default function Connection() {
     }
     
     return (
-        <div>
+        <div class="wrapper">
             <CustomInput type="text" labelText="Enter Host:Port (xxx.xxx.xxx.xxx:yyyy)"
                     id="host-port" name="host_port" inputValue={hostPort} size="22"
                     onInputChange={setHostPortField}/>
