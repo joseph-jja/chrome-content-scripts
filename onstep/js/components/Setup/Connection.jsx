@@ -56,16 +56,21 @@ export default function Connection() {
             setHostPortError(e);
         });
     }
+
+    const COMPort = () => {
+        return (
+            <CustomInput type="text" labelText="Enter Serial Port (/dev/xxxx)"
+                    id="serial-port" name="serial_port" inputValue={serialPort} size="22"
+                    onInputChange={setSerialPortField}/> 
+            );
+    }
     
     return (
         <div>
             <CustomInput type="text" labelText="Enter Host:Port (xxx.xxx.xxx.xxx:yyyy)"
                     id="host-port" name="host_port" inputValue={hostPort} size="22"
                     onInputChange={setHostPortField}/>
-            { window.electron.operatingSystem() === 'linux' ?
-                <CustomInput type="text" labelText="Enter Serial Port (/dev/xxxx)"
-                    id="serial-port" name="serial_port" inputValue={serialPort} size="22"
-                    onInputChange={setSerialPortField}/> : null }
+            { window.electron.operatingSystem() === 'linux' ? COMPort() : null }
             <ErrorMessage>{serialOrHostPortError}</ErrorMessage>
             <br/>
             <CustomButton id="serial-connect" 
