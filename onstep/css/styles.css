@@ -21,3 +21,9 @@ button {
 .errorField {
     display: block;
 }
+div.wrapper {
+    margin: 0.5em;
+}
+label {
+    margin-right: 0.5em:
+}

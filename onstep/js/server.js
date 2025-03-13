@@ -62,7 +62,7 @@ ipcMain.on('close', () => {
 });
 
 app.on('window-all-closed', () => {
-    if (Connection.isConnected) {
+    if (Connection?.isConnected) {
         Connection.disconnect();
     }
     if (process.platform !== 'darwin') {    
@@ -100,7 +100,7 @@ server.get('/setup', (req, res) => {
 
 server.get('/command', (req, res) => {
     const command = req.query?.command;
-    if (Connection.isConnected && command) {
+    if (Connection?.isConnected && command) {
         if (command.startsWith(':') && command.endsWith('#')) {
             Connection.sendCommand(command).then(resp => {
                 console.log('Command response: ' + resp);
@@ -117,7 +117,7 @@ server.get('/command', (req, res) => {
 });
 
 server.get('/disconnect', (req, res) => {
-    if (Connection.isConnected) {
+    if (Connection?.isConnected) {
         Connection.disconnect();
         Connection = null;
     }

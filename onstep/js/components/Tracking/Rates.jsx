@@ -16,7 +16,7 @@ export default function Rates() {
 
     //        <ErrorMessage>{trackingError}</ErrorMessage>                
     return ( 
-        <div>
+        <div class="wrapper">
             <CustomButton id="tracking-increase" 
                 onButtonClick={setTrackingRateValue}>Increase Tracking</CustomButton>
             <CustomButton id="tracking-reset" 
