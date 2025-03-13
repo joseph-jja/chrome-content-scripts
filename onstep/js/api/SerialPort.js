@@ -1,4 +1,7 @@
 import fs from 'node:fs/promises';
+import {
+    EventEmitter
+} from 'node:events';
 
 export default class SerialPort extends EventEmitter {
 
