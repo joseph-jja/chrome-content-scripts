@@ -7,7 +7,6 @@ import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
     daisyChainBooleanCommands
 } from 'js/utils/commandUtils.js';
-import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
 
@@ -41,7 +40,6 @@ export default function DateTime() {
     const setTimeFieldFromForm = (event) => {
         const value = event?.target?.value;
         setTimeField(value);
-        StorageBox.setItem('date', value);
     }
 
     const setDateTime = async () => {
