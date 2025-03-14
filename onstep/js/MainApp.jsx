@@ -6,6 +6,7 @@ import Setup from 'js/tabs/Setup.jsx';
 import Tracking from 'js/tabs/Tracking.jsx';
 import Movement from 'js/tabs/Movement.jsx';
 import Advanced from 'js/tabs/Advanced.jsx';
+import Status from 'js/components/Information/Status.jsx';
 
 const { useState } = React;
 
@@ -45,6 +46,9 @@ export default function MainApp() {
                         tabField === 'movement' ? <Movement/> :
                         <Setup/>
                 }
+            </Container> 
+            <Container id="info-container">
+                <Status/>
             </Container> 
         </>
     );

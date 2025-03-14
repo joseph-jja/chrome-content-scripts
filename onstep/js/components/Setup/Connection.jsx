@@ -8,17 +8,22 @@ import {
     setupConnection,
     teardownConnection
 } from 'js/api/request.js';
+import StorageBox from "js/storage/StorageBox.js";
 
-const { useState } = React;
+const {
+    useState,
+    useSyncExternalStore
+} = React;
 
 const HOST_PORT_RE = /\d+\.\d+\.\d+\.\d+\:\d*/;
 const SERIAL_PORT_RE = /\/dev\//;
 
 export default function Connection() {
+    const store = useSyncExternalStore(StorageBox.subscribe, StorageBox.getSnapshot);
     const [hostPort, setHostPort] = useState(null);
     const [serialPort, setSerialPort] = useState(null);
     const [serialOrHostPortError, setSerialOrHostPortError] = useState('');
-
+  
     const setSerialPortField = (event) => {
         setSerialPort(event?.target?.value);
     }
@@ -37,11 +42,19 @@ export default function Connection() {
     const sendConnectCommand = () => {
         if (hostPort && hostPort.match(HOST_PORT_RE)) { 
             setSerialOrHostPortError('');
+            StorageBox.setItem('connection', {
+                type: 'hostPort',
+                hostPort
+            });
             // now we need to call fetch
             // and send to server
             remoteConnect(hostPort);
         } else if (serialPort && serialPort.match(SERIAL_PORT_RE)) {
             setSerialOrHostPortError('');
+            StorageBox.setItem('connection', {
+                type: 'serialPort',
+                serialPort
+            });
             // now we need to call fetch
             // and send to server
             remoteConnect(serialPort);

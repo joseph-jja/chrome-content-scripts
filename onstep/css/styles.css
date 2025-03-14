@@ -14,6 +14,7 @@ button {
     color: red;
     padding: 0.5em;
 }
+#info-container,
 #main-container {
     padding: 2px;
     margin: 2px;
