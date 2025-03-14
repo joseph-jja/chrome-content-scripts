@@ -101,10 +101,11 @@ server.get('/setup', (req, res) => {
 
 server.get('/command', (req, res) => {
     const command = req.query?.command;
+    const returnsData = req.query?.returnsData || true;
     if (Connection?.isConnected && command) {
         const decodedCommand = decodeURIComponent(command); 
         if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
-            Connection.sendCommand(decodedCommand).then(resp => {
+            Connection.sendCommand(decodedCommand, returnsData).then(resp => {
                 console.log('Command sent ', decodedCommand, ' response: ' + resp);
                 res.send('Command response: ' + resp);
             }).catch(e => {

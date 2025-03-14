@@ -4,8 +4,9 @@ import Container from 'js/components/base/Container.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
-    daisyChainBooleanCommands
-} from 'js/utils/commandUtils.js';
+    sendCommand
+} from 'js/api/request.js';
+import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
 const { useState } = React;
 
@@ -31,7 +32,7 @@ export default function Directions() {
             setDirection(targetObj);
         }
         if (cmd) {
-            const [err, results] = await daisyChainBooleanCommands([cmd]);
+            const [err, results] = await PromiseWrapper(sendCommand(cmd, false));
             if (err || results !== 0) {
                 setDirectionError(err || results);
             } else {
