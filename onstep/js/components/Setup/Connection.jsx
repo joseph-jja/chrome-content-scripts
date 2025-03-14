@@ -18,8 +18,8 @@ const HOST_PORT_RE = /\d+\.\d+\.\d+\.\d+\:\d*/;
 const SERIAL_PORT_RE = /\/dev\//;
 
 export default function Connection() {
-    const [hostPort, setHostPort] = useState(null);
-    const [serialPort, setSerialPort] = useState(null);
+    const [hostPort, setHostPort] = useState(StorageBox.getItem('hostPort'));
+    const [serialPort, setSerialPort] = useState(StorageBox.getItem('serialPort'));
     const [serialOrHostPortError, setSerialOrHostPortError] = useState('');
   
     const setSerialPortField = (event) => {
@@ -40,19 +40,15 @@ export default function Connection() {
     const sendConnectCommand = () => {
         if (hostPort && hostPort.match(HOST_PORT_RE)) { 
             setSerialOrHostPortError('');
-            StorageBox.setItem('connection', {
-                type: 'hostPort',
-                hostPort
-            });
+            StorageBox.setItem('hostPort', hostPort);
+            StorageBox.deleteItem('serialPort');
             // now we need to call fetch
             // and send to server
             remoteConnect(hostPort);
         } else if (serialPort && serialPort.match(SERIAL_PORT_RE)) {
             setSerialOrHostPortError('');
-            StorageBox.setItem('connection', {
-                type: 'serialPort',
-                serialPort
-            });
+            StorageBox.setItem('serialPort', serialPort);
+            StorageBox.deleteItem('hostPort');
             // now we need to call fetch
             // and send to server
             remoteConnect(serialPort);

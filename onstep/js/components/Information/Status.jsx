@@ -17,17 +17,12 @@ const {
 export default function Status() {
     const storageBox = useSyncExternalStore(StorageBox.subscribe, StorageBox.getSnapshot);
     console.log({ storageBox });
-const formatFields = () => {
-        const results = storageBox.entries().map(item => {
-            return item
-        }).reduce((acc, next) => {
-            return acc + ' - ' + next;  
-        }, []);
-    }
-
+    
     return (
         <>
-            Connected: { formatFields()};
+            Connected: {storageBox.entries().map((item) => (
+                <div>{item[0]}: {item[1]}</div>
+            ))}
         </>
     );
 }

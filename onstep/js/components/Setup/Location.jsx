@@ -15,8 +15,8 @@ const VALID_LAT_LONG_RE = /[\+|\-]?\d+\:\d+/;
 
 // TODO figure out how this would work cross platform
 export default function Location() {
-    const [latitude, setLatitude] = useState(null);
-    const [longitude, setLongitude] = useState(null);
+    const [latitude, setLatitude] = useState(StorageBox.getItem('latitude'));
+    const [longitude, setLongitude] = useState(StorageBox.getItem('longitude');
     const [latitudeLongitudeError, setLatitudeLongitudeError] = useState('');    
     
     const setField = (event) => {
@@ -25,11 +25,12 @@ export default function Location() {
             return;
         }
         const value = event?.target?.value || null;
-        StorageBox.setItem('location', value);
         if (fieldName === 'latitude') {
             setLatitude(value);
+            StorageBox.setItem('latitude', value);
         } else if (fieldName === 'longitude') {
             setLongitude(value);
+            StorageBox.setItem('longitude', value);
         }
     }
 
