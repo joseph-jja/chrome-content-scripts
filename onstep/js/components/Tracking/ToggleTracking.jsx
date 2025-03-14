@@ -7,12 +7,13 @@ import {
     sendCommand
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
+import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
 
 // TODO figure out how this would work cross platform
 export default function ToggleTracking() {
-    const [trackingToggle, setTrackingToggle] = useState('tracking-disable');
+    const [trackingToggle, setTrackingToggle] = useState(StorageBox.getItem('tracking'));
     const [trackingError, setTrackingError] = useState(null);
 
     const setTracking = async (event) => {
@@ -21,15 +22,18 @@ export default function ToggleTracking() {
         if (targetId === 'tracking-enable') {
             cmd = ':Te#';
             setTrackingToggle(targetId);
+            StorageBox.setItem('tracking', targetId);
         } else if (targetId === 'tracking-disable') {
             cmd = ':Td#';
             setTrackingToggle(targetId);
+            StorageBox.setItem('tracking', targetId);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
                 setTrackingError(err || results);
                 setTrackingToggle('tracking-disable');
+                StorageBox.setItem('tracking', 'tracking-disable');
             } else {
                 setTrackingError('');
             }
