@@ -54,7 +54,7 @@ export default function DateTime() {
             // 	:SCMM/DD/YY#
             // 	:SLHH:MM:SS#
             const results = await daisyChainBooleanCommands([`:SC${dateField}#`, ':GC#', `:SL${timeField}#`, ':GL#']);
-            setDateTimeErrorField(results.join('<br/>'));
+            setDateTimeErrorField(results);
         } else {
             setDateTimeErrorField('Invalid date and / or time entered!');
         }

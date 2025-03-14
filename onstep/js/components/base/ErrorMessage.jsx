@@ -7,7 +7,14 @@ export default function ErrorMessage(props) {
     } = props;
 
     if (children) {
-        return (<span class="errorField">{children}</span>);
+        const messages = Array.isArray(children) ? children : [children];
+        return (
+            <>
+                {messages.map((item) => (
+                    <span class="errorField">{item}</span>
+                ))}
+            </>
+        );    
     } else {
         return null;
     }

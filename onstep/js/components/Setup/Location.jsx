@@ -16,7 +16,7 @@ const VALID_LAT_LONG_RE = /[\+|\-]?\d+\:\d+/;
 // TODO figure out how this would work cross platform
 export default function Location() {
     const [latitude, setLatitude] = useState(StorageBox.getItem('latitude'));
-    const [longitude, setLongitude] = useState(StorageBox.getItem('longitude');
+    const [longitude, setLongitude] = useState(StorageBox.getItem('longitude'));
     const [latitudeLongitudeError, setLatitudeLongitudeError] = useState('');    
     
     const setField = (event) => {
@@ -47,7 +47,7 @@ export default function Location() {
             // latitude => :StsDD*MM#
             // longitude => :SgDDD*MM#
             const results = await daisyChainBooleanCommands([`:Sts${latitude}#`, `:Sg${longitude}#`]);
-            setLatitudeLongitudeError(results.join('<br/>'));
+            setLatitudeLongitudeError(results);
         } else {
             setLatitudeLongitudeError('Invalid latitude and / longitude or entered!');
         }
