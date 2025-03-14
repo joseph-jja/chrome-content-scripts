@@ -7,6 +7,7 @@ import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
     daisyChainBooleanCommands
 } from 'js/utils/commandUtils.js';
+import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
 
@@ -24,6 +25,7 @@ export default function Location() {
             return;
         }
         const value = event?.target?.value || null;
+        StorageBox.setItem('location', value);
         if (fieldName === 'latitude') {
             setLatitude(value);
         } else if (fieldName === 'longitude') {
