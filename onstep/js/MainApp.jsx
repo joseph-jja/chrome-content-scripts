@@ -7,10 +7,15 @@ import Tracking from 'js/tabs/Tracking.jsx';
 import Movement from 'js/tabs/Movement.jsx';
 import Advanced from 'js/tabs/Advanced.jsx';
 import Status from 'js/components/Information/Status.jsx';
+import StorageBox from "js/storage/StorageBox.js";
 
-const { useState } = React;
+const {
+    useState,
+    useSyncExternalStore
+} = React;
 
 export default function MainApp() {
+    const storageBox = useSyncExternalStore(StorageBox.subscribe, StorageBox.getSnapshot);
     const [tabField, setTabField] = useState('setup');
 
     function closeApp() {
