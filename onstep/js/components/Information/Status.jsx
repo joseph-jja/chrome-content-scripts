@@ -15,19 +15,12 @@ const {
 } = React;
 
 export default function Status() {
-    const store = useSyncExternalStore(StorageBox.subscribe, StorageBox.getSnapshot);
-    const [dataChg, setDataChg] = useState();
-        
-    const mapItems = () => {
-        const connection = StorageBox.getItem('connection');
-        //setDataChg(connection);
-    };
+    const storageBox = useSyncExternalStore(StorageBox.subscribe, StorageBox.getSnapshot);
+    console.log({ storageBox });
 
-    StorageBox.subscribe(mapItems);
-    
     return (
         <>
-            Connected: { dataChg }
+            Connected: { storageBox }
         </>
     );
 }
