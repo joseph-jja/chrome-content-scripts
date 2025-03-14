@@ -44,7 +44,7 @@ export default function Location() {
             // latitude => :StsDD*MM#
             // longitude => :SgDDD*MM#
             const results = await daisyChainBooleanCommands([`:Sts${latitude}#`, `:Sg${longitude}#`]);
-            setLatitudeLongitudeError(results);
+            setLatitudeLongitudeError(results.join('<br/>'));
         } else {
             setLatitudeLongitudeError('Invalid latitude and / longitude or entered!');
         }
