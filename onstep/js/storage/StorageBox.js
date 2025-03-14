@@ -24,7 +24,7 @@ const StorageBox = {
     
     subscribe(callback) {
         subscribers.add(callback);
-        return () => subscribers.filter(cb => cb !== callback);
+        return () => subscribers.forEach((callback) => callback());
     }
 }
 
