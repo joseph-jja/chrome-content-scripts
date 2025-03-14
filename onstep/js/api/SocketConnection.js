@@ -41,7 +41,7 @@ export default class SocketConnection extends EventEmitter {
         });
     }
     
-    sendCommand(command) {
+    sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
             this.data = [];
             if (!this.client) {
@@ -52,6 +52,10 @@ export default class SocketConnection extends EventEmitter {
                 return resolve(this.data.join(''));
             });
             this.client.write(command);
+            if (!returnsData) {
+                this.removeAllListeners('readEnd');
+                return resolve('no reply');
+            }
         });
     }
 

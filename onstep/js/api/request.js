@@ -2,10 +2,10 @@ import {
     REMOTE_HOST
 } from 'js/config.js';
 
-async function request(url, command = '') {
+async function request(url, command = '', returnsData = true) {
 
     return new Promise((resolve, reject) => {
-        fetch(`${REMOTE_HOST}/${url}?command=${encodeURIComponent(command)}`).then(async response => {
+        fetch(`${REMOTE_HOST}/${url}?command=${encodeURIComponent(command)}&returnsData=${returnsData}`).then(async response => {
             const data = await response.text();
             resolve(data);
         }).catch(e => {

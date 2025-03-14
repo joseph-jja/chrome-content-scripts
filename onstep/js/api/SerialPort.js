@@ -29,7 +29,7 @@ export default class SerialPort extends EventEmitter {
         });
     }
 
-    sendCommand(command) {
+    sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
             this.data = [];
             if (!this.socket && !this.isConnected) {
@@ -37,6 +37,9 @@ export default class SerialPort extends EventEmitter {
             }
 
             this.socket.write(command).then(async res => {
+                if (!returnsData) {
+                    return resolve('no reply');
+                }
                 const data = await this.socket.read();
                 const buffer = new Int8Array(data?.buffer);
                 let result = '',
