@@ -11,15 +11,13 @@ import {
 import StorageBox from "js/storage/StorageBox.js";
 
 const {
-    useState,
-    useSyncExternalStore
+    useState
 } = React;
 
 const HOST_PORT_RE = /\d+\.\d+\.\d+\.\d+\:\d*/;
 const SERIAL_PORT_RE = /\/dev\//;
 
 export default function Connection() {
-    const store = useSyncExternalStore(StorageBox.subscribe, StorageBox.getSnapshot);
     const [hostPort, setHostPort] = useState(null);
     const [serialPort, setSerialPort] = useState(null);
     const [serialOrHostPortError, setSerialOrHostPortError] = useState('');
