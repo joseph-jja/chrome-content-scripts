@@ -21,7 +21,7 @@ export default function Status() {
     return (
         <>
             Connected: { storageBox.forEach(item => (
-            <br/>item
+            <br/>(item)
             ))};
         </>
     );
