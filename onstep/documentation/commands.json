@@ -295,10 +295,6 @@
         "description": "Move to catalog item no.",
         "reply": "Reply: [none]"
     },
-    ":L$#": {
-        "description": "Library record storage is in EEPROM. A catalog name record is like any other except the name must start with a '$'. A special search can then be done with the",
-        "reply": "command to move to that record. It's up to the user to not waste EEPROM with more than one name record per catalog. When the default PEC table size of 824 bytes is used, the first 1024 bytes are devoted to settings. The remaining EEPROM is used for catalog records. Each record is 16 bytes."
-    },
     ":LI#": {
         "description": "Get catalog item id.",
         "reply": "Reply: name,type#"
