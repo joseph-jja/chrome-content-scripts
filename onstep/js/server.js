@@ -83,9 +83,9 @@ app.on('window-all-closed', () => {
 });
 
 server.get('/setup', (req, res) => {
-    const hostPort = req.query?.command;
-    if (hostPort && hostPort.includes(':')) {
-        const [host, port] = hostPort.split(':');
+    const commandOption = req.query?.command;
+    if (commandOption && commandOption.includes(':')) {
+        const [host, port] = commandOption.split(':');
         console.log('Trying to connect');
         Connection = new SocketConnection();
         Connection.connect(host, port).then(resp => {
@@ -96,10 +96,10 @@ server.get('/setup', (req, res) => {
             res.send('Connection failed ' + e);
         });
         return;
-    } else if (hostPort.startsWith('/dev/')) {
+    } else if (commandOption.startsWith('/dev/')) {
           console.log('Trying to connect to tty device');
           Connection = new SerialPort();  
-          Connection.connect(hostPort).then(resp => {
+          Connection.connect(commandOption).then(resp => {
               console.log('Success to connect');
               res.send('Connected ' + resp);
           }).catch(e => {
@@ -108,7 +108,7 @@ server.get('/setup', (req, res) => {
           });
         return;
     }
-    res.send(`Connection failed, invalid host and port values ${hostPort}`);
+    res.send(`Connection failed, invalid host and port values ${commandOption}`);
 });
 
 server.get('/command', (req, res) => {
