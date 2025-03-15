@@ -41,6 +41,7 @@ export default function CustomCommand() {
                 id="command-field" name="command_field" inputValue={commandField}
                 onInputChange={setCommandFromForm}/>
             <CustomInput type="checkbox" labelText="Has response data?" 
+                defaultChecked={true}
                 id="response-field" name="response_field" inputValue={responseField}
                 onInputChange={setResponseFieldForm}/>
             <ErrorMessage>{commandFieldError}</ErrorMessage>
