@@ -17,7 +17,7 @@ export default function Status() {
     
     return (
         <>
-            Connected: {storageBox.entries().map((item) => (
+            Status: {storageBox.entries().map((item) => (
                 <div>{item[0]}: {item[1]}</div>
             ))}
         </>
