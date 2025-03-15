@@ -21,7 +21,15 @@ const server = express();
 let Connection;
 
 const menu = Menu.buildFromTemplate([]);
-Menu.setApplicationMenu(menu)
+Menu.setApplicationMenu(menu);
+
+const args = process.argv;
+let enableDebug = false;
+args.forEach(arg => {
+    if (arg === '--enableDebug') {
+        enableDebug = true;   
+    }
+});
 
 const createWindow = () => {
     // define the window as a let so we can null it out later
@@ -45,7 +53,9 @@ const createWindow = () => {
         win = null;
     });
 
-    //win.webContents.openDevTools();
+    if (enableDebug) {
+        win.webContents.openDevTools();
+    }
 }
 
 app.whenReady().then(() => {
@@ -130,7 +140,7 @@ server.get('/disconnect', (req, res) => {
 });
 
 server.get('/commandsList', (req, res) => {
-    fs.createReadStream(`${basedir}/documentation/commands.json`).pipe(res);
+    fs.createReadStream(`${basedir}/js/data/commands.json`).pipe(res);
 })
 
 server.listen(LISTEN_PORT, () => {
