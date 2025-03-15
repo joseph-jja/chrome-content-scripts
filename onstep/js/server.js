@@ -130,7 +130,7 @@ server.get('/disconnect', (req, res) => {
 });
 
 server.get('/commandsList', (req, res) => {
-    res.pipe(fs.createReadStream(`${basedir}/documentation/commands.json`));
+    fs.createReadStream(`${basedir}/documentation/commands.json`).pipe(res);
 })
 
 server.listen(LISTEN_PORT, () => {
