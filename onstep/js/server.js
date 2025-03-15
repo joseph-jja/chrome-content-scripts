@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+
 import {
     app,
     BrowserWindow,
@@ -126,6 +128,10 @@ server.get('/disconnect', (req, res) => {
     }
     res.send('Disconnected!');
 });
+
+server.get('/commandsList', (req, res) => {
+    res.pipe(fs.createReadStream(`${basedir}/documentation/commands.json`));
+})
 
 server.listen(LISTEN_PORT, () => {
     console.log(`Example app listening on port ${LISTEN_PORT}`);
