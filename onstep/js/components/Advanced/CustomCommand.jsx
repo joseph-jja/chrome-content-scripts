@@ -21,7 +21,7 @@ export default function CustomCommand() {
         setCommandField(value);
     }
     const setResponseFieldForm = (event) => {
-        const value = event?.target?.value;
+        const value = event?.target?.checked;
         setResponseField(value);
     }
     
