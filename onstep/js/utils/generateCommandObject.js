@@ -17,7 +17,7 @@ const MATCH_COMMAND = /\:[A-Za-z0-9\/\:\*\$\.\+\-\!\,\/\?\[\]]*\#/g;
 rl.on('line', line => {
 
     const parts = line.match(MATCH_COMMAND);
-    console.log(parts);
+    //console.log(parts);
     if (!parts || parts.length > 2 || parts.length < 1) {
         return;
     }
