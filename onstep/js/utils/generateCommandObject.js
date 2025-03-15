@@ -30,6 +30,6 @@ rl.on('line', line => {
 });
 
 rl.on('close', () => {
-    fs.writeFileSync(`${basedir}/documentation/commands.json`, JSON.stringify((commandOptions));
+    fs.writeFileSync(`${basedir}/documentation/commands.json`, JSON.stringify(commandOptions));
     console.log("Commands processed: ", Object.keys(commandOptions).length);
 });
