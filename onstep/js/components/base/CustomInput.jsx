@@ -8,6 +8,7 @@ export default function CustomInput(props) {
         name,
         inputValue = '',
         onInputChange,
+        defaultChecked,
         labelText = '',
         size
     } = props;
@@ -17,6 +18,7 @@ export default function CustomInput(props) {
             <label for={name}>{labelText}:&nbsp;</label>  
             <input type={type} id={id} 
                 name={name} size={size}
+                defaultChecked={defaultChecked}
                 onChange={onInputChange} value={inputValue}/>
         </>
     );
