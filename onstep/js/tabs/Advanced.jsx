@@ -60,10 +60,14 @@ export default function Tracking() {
             <CustomSelect id="all-options" name="all_options"
                 labelText="All Commands" size="10"
                 onSelectChange={selectionFieldChange}>
-                {
-                    
-                }
-                </CustomSelect>
+                {data?.map((item) => (
+                    <CustomOption value={item?.key}>
+                        {item?.data?.description}&nbsp;&nbsp;
+                        {item?.key}&nbsp;&nbsp;
+                        {item?.data?.reply}
+                    </CustomOption>
+                ))}
+            </CustomSelect>
         </>
     );
 }
