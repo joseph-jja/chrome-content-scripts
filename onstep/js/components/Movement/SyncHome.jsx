@@ -20,10 +20,10 @@ export default function SyncHome() {
         let cmd;
         if (targetObj === 'go-home') {
             cmd = ':hC#';
-            setHome(targetObj);
+            setHomeSync(targetObj);
         } else if (targetObj === 'sync-position') {
             cmd = ':CM#';
-            setHome(targetObj);
+            setHomeSync(targetObj);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd, false));
