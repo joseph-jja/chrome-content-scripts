@@ -7,7 +7,6 @@ import {
     sendCommand
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
-import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
 
