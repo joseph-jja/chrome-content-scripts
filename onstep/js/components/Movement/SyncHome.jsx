@@ -38,10 +38,10 @@ export default function SyncHome() {
     return ( 
         <Container class="wrapper">
             <CustomButton id="go-home" 
-                onButtonClick={setSyncHomeValue}>Go Home Tracking</CustomButton>
+                onButtonClick={setSyncHomeValue}>Go To Home Position</CustomButton>
             <CustomButton id="sync-position" 
-                onButtonClick={setTrackingRateValue}>Sync Position</CustomButton>
-            <ErrorMessage>{setSyncHomeValue}</ErrorMessage>                
+                onButtonClick={setSyncHomeValue}>Sync Position</CustomButton>
+            <ErrorMessage>{setHomeSyncError}</ErrorMessage>                
         </Container>
     );
 }
