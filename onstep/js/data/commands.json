@@ -476,7 +476,7 @@
         "reply": "Reply: n#"
     },
     ":FP[n]#": {
-        "description": "",
+        "description": "Get % where n is number",
         "reply": "Reply: 0 or 1"
     },
     ":FQ#": {
@@ -536,7 +536,7 @@
         "reply": "Reply: [none]"
     },
     ":ERESET#": {
-        "description": "",
+        "description": "Reset EPROM",
         "reply": "Reply: [none] or 0 (failure)"
     },
     ":ENVRESET#": {
