@@ -41,7 +41,7 @@ export default function SyncHome() {
                 onButtonClick={setSyncHomeValue}>Go To Home Position</CustomButton>
             <CustomButton id="sync-position" 
                 onButtonClick={setSyncHomeValue}>Sync Position</CustomButton>
-            <ErrorMessage>{setHomeSyncError}</ErrorMessage>                
+            <ErrorMessage>{homeSyncError}</ErrorMessage>                
         </Container>
     );
 }
