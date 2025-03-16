@@ -4,13 +4,13 @@ export default function CustomOption(props) {
 
     const {
         value,
-        optionText,
+        children,
         selected = false,
     } = props;
 
     return (
         <>
-            <option value={value} selected={selected}>{optionText}</option>
+            <option value={value} selected={selected}>{children}</option>
         </>
     );
 }
