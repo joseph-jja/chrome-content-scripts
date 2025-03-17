@@ -49,6 +49,26 @@ export default function Rates() {
             }
         }
     };
+    
+    const setTrackingRateValueWithResponse = async (event) => {
+        const targetObj = event?.target?.id;
+        let cmd;
+        if (targetObj === 'enable-refraction-tracking') {
+            cmd = ':Tr#';
+            setTrackingRate(targetObj);
+        } else if (targetObj === 'disable-refraction-tracking') {
+            cmd = ':Tn#';
+            setTrackingRate(targetObj);
+                        
+        }
+        
+        const [err, results] = await PromiseWrapper(sendCommand(cmd, true));
+            if (err || results !== 0) {
+                setTrackingRateError(err || results);
+            } else {
+                setTrackingRateError('');
+            }
+    }
 
     return ( 
         <Container class="wrapper">
@@ -56,18 +76,23 @@ export default function Rates() {
                 onButtonClick={setTrackingRateValue}>Track Default Sidereal Tracking</CustomButton>
             <CustomButton id="tracking-reset" 
                 onButtonClick={setTrackingRateValue}>Reset Sidereal Tracking</CustomButton>
-            <br/>
+            <hr/>
             <CustomButton id="tracking-increase" 
                 onButtonClick={setTrackingRateValue}>Increase Tracking</CustomButton>
             <CustomButton id="tracking-decrease" 
                 onButtonClick={setTrackingRateValue}>Decrease Tracking</CustomButton>
-            <br/>
+            <hr/>
             <CustomButton id="tracking-solar" 
                 onButtonClick={setTrackingRateValue}>Tracking Solar Rate</CustomButton>
             <CustomButton id="tracking-lunar" 
                 onButtonClick={setTrackingRateValue}>Tracking Lunar Rate</CustomButton>
             <CustomButton id="tracking-king" 
                 onButtonClick={setTrackingRateValue}>Tracking King Rate</CustomButton>
+            <hr/>
+            <CustomButton id="enable-refraction-tracking" 
+                onButtonClick={setTrackingRateValueWithResponse}>Tracking Refraction Rate Enable</CustomButton>
+            <CustomButton id="disable-refraction-tracking" 
+                onButtonClick={setTrackingRateValueWithResponse}>Tracking Refraction Rate Disable</CustomButton>
             <ErrorMessage>{trackingRateError}</ErrorMessage>                
         </Container>
     );
