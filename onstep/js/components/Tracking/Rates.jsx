@@ -33,7 +33,10 @@ export default function Rates() {
         } else if (targetObj === 'tracking-lunar') {
             cmd = ':TL#';
             setTrackingRate(targetObj);
-        } else if (targetObj === 'tracking-default') {
+        } else if (targetObj === 'tracking-king') {
+            cmd = ':TK#';
+            setTrackingRate(targetObj);
+        } else if (targetObj === 'tracking-sidereal') {
             cmd = ':TQ#';
             setTrackingRate(targetObj);
         }
@@ -49,19 +52,22 @@ export default function Rates() {
 
     return ( 
         <Container class="wrapper">
+            <CustomButton id="tracking-sidereal" 
+                onButtonClick={setTrackingRateValue}>Track Default Sidereal Tracking</CustomButton>
+            <CustomButton id="tracking-reset" 
+                onButtonClick={setTrackingRateValue}>Reset Sidereal Tracking</CustomButton>
+            <br/>
             <CustomButton id="tracking-increase" 
                 onButtonClick={setTrackingRateValue}>Increase Tracking</CustomButton>
-            <CustomButton id="tracking-reset" 
-                onButtonClick={setTrackingRateValue}>Reset Tracking</CustomButton>
             <CustomButton id="tracking-decrease" 
                 onButtonClick={setTrackingRateValue}>Decrease Tracking</CustomButton>
             <br/>
-            <CustomButton id="tracking-default" 
-                onButtonClick={setTrackingRateValue}>Tracking Default Rate</CustomButton>
             <CustomButton id="tracking-solar" 
                 onButtonClick={setTrackingRateValue}>Tracking Solar Rate</CustomButton>
             <CustomButton id="tracking-lunar" 
                 onButtonClick={setTrackingRateValue}>Tracking Lunar Rate</CustomButton>
+            <CustomButton id="tracking-king" 
+                onButtonClick={setTrackingRateValue}>Tracking King Rate</CustomButton>
             <ErrorMessage>{trackingRateError}</ErrorMessage>                
         </Container>
     );
