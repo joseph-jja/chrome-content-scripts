@@ -18,7 +18,9 @@ export default function Status() {
     return (
         <>
             Status: {storageBox.entries().map((item) => (
-                <div>{item[0]}: {item[1]}</div>
+                item[0] !== 'onstep_options_list' ?
+                   <div>{item[0]}: {item[1]}</div> :
+                   null
             ))}
         </>
     );
