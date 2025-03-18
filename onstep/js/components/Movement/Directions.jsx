@@ -43,15 +43,34 @@ export default function Directions() {
 
     return ( 
         <Container class="wrapper">
-            <CustomButton id="direction-north" 
-                onButtonClick={setMovementValue}>North</CustomButton>
-            <CustomButton id="direction-south" 
-                onButtonClick={setMovementValue}>South</CustomButton>
-            <br/>
-            <CustomButton id="direction-east" 
-                onButtonClick={setMovementValue}>East</CustomButton>
-            <CustomButton id="direction-west" 
-                onButtonClick={setMovementValue}>West</CustomButton>
+            <table>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <CustomButton id="direction-north" 
+                            onButtonClick={setMovementValue}>North</CustomButton></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                        <CustomButton id="direction-east" 
+                            onButtonClick={setMovementValue}>East</CustomButton>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <CustomButton id="direction-west" 
+                            onButtonClick={setMovementValue}>West</CustomButton>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <CustomButton id="direction-south" 
+                            onButtonClick={setMovementValue}>South</CustomButton>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
             <ErrorMessage>{directionError}</ErrorMessage>                
         </Container>
     );
