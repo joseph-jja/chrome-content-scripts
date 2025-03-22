@@ -9,7 +9,9 @@ export default function Setup() {
     return (
         <>
             <Connection/>
+            <hr/>
             <Location/>
+            <hr/>
             <DateTime/>
         </>
     );
