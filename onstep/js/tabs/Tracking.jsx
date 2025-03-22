@@ -7,10 +7,10 @@ import Container from 'js/components/base/Container.jsx';
 export default function Tracking() {
 
     return (
-        <Container>
+        <>
             <ToggleTracking/>
             <hr/>
             <Rates/>
-        </Container>
+        </>
     );
 }
