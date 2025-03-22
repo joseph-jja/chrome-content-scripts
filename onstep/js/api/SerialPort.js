@@ -7,7 +7,7 @@ export default class SerialPort extends EventEmitter {
 
     constructor() {
         super();
-        this.socket = undefined;
+        this.fileDescriptor = undefined;
         this.data = [];
         this.isConnected = false;
     }
@@ -19,7 +19,7 @@ export default class SerialPort extends EventEmitter {
             }
 
             fs.open(ttyDevice, 'r+').then(fd => {
-                this.socket = fd;
+                this.fileDescriptor = fd;
                 this.isConnected = true;
                 return resolve('Success');
             }).catch(e => {
@@ -30,17 +30,17 @@ export default class SerialPort extends EventEmitter {
     }
 
     sendCommand(command, returnsData = true) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             this.data = [];
-            if (!this.socket && !this.isConnected) {
+            if (!this.fileDescriptor && !this.isConnected) {
                 return reject('Not connected!');
             }
 
-            this.socket.write(command).then(async res => {
+            this.fileDescriptor.write(command).then(async res => {
                 if (!returnsData) {
                     return resolve('no reply');
                 }
-                const data = await this.socket.read();
+                const data = await this.fileDescriptor.read();
                 const buffer = new Int8Array(data?.buffer);
                 let result = '',
                     i = 0,
@@ -65,10 +65,10 @@ export default class SerialPort extends EventEmitter {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.socket) {
+            if (!this.fileDescriptor) {
                 return reject('Not connected!');
             }
-            this.socket.close();
+            this.fileDescriptor.close();
             this.isConnected = false;
             resolve('Closed');
         });
