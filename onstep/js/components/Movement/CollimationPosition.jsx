@@ -11,6 +11,7 @@ import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 const { useState } = React;
 
 const DOBSONIAN_COLLIMATION_POSITION = '//:Sas10:00:00#';
+const GOTO_HORIZONTAL_POSITION = ':MA#';
 
 // TODO figure out how this would work cross platform
 export default function CollimationPosition() {
