@@ -8,12 +8,12 @@ import Container from 'js/components/base/Container.jsx';
 // composite of components for the page
 export default function Setup() {
     return (
-        <Container>
+        <>
             <Connection/>
             <hr/>
             <Location/>
             <hr/>
             <DateTime/>
-        </Container>
+        </>
     );
 }
