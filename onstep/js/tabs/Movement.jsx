@@ -8,6 +8,7 @@ export default function Movement() {
     return (
         <Container>
             <Directions/>
+            <hr/>
             <SyncHome/>
         </Container>
     );
