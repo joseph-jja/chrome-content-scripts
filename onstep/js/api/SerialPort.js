@@ -3,6 +3,8 @@ import {
     EventEmitter
 } from 'node:events';
 
+import PromiseWrapper from 'js/utils/PromiseWrapper.js';
+
 export default class SerialPort extends EventEmitter {
 
     constructor() {
@@ -13,19 +15,20 @@ export default class SerialPort extends EventEmitter {
     }
 
     connect(ttyDevice) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             if (!ttyDevice) {
                 return reject('Invalid ttyp device!');
             }
 
-            fs.open(ttyDevice, 'r+').then(fd => {
-                this.fileDescriptor = fd;
+            const [err, results] = await PromiseWrapper(fs.open(ttyDevice, 'r+'));
+            if (results ) {
+                this.fileDescriptor = results;
                 this.isConnected = true;
                 return resolve('Success');
-            }).catch(e => {
-                console.log('Error: ', e);
-                return reject(e);
-            });
+            } else {
+                console.log('Error: ', err);
+                return reject(err);
+            }
         });
     }
 
@@ -36,7 +39,8 @@ export default class SerialPort extends EventEmitter {
                 return reject('Not connected!');
             }
 
-            this.fileDescriptor.write(command).then(async res => {
+            const [err, results] = await PromiseWrapper(this.fileDescriptor.write(command));
+            if (!err) {
                 if (!returnsData) {
                     return resolve('no reply');
                 }
@@ -56,9 +60,9 @@ export default class SerialPort extends EventEmitter {
                 }
                 console.log('got data ', result); 
                 return resolve(result);
-            }).catch(e => {
-                console.log('Error: ', e);
-                return reject(e);
+            } else {
+                console.log('Error: ', err);
+                return reject(err);
             });
         });
     }
