@@ -55,8 +55,9 @@ export default function Tracking() {
     }
     
     return (
-        <>
+        <Container>
             <CustomCommand/>
+            <hr/>
             <CustomSelect id="all-options" name="all_options"
                 labelText="All Commands" size="10"
                 onSelectChange={selectionFieldChange}>
@@ -68,6 +69,6 @@ export default function Tracking() {
                     </CustomOption>
                 ))}
             </CustomSelect>
-        </>
+        </Container>
     );
 }
