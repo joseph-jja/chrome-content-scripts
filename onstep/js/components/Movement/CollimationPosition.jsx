@@ -11,45 +11,29 @@ import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
 const { useState } = React;
 
+const DOBSONIAN_COLLIMATION_POSITION = '//:Sas10:00:00#';
+
 // TODO figure out how this would work cross platform
 export default function CollimationPosition() {
     const [collimate, setCollimate] = useState(null);
     const [collimateError, setCollimateError] = useState(null);
 
-    const setMovementValue = async (event) => {
+    const setCollimationPosition = async (event) => {
         const targetObj = event?.target?.id;
-        let cmd;
-        if (targetObj === 'direction-north') {
-            cmd = ':Qn#';
-            setDirection(targetObj);
-        } else if (targetObj === 'direction-south') {
-            cmd = ':Qs#';
-            setDirection(targetObj);
-        } else if (targetObj === 'direction-east') {
-            cmd = ':Qe#';
-            setDirection(targetObj);
-        } else if (targetObj === 'direction-west') {
-            cmd = ':Qw#';
-            setDirection(targetObj);
-        }
-        if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd, false));
-            if (err || results !== 0) {
-                setDirectionError(err || results);
-            } else {
-                setDirectionError('');
-            }
+        const [err, results] = await PromiseWrapper(sendCommand(DOBSONIAN_COLLIMATION_POSITION, true));
+        if (err || results !== 0) {
+            setCollimateError(err || results);
+        } else {
+            setCollimateError('');
         }
     };
 
     return ( 
         <Container class="wrapper">
-            <CustomInput/>
-            <CustomButton id="direction-north" 
-                onButtonClick={setMovementValue}>North</CustomButton>
-            <ErrorMessage>{directionError}</ErrorMessage>                
+            <CustomInput type="text"/>
+            <CustomButton id="collimate-position" 
+                onButtonClick={setCollimationPosition}>Goto Collimation Position</CustomButton>
+            <ErrorMessage>{collimateError}</ErrorMessage>                
         </Container>
     );
 }
-
-//:SasDD:MM:SS# *
