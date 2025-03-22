@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Container from 'js/components/base/Container.jsx';
-import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
@@ -30,7 +29,6 @@ export default function CollimationPosition() {
 
     return ( 
         <Container class="wrapper">
-            <CustomInput type="text"/>
             <CustomButton id="collimate-position" 
                 onButtonClick={setCollimationPosition}>Goto Collimation Position</CustomButton>
             <ErrorMessage>{collimateError}</ErrorMessage>                
