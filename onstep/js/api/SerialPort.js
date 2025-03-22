@@ -63,7 +63,7 @@ export default class SerialPort extends EventEmitter {
             } else {
                 console.log('Error: ', err);
                 return reject(err);
-            });
+            }
         });
     }
 
