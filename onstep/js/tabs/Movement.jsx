@@ -6,10 +6,10 @@ import SyncHome from 'js/components/Movement/SyncHome.jsx';
 
 export default function Movement() {
     return (
-        <Container>
+        <>
             <Directions/>
             <hr/>
             <SyncHome/>
-        </Container>
+        </>
     );
 }
