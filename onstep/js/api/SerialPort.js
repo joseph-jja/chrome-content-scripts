@@ -3,7 +3,7 @@ import {
     EventEmitter
 } from 'node:events';
 
-import PromiseWrapper from 'js/utils/PromiseWrapper.js';
+import PromiseWrapper from '#server/utils/PromiseWrapper.js';
 
 export default class SerialPort extends EventEmitter {
 
