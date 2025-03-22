@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import {
     app,
     BrowserWindow,
+    dialog,
     ipcMain,
     Menu
 } from 'electron';
@@ -20,7 +21,20 @@ const server = express();
 
 let Connection;
 
-const menu = Menu.buildFromTemplate([]);
+const menu = Menu.buildFromTemplate([{
+    label: app.name,
+    submenu: [{ 
+        label: 'about',
+        click: () => {
+            dialog.showMessageBox({ 
+                title: 'about',
+                message: 'OnStep/OnStepX control board desktop app'
+            });
+        }
+    }, {
+        role: 'quit'
+    }]
+}]);
 Menu.setApplicationMenu(menu);
 
 const args = process.argv;
