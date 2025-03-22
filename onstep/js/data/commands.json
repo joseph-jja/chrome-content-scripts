@@ -304,7 +304,7 @@
         "reply": "Reply: name,type,RA,Dec#"
     },
     ":LWssss,ttt#": {
-        "description": "UNK,OC,GC,PN,DN,SG,EG,IG,KNT,SNR,GAL,CN,STR,PLA,CMT,AST",
+        "description": "Write catalog item info. ssss=name, ttt=type code: UNK,OC,GC,PN,DN,SG,EG,IG,KNT,SNR,GAL,CN,STR,PLA,CMT,AST",
         "reply": "Reply: 0 or 1"
     },
     ":LD#": {
@@ -544,7 +544,7 @@
         "reply": "Reply: \"NV memory will be cleared...\""
     },
     ":SBn#": {
-        "description": "7=4800, 8=2400, 9=1200",
+        "description": "Set baud rate: 1=56.7K, 2=38.4K, 3=28.8K, 4=19.2K, 5=14.4K, 6=9600, 7=4800, 8=2400, 9=12007=4800, 8=2400, 9=1200",
         "reply": "Reply: 0 or 1"
     },
     ":U#": {
