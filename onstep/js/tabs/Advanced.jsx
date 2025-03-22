@@ -7,10 +7,10 @@ import AllCommandsList from 'js/components/Advanced/AllCommandsList.jsx';
 export default function Tracking() {
     
     return (
-        <Container>
+        <>
             <CustomCommand/>
             <hr/>
             <AllCommandsList/>
-        </Container>
+        </>
     );
 }
