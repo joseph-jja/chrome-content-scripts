@@ -2,11 +2,11 @@ import {
     EventEmitter
 } from 'node:events';
 
-import { SerialPort as SerialPortNPM } from 'serialport'
+import { SerialPort } from 'serialport'
 
 import PromiseWrapper from '#server/utils/PromiseWrapper.js';
 
-export default class SerialPort extends EventEmitter {
+export default class USBSerialPort extends EventEmitter {
 
     constructor() {
         super();
@@ -22,7 +22,7 @@ export default class SerialPort extends EventEmitter {
             }
 
             try {
-                this.fileDescriptor = new SerialPortNPM({ path: ttyDevice, baudRate: 9600 });
+                this.fileDescriptor = new SerialPort({ path: ttyDevice, baudRate: 9600 });
                 this.isConnected = true;
                 return resolve('Success');
             } catch (err) {
