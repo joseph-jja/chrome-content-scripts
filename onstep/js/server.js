@@ -130,11 +130,11 @@ server.get('/setup', (req, res) => {
 
 server.get('/command', (req, res) => {
     const command = req.query?.command;
-    const returnsData = req.query?.returnsData;
+    const returnsData = safeParse(req.query?.returnsData);
     if (Connection?.isConnected && command) {
         const decodedCommand = decodeURIComponent(command); 
         if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
-            const expectResponse = (typeof safeParse(returnsData) === 'boolean' ? returnsData : true);
+            const expectResponse = (typeof returnsData === 'boolean' ? returnsData : true);
             console.log('Should be returning data? ', returnsData, expectResponse);
             Connection.sendCommand(decodedCommand, expectResponse).then(resp => {
                 console.log('Command sent ', decodedCommand, ' response: ' + resp);
