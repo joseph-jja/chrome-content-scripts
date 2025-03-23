@@ -2,7 +2,7 @@ import {
     EventEmitter
 } from 'node:events';
 
-import { SerialPort } from 'serialport'
+import { SerialPort as SerialPortNPM } from 'serialport'
 
 import PromiseWrapper from '#server/utils/PromiseWrapper.js';
 
@@ -22,7 +22,7 @@ export default class SerialPort extends EventEmitter {
             }
 
             try {
-                this.fileDescriptor = new SerialPort({ path: ttyDevice, baudRate: 9600 });
+                this.fileDescriptor = new SerialPortNPM({ path: ttyDevice, baudRate: 9600 });
                 this.isConnected = true;
                 return resolve('Success');
             } catch (err) {
@@ -40,7 +40,8 @@ export default class SerialPort extends EventEmitter {
             }
 
             try {
-                this.fileDescriptor.write(command);
+                const bytes = this.fileDescriptor.write(command);
+                console.log('Data writen', bytes);
             } catch(err) {
                 console.log('Error: ', err);
                 return reject(err);
@@ -48,26 +49,25 @@ export default class SerialPort extends EventEmitter {
             if (!returnsData) {
                 return resolve('no reply');
             }
-                const data = await this.fileDescriptor.read();
-                const buffer = new Int8Array(data?.buffer);
-                let result = '',
-                    i = 0,
-                    end = buffer?.length || 0;
-                while (!result.includes('#') && i < end) {
-                    const charData = String.fromCharCode(buffer[i]);
-                    const charCode = charData.charCodeAt(0); 
-                    if (charCode > 32 && charCode < 127) {
-                        //console.log('-', charData, '-', charCode);
-                        result += charData;
-                    }
-                    i++;
+            console.log('returns data? ', returnsData);
+            const dataBuffer = Buffer.alloc(100)
+            await this.fileDescriptor.read(dataBuffer, 0, 100);
+            
+            const buffer = new Int8Array(dataBuffer);
+            let result = '',
+                i = 0,
+                end = buffer?.length || 0;
+            while (!result.includes('#') && i < end) {
+                const charData = String.fromCharCode(buffer[i]);
+                const charCode = charData.charCodeAt(0); 
+                if (charCode > 32 && charCode < 127) {
+                    //console.log('-', charData, '-', charCode);
+                    result += charData;
                 }
-                console.log('got data ', result); 
-                return resolve(result);
-            } else {
-                console.log('Error: ', err);
-                return reject(err);
+                i++;
             }
+            console.log('got data ', result); 
+            return resolve(result);
         });
     }
 
