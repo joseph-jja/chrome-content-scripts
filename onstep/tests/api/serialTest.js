@@ -5,7 +5,7 @@ const Connection = new SerialPort();
 const TTY_DEVICE = '/dev/ttyACM0';
 
 Connection.connect(TTY_DEVICE).then(async resp => {
-    console.log('Success to connect', resp, Connection.socket, Connection.isConnected);
+    console.log('Success to connect', resp, Connection.usbPort, Connection.isConnected);
     
     try {
         const res = await Connection.sendCommand(':GC#');
