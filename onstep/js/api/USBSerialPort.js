@@ -24,6 +24,7 @@ export default class USBSerialPort extends EventEmitter {
             try {
                 this.usbPort = new SerialPort({ path: ttyDevice, baudRate: 9600 });
                 this.isConnected = true;
+                console.log('Connected');
                 return resolve('Success');
             } catch (err) {
                 console.log('Error: ', err);
@@ -41,15 +42,15 @@ export default class USBSerialPort extends EventEmitter {
 
             try {
                 const bytes = this.usbPort.write(command);
-                console.log('Data writen', bytes);
+                console.log('Data writen', bytes, command);
             } catch(err) {
                 console.log('Error: ', err);
                 return reject(err);
             }
+            console.log('Expected to return data? ', returnsData);
             if (!returnsData) {
                 return resolve('no reply');
             }
-            console.log('returns data? ', returnsData);
             const dataBuffer = Buffer.alloc(100)
             await this.usbPort.read(dataBuffer, 0, 100);
             
@@ -66,7 +67,7 @@ export default class USBSerialPort extends EventEmitter {
                 }
                 i++;
             }
-            console.log('got data ', result); 
+            console.log('Results from read ', result, buffer.length); 
             return resolve(result);
         });
     }
