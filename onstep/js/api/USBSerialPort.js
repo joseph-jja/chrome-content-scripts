@@ -15,14 +15,14 @@ export default class USBSerialPort extends EventEmitter {
         this.isConnected = false;
     }
 
-    connect(ttyDevice) {
+    connect(usbDevice) {
         return new Promise(async (resolve, reject) => {
-            if (!ttyDevice) {
-                return reject('Invalid ttyp device!');
+            if (!usbDevice) {
+                return reject(`Invalid usb device ${usbDevice}!`);
             }
 
             try {
-                this.usbPort = new SerialPort({ path: ttyDevice, baudRate: 9600 });
+                this.usbPort = new SerialPort({ path: usbDevice, baudRate: 9600 });
                 this.isConnected = true;
                 console.log('Connected');
                 return resolve('Success');
