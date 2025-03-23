@@ -10,7 +10,7 @@ export default class USBSerialPort extends EventEmitter {
 
     constructor() {
         super();
-        this.fileDescriptor = undefined;
+        this.usbPort = undefined;
         this.data = [];
         this.isConnected = false;
     }
@@ -22,7 +22,7 @@ export default class USBSerialPort extends EventEmitter {
             }
 
             try {
-                this.fileDescriptor = new SerialPort({ path: ttyDevice, baudRate: 9600 });
+                this.usbPort = new SerialPort({ path: ttyDevice, baudRate: 9600 });
                 this.isConnected = true;
                 return resolve('Success');
             } catch (err) {
@@ -35,12 +35,12 @@ export default class USBSerialPort extends EventEmitter {
     sendCommand(command, returnsData = true) {
         return new Promise(async (resolve, reject) => {
             this.data = [];
-            if (!this.fileDescriptor && !this.isConnected) {
+            if (!this.usbPort && !this.isConnected) {
                 return reject('Not connected!');
             }
 
             try {
-                const bytes = this.fileDescriptor.write(command);
+                const bytes = this.usbPort.write(command);
                 console.log('Data writen', bytes);
             } catch(err) {
                 console.log('Error: ', err);
@@ -51,7 +51,7 @@ export default class USBSerialPort extends EventEmitter {
             }
             console.log('returns data? ', returnsData);
             const dataBuffer = Buffer.alloc(100)
-            await this.fileDescriptor.read(dataBuffer, 0, 100);
+            await this.usbPort.read(dataBuffer, 0, 100);
             
             const buffer = new Int8Array(dataBuffer);
             let result = '',
@@ -73,10 +73,10 @@ export default class USBSerialPort extends EventEmitter {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.fileDescriptor || !this.isConnected) {
+            if (!this.usbPort || !this.isConnected) {
                 return reject('Not connected!');
             }
-            this.fileDescriptor.close();
+            this.usbPort.close();
             this.isConnected = false;
             resolve('Closed');
         });
