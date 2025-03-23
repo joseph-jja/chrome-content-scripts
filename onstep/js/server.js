@@ -14,6 +14,9 @@ import SocketConnection from '#server/api/SocketConnection.js';
 import {
     LISTEN_PORT
 } from '#server/config.js';
+import {
+    safeParse
+} from '#server/utils/jsonUtils.js';
 
 const basedir = process.cwd();
 
@@ -131,7 +134,8 @@ server.get('/command', (req, res) => {
     if (Connection?.isConnected && command) {
         const decodedCommand = decodeURIComponent(command); 
         if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
-            const expectResponse = (typeof returnsData === 'boolean' ? returnsData : true);
+            const expectResponse = (typeof safeParse(returnsData) === 'boolean' ? returnsData : true);
+            console.log('Should be returning data? ', returnsData, expectResponse);
             Connection.sendCommand(decodedCommand, expectResponse).then(resp => {
                 console.log('Command sent ', decodedCommand, ' response: ' + resp);
                 res.send('Command response: ' + resp);
