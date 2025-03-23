@@ -1,7 +1,8 @@
-import fs from 'node:fs/promises';
 import {
     EventEmitter
 } from 'node:events';
+
+import { SerialPort } from 'serialport'
 
 import PromiseWrapper from '#server/utils/PromiseWrapper.js';
 
@@ -20,12 +21,11 @@ export default class SerialPort extends EventEmitter {
                 return reject('Invalid ttyp device!');
             }
 
-            const [err, results] = await PromiseWrapper(fs.open(ttyDevice, 'r+'));
-            if (results ) {
-                this.fileDescriptor = results;
+            try {
+                this.fileDescriptor = new SerialPort({ path: ttyDevice, baudRate: 9600 });
                 this.isConnected = true;
                 return resolve('Success');
-            } else {
+            } catch (err) {
                 console.log('Error: ', err);
                 return reject(err);
             }
@@ -39,11 +39,15 @@ export default class SerialPort extends EventEmitter {
                 return reject('Not connected!');
             }
 
-            const [err, results] = await PromiseWrapper(this.fileDescriptor.write(command));
-            if (!err) {
-                if (!returnsData) {
-                    return resolve('no reply');
-                }
+            try {
+                this.fileDescriptor.write(command);
+            } catch(err) {
+                console.log('Error: ', err);
+                return reject(err);
+            }
+            if (!returnsData) {
+                return resolve('no reply');
+            }
                 const data = await this.fileDescriptor.read();
                 const buffer = new Int8Array(data?.buffer);
                 let result = '',
