@@ -41,6 +41,10 @@ export default class SocketConnection extends EventEmitter {
         });
     }
     
+    isConnected() {
+        return this.isConnected;
+    }
+    
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
             this.data = [];

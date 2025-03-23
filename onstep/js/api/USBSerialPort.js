@@ -3,6 +3,7 @@ import {
 } from 'node:events';
 
 import { SerialPort } from 'serialport'
+import { SerialPortStream } from '@serialport/stream';
 
 import PromiseWrapper from '#server/utils/PromiseWrapper.js';
 
@@ -12,31 +13,39 @@ export default class USBSerialPort extends EventEmitter {
         super();
         this.usbPort = undefined;
         this.data = [];
-        this.isConnected = false;
     }
 
     connect(usbDevice) {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             if (!usbDevice) {
                 return reject(`Invalid usb device ${usbDevice}!`);
             }
 
             try {
                 this.usbPort = new SerialPort({ path: usbDevice, baudRate: 9600 });
-                this.isConnected = true;
-                console.log('Connected');
-                return resolve('Success');
+                this.usbPort.once('open', (x) => {
+                    console.log('Connected open', );  
+                    return resolve('Success');              
+                });
+                this.usbPort.on('error', err => {
+                    console.log('Error opening ', err);  
+                    return reject(err);            
+                });
             } catch (err) {
                 console.log('Error: ', err);
                 return reject(err);
             }
         });
     }
+    
+    isConnected() {
+        return (this.usbPort?.port?.fd ? true: false);
+    }
 
     sendCommand(command, returnsData = true) {
         return new Promise(async (resolve, reject) => {
             this.data = [];
-            if (!this.usbPort && !this.isConnected) {
+            if (!this.usbPort && !this.isConnected()) {
                 return reject('Not connected!');
             }
 
@@ -74,7 +83,7 @@ export default class USBSerialPort extends EventEmitter {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.usbPort || !this.isConnected) {
+            if (!this.usbPort || !this.isConnected()) {
                 return reject('Not connected!');
             }
             this.usbPort.close();

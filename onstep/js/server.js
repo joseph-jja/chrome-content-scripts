@@ -91,7 +91,7 @@ ipcMain.on('close', () => {
 });
 
 app.on('window-all-closed', () => {
-    if (Connection?.isConnected) {
+    if (Connection?.isConnected()) {
         Connection.disconnect();
     }
     if (process.platform !== 'darwin') {    
@@ -131,7 +131,7 @@ server.get('/setup', (req, res) => {
 server.get('/command', (req, res) => {
     const command = req.query?.command;
     const returnsData = safeParse(req.query?.returnsData);
-    if (Connection?.isConnected && command) {
+    if (Connection?.isConnected() && command) {
         const decodedCommand = decodeURIComponent(command); 
         if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
             const expectResponse = (typeof returnsData === 'boolean' ? returnsData : true);
@@ -151,7 +151,7 @@ server.get('/command', (req, res) => {
 });
 
 server.get('/disconnect', (req, res) => {
-    if (Connection?.isConnected) {
+    if (Connection?.isConnected()) {
         Connection.disconnect();
         Connection = null;
     }
