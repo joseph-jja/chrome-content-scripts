@@ -9,7 +9,7 @@ import {
 } from 'electron';
 import express from 'express';
 
-import SerialPort from '#server/api/SerialPort.js';
+import SerialPort from '#server/api/USBSerialPort.js';
 import SocketConnection from '#server/api/SocketConnection.js';
 import {
     LISTEN_PORT
