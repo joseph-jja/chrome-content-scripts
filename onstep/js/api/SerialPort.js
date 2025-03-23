@@ -73,7 +73,7 @@ export default class SerialPort extends EventEmitter {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.fileDescriptor) {
+            if (!this.fileDescriptor || !this.isConnected) {
                 return reject('Not connected!');
             }
             this.fileDescriptor.close();
