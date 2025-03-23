@@ -1,4 +1,4 @@
-import SerialPort from '#server/api/SerialPort.js';
+import SerialPort from '#server/api/USBSerialPort.js';
 
 const Connection = new SerialPort();
 
