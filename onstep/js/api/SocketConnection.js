@@ -35,10 +35,6 @@ export default class SocketConnection extends DeviceConnection {
             });
     }
     
-    isConnected() {
-        return this.isConnected;
-    }
-    
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
             this.data = [];
