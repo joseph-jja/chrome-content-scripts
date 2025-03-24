@@ -62,7 +62,7 @@ export default class USBSerialPort extends DeviceConnection {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.device || !this.connected()) {
+            if (!this.device || !this.isConnected()) {
                 return reject('Not connected!');
             }
             this.device.close();
