@@ -33,6 +33,7 @@ export default class SocketConnection extends DeviceConnection {
                 this.data.push(results);
                 this.emit('readEnd');
             });
+        });
     }
     
     sendCommand(command, returnsData = true) {
