@@ -105,7 +105,7 @@ server.get('/setup', (req, res) => {
         const [host, port] = commandOption.split(':');
         console.log('Trying to connect');
         Connection = new SocketConnection();
-        Connection.connect(host, port).then(resp => {
+        Connection.connect({host, port}).then(resp => {
             console.log('Success to connect');
             res.send('Connected ' + resp);
         }).catch(e => {
@@ -116,7 +116,7 @@ server.get('/setup', (req, res) => {
     } else if (commandOption.startsWith('/dev/')) {
           console.log('Trying to connect to tty device');
           Connection = new SerialPort();  
-          Connection.connect(commandOption).then(resp => {
+          Connection.connect({usbDevice: commandOption}).then(resp => {
               console.log('Success to connect');
               res.send('Connected ' + resp);
           }).catch(e => {
