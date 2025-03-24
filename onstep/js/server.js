@@ -105,7 +105,7 @@ server.get('/setup', (req, res) => {
         const [host, port] = commandOption.split(':');
         console.log('Trying to connect');
         Connection = new SocketConnection();
-        Connection.connect({host, port}).then(resp => {
+        Connection.connect({host: host, port: port}).then(resp => {
             console.log('Success to connect');
             res.send('Connected ' + resp);
         }).catch(e => {
