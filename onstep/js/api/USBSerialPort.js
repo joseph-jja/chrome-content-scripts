@@ -1,12 +1,8 @@
-import {
-    EventEmitter
-} from 'node:events';
-
 import { SerialPort } from 'serialport'
 
-import PromiseWrapper from '#server/utils/PromiseWrapper.js';
+import DeviceConnection from '#server/api/DeviceConnection.js';
 
-export default class USBSerialPort extends EventEmitter {
+export default class USBSerialPort extends DeviceConnection {
 
     constructor() {
         super();
