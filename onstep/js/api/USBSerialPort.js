@@ -8,6 +8,7 @@ export default class USBSerialPort extends DeviceConnection {
 
     constructor() {
         super();
+        this.data = [];
     }
 
     connect(options) {
@@ -33,6 +34,11 @@ export default class USBSerialPort extends DeviceConnection {
                     console.log('Error opening ', err);
                     return reject(err);
                 });
+                this.device.on('data', msg => {
+                    const results = msg.toString()
+                    this.data.push(results);
+                    this.emit('readEnd');
+                });
             } catch (err) {
                 console.log('Error: ', err);
                 return reject(err);
@@ -51,17 +57,15 @@ export default class USBSerialPort extends DeviceConnection {
                 return reject('Not connected!');
             }
 
+            this.once('readEnd', () => {
+                return resolve(this.data.join(''));
+            });
             const bytes = this.device.write(command);
             console.log('Data writen', bytes, command);
-            /*if (!this.returnsData) {                
-                this.device.write(':GVP#');
-                console.log('No reply is expected, returning firmware name');
-            }*/
-            this.device.once('data', data => {
-                const results = data?.toString();
-                console.log('Results from read ', results);
-                return resolve(results);
-            });
+            if (!returnsData) {
+                this.removeAllListeners('readEnd');
+                return resolve('no reply');
+            }
         });
     }
 
