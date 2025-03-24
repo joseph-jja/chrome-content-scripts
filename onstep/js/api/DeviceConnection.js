@@ -14,7 +14,7 @@ export default class DeviceConnection extends EventEmitter {
         return this.isConnected && this.device;
     }
 
-    connect(device, options) {
+    connect(options) {
         throw new Error('Child must implement');
     }
 
