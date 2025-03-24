@@ -11,7 +11,7 @@ export default class DeviceConnection extends EventEmitter {
     }
 
     isConnected() {
-        return this.connected && this.device;
+        return (this.connected && this.device ? true: false);
     }
 
     connect(options) {

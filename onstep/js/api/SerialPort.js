@@ -14,11 +14,11 @@ export default class SerialPort extends DeviceConnection {
             const {
                 usbDevice
             } = options;
-            if (!ttyDevice) {
+            if (!usbDevice) {
                 return reject('Invalid ttyp device!');
             }
 
-            fs.open(ttyDevice, 'r+').then(fd => {
+            fs.open(usbDevice, 'r+').then(fd => {
                 this.device = fd;
                 this.connected = true;
                 return resolve('Success');
@@ -32,7 +32,7 @@ export default class SerialPort extends DeviceConnection {
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
             this.data = [];
-            if (!this.device && !this.connected) {
+            if (!this.isConnected()) {
                 return reject('Not connected!');
             }
 
