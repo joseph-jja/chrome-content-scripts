@@ -13,13 +13,13 @@ export default class SocketConnection extends DeviceConnection {
 
     connect(options) {
         return new Promise((resolve, reject) => {
-            if (!host || !port) {
-                return reject('Invalid host and or port!');
-            }
             const {
                 host,
                 port
             } = options;
+            if (!host || !port) {
+                return reject('Invalid host and or port!');
+            }
             this.device = new Socket();
             this.device.connect(port, host, () => {
                 this.isConnected = true;
