@@ -24,6 +24,9 @@ export default function SyncHome() {
         } else if (targetObj === 'sync-position') {
             cmd = ':CM#';
             setHomeSync(targetObj);
+        } else if (targetObj === 'stop-mvoement') {
+            cmd = ':Q#';
+            setHomeSync(targetObj);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd, false));
@@ -41,6 +44,8 @@ export default function SyncHome() {
                 onButtonClick={setSyncHomeValue}>Go To Home Position</CustomButton>
             <CustomButton id="sync-position" 
                 onButtonClick={setSyncHomeValue}>Sync Position</CustomButton>
+            <CustomButton id="stop-mvoement" 
+                onButtonClick={setSyncHomeValue}>Stop Movement</CustomButton>
             <ErrorMessage>{homeSyncError}</ErrorMessage>                
         </Container>
     );
