@@ -7,11 +7,11 @@ export default class DeviceConnection extends EventEmitter {
     constructor() {
         super();
         this.device = undefined;
-        this.isConnected = false;
+        this.connected = false;
     }
 
     isConnected() {
-        return this.isConnected && this.device;
+        return this.connected && this.device;
     }
 
     connect(options) {
