@@ -26,11 +26,11 @@ let Connection;
 const menu = Menu.buildFromTemplate([{
     label: app.name,
     submenu: [{
-        label: 'about',
+        label: 'About',
         click: () => {
             dialog.showMessageBox({
-                title: 'about',
-                message: 'OnStep/OnStepX control board desktop app'
+                title: 'About',
+                message: 'OnStep/OnStepX desktop control app'
             });
         }
     }, {
