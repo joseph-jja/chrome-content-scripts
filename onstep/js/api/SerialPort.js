@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 
 import DeviceConnection from '#server/api/DeviceConnection.js';
 
-export default class SerialPort extend DeviceConnection {
+export default class SerialPort extends DeviceConnection {
 
     constructor() {
         super();
