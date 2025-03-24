@@ -47,17 +47,16 @@ export default class USBSerialPort extends EventEmitter {
                 return reject('Not connected!');
             }
 
-            try {
-                const bytes = this.usbPort.write(command);
-                console.log('Data writen', bytes, command);
-            } catch(err) {
-                console.log('Error: ', err);
-                return reject(err);
+            const bytes = this.usbPort.write(command);
+            console.log('Data writen', bytes, command);
+            if (!this.returnsData) {                
+                this.usbPort.write(':GVP#');
+                console.log('No reply is expected, returning firmware name');
             }
             this.usbPort.once('data', data => {
                 const results = data?.toString(); 
                 console.log('Results from read ', results);
-                resolve(results);
+                return resolve(results);
             });
         });
     }
