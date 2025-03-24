@@ -42,7 +42,7 @@ export default class USBSerialPort extends DeviceConnection {
     sendCommand(command, returnsData = true) {
         return new Promise(async (resolve, reject) => {
             this.data = [];
-            if (!this.device && !this.isConnected()) {
+            if (!this.device && !this.connected()) {
                 return reject('Not connected!');
             }
 
@@ -62,11 +62,11 @@ export default class USBSerialPort extends DeviceConnection {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.device || !this.isConnected()) {
+            if (!this.device || !this.connected()) {
                 return reject('Not connected!');
             }
             this.device.close();
-            this.isConnected = false;
+            this.connected = false;
             resolve('Closed');
         });
     }
