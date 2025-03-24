@@ -29,7 +29,7 @@ export default function SyncHome() {
             setHomeSync(targetObj);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd, false));
+            const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
                 setHomeSyncError(err || results);
             } else {

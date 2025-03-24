@@ -32,7 +32,7 @@ export default function Directions() {
             setDirection(targetObj);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd, false));
+            const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
                 setDirectionError(err || results);
             } else {

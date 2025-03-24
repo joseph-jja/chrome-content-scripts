@@ -13,22 +13,17 @@ const { useState } = React;
 
 export default function CustomCommand() {
     const [commandField, setCommandField] = useState(null);
-    const [responseField, setResponseField] = useState(true);
     const [commandFieldError, setCommandFieldError] = useState(null);
         
     const setCommandFromForm = (event) => {
         const value = event?.target?.value;
         setCommandField(value);
     }
-    const setResponseFieldForm = (event) => {
-        const value = event?.target?.checked;
-        setResponseField(value);
-    }
     
     const sendCommandToServer = async () => {
         if (commandField) {
             setCommandFieldError('');
-            const [err, results] = await PromiseWrapper(sendCommand(commandField, responseField));
+            const [err, results] = await PromiseWrapper(sendCommand(commandField));
             setCommandFieldError(err || results);
         } else {
             setCommandFieldError('Invalid command entered!');
@@ -40,10 +35,6 @@ export default function CustomCommand() {
             <CustomInput type="text" labelText="Enter command (:xxxx#)" size="12"
                 id="command-field" name="command_field" inputValue={commandField}
                 onInputChange={setCommandFromForm}/>
-            <CustomInput type="checkbox" labelText="Has response data?" 
-                defaultChecked={true}
-                id="response-field" name="response_field" inputValue={responseField}
-                onInputChange={setResponseFieldForm}/>
             <ErrorMessage>{commandFieldError}</ErrorMessage>
             <br/>
             <CustomButton id="command-button" 

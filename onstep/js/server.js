@@ -14,9 +14,8 @@ import SocketConnection from '#server/api/SocketConnection.js';
 import {
     LISTEN_PORT
 } from '#server/config.js';
-import {
-    safeParse
-} from '#server/utils/jsonUtils.js';
+
+import COMMANDS_WITH_NO_REPLY from '#server/data/noReplayCommands.js';
 
 const basedir = process.cwd();
 
@@ -135,7 +134,8 @@ server.get('/setup', (req, res) => {
 
 server.get('/command', (req, res) => {
     const command = req.query?.command;
-    const returnsData = safeParse(req.query?.returnsData);
+    // values NOT in this array then 
+    const returnsData = !COMMANDS_WITH_NO_REPLY.includes(command);
     if (Connection?.isConnected() && command) {
         const decodedCommand = decodeURIComponent(command);
         if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {

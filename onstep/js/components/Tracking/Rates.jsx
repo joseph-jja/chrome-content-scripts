@@ -41,7 +41,7 @@ export default function Rates() {
             setTrackingRate(targetObj);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd, false));
+            const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
                 setTrackingRateError(err || results);
             } else {
@@ -62,7 +62,7 @@ export default function Rates() {
                         
         }
         
-        const [err, results] = await PromiseWrapper(sendCommand(cmd, true));
+        const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
                 setTrackingRateError(err || results);
             } else {

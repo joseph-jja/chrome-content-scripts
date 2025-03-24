@@ -19,8 +19,8 @@ export function setupConnection(commandOption) {
     return request(url);
 }
 
-export function sendCommand(command = '', returnsData = true) {
-    const url = `/command/?command=${encodeURIComponent(command)}&returnsData=${returnsData}`;
+export function sendCommand(command = '') {
+    const url = `/command/?command=${encodeURIComponent(command)}`;
     return request(url);
 }
 
