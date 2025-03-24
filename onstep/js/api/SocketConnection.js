@@ -8,9 +8,7 @@ export default class SocketConnection extends DeviceConnection {
 
     constructor() {
         super();
-        this.device = new Socket();
         this.data = [];
-        this.isConnected = false;
     }
 
     connect(host, port) {
@@ -19,6 +17,7 @@ export default class SocketConnection extends DeviceConnection {
                 return reject('Invalid host and or port!');
             }
 
+            this.device = new Socket();
             this.device.connect(port, host, () => {
                 this.isConnected = true;
                 return resolve('Success');
