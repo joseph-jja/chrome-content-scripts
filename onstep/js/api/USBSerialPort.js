@@ -8,8 +8,12 @@ export default class USBSerialPort extends DeviceConnection {
         super();
     }
 
-    connect(usbDevice) {
+    connect(options) {
         return new Promise((resolve, reject) => {
+            const {
+                usbDevice
+            } = options;
+
             if (!usbDevice) {
                 return reject(`Invalid usb device ${usbDevice}!`);
             }
