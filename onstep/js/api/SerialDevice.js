@@ -5,7 +5,7 @@ import {
 
 import SocketConnection from '#server/api/SocketConnection.js';
 
-export default class SerialPort extends SocketConnection {
+export default class SerialDevice extends SocketConnection {
 
     constructor() {
         super();
