@@ -41,9 +41,9 @@ export default function MainApp() {
                 enabled={tabField === 'advanced'}
                 onButtonClick={showSetupTag}>Advanced</CustomButton>
                 
-            <CustomButton id="close" onButtonClick={() => closeApp()}>
+            {/*<CustomButton id="close" onButtonClick={() => closeApp()}>
                 Close App
-            </CustomButton>
+            </CustomButton>*/}
             <Container id="main-container">
                 {
                     tabField === 'tracking' ? <Tracking/> :
