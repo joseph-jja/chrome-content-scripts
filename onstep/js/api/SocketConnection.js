@@ -22,7 +22,7 @@ export default class SocketConnection extends DeviceConnection {
             }
             this.device = new Socket();
             this.device.connect(port, host, () => {
-                this.isConnected = true;
+                this.connected = true;
                 return resolve('Success');
             });
 
@@ -64,7 +64,7 @@ export default class SocketConnection extends DeviceConnection {
             this.device.removeAllListeners('error');
             this.device.removeAllListeners('data');
             this.device.end();
-            this.isConnected = false;
+            this.connected = false;
             return resolve('Closed');
         });
     }
