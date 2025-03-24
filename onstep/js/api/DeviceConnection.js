@@ -13,7 +13,7 @@ export default class DeviceConnection extends EventEmitter {
         return this.isConnected;
     }
 
-    connect() {
+    connect(device, options) {
         throw new Error('Child must implement');
     }
 
