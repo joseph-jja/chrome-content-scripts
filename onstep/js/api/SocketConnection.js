@@ -58,7 +58,7 @@ export default class SocketConnection extends DeviceConnection {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.device && isConnected()) {
+            if (!this.device && this.isConnected()) {
                 return reject('Not connected!');
             }
             this.device.removeAllListeners('error');
