@@ -9,8 +9,11 @@ export default class SerialPort extend DeviceConnection {
         this.data = [];
     }
 
-    connect(ttyDevice) {
+    connect(options) {
         return new Promise((resolve, reject) => {
+            const {
+                usbDevice
+            } = options;
             if (!ttyDevice) {
                 return reject('Invalid ttyp device!');
             }
