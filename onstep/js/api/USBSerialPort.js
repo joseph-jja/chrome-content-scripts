@@ -6,7 +6,6 @@ export default class USBSerialPort extends DeviceConnection {
 
     constructor() {
         super();
-        this.usbPort = undefined;
     }
 
     connect(usbDevice) {
@@ -16,12 +15,12 @@ export default class USBSerialPort extends DeviceConnection {
             }
 
             try {
-                this.usbPort = new SerialPort({ path: usbDevice, baudRate: 9600 });
-                this.usbPort.once('open', (x) => {
+                this.device = new SerialPort({ path: usbDevice, baudRate: 9600 });
+                this.device.once('open', (x) => {
                     console.log('Connected open', );
                     return resolve('Success');              
                 });
-                this.usbPort.on('error', err => {
+                this.device.on('error', err => {
                     console.log('Error opening ', err);  
                     return reject(err);            
                 });
@@ -33,23 +32,23 @@ export default class USBSerialPort extends DeviceConnection {
     }
     
     isConnected() {
-        return (this.usbPort?.port?.fd ? true: false);
+        return (this.device?.port?.fd ? true: false);
     }
 
     sendCommand(command, returnsData = true) {
         return new Promise(async (resolve, reject) => {
             this.data = [];
-            if (!this.usbPort && !this.isConnected()) {
+            if (!this.device && !this.isConnected()) {
                 return reject('Not connected!');
             }
 
-            const bytes = this.usbPort.write(command);
+            const bytes = this.device.write(command);
             console.log('Data writen', bytes, command);
             /*if (!this.returnsData) {                
-                this.usbPort.write(':GVP#');
+                this.device.write(':GVP#');
                 console.log('No reply is expected, returning firmware name');
             }*/
-            this.usbPort.once('data', data => {
+            this.device.once('data', data => {
                 const results = data?.toString(); 
                 console.log('Results from read ', results);
                 return resolve(results);
@@ -59,10 +58,10 @@ export default class USBSerialPort extends DeviceConnection {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.usbPort || !this.isConnected()) {
+            if (!this.device || !this.isConnected()) {
                 return reject('Not connected!');
             }
-            this.usbPort.close();
+            this.device.close();
             this.isConnected = false;
             resolve('Closed');
         });
