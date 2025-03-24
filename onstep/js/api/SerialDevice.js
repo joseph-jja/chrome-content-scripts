@@ -10,6 +10,7 @@ export default class SerialDevice extends SocketConnection {
     constructor() {
         super();
         this.data = [];
+        this.fd = undefined;
     }
 
     connect(options) {
@@ -28,6 +29,7 @@ export default class SerialDevice extends SocketConnection {
                 });
             } else if (usbDevice) {
                 fs.open(usbDevice, 'r+').then(fd => {
+                    this.fd = fd;
                     this.socket = new Socket({
                         fd
                     });
