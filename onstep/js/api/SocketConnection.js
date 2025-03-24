@@ -1,17 +1,10 @@
 import {
     Socket
 } from 'node:net';
-import {
-    EventEmitter
-} from 'node:events';
 
-export default class SocketConnection extends EventEmitter {
+import DeviceConnection from '#server/api/DeviceConnection.js';
 
-    static dataListener(msg) {
-        const results = msg.toString()
-        this.data.push(results);
-        this.emit('readEnd');
-    };
+export default class SocketConnection extends DeviceConnection {
 
     constructor() {
         super();
@@ -35,8 +28,11 @@ export default class SocketConnection extends EventEmitter {
                 return reject(err);
             });
 
-            this.client.on('data', SocketConnection.dataListener);
-        });
+            this.client.on('data', msg => {
+                const results = msg.toString()
+                this.data.push(results);
+                this.emit('readEnd');
+            });
     }
     
     isConnected() {
@@ -63,7 +59,7 @@ export default class SocketConnection extends EventEmitter {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.client) {
+            if (!this.client && isConnected()) {
                 return reject('Not connected!');
             }
             this.client.removeAllListeners('error');
