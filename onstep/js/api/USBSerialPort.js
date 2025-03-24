@@ -49,10 +49,10 @@ export default class USBSerialPort extends EventEmitter {
 
             const bytes = this.usbPort.write(command);
             console.log('Data writen', bytes, command);
-            if (!this.returnsData) {                
+            /*if (!this.returnsData) {                
                 this.usbPort.write(':GVP#');
                 console.log('No reply is expected, returning firmware name');
-            }
+            }*/
             this.usbPort.once('data', data => {
                 const results = data?.toString(); 
                 console.log('Results from read ', results);
