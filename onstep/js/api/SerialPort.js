@@ -20,7 +20,7 @@ export default class SerialPort extends DeviceConnection {
 
             fs.open(ttyDevice, 'r+').then(fd => {
                 this.device = fd;
-                this.isConnected = true;
+                this.connected = true;
                 return resolve('Success');
             }).catch(e => {
                 console.log('Error: ', e);
@@ -32,7 +32,7 @@ export default class SerialPort extends DeviceConnection {
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
             this.data = [];
-            if (!this.device && !this.isConnected) {
+            if (!this.device && !this.connected) {
                 return reject('Not connected!');
             }
 
@@ -65,11 +65,11 @@ export default class SerialPort extends DeviceConnection {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.device) {
+            if (!this.device && !this.isConnected()) {
                 return reject('Not connected!');
             }
             this.device.close();
-            this.isConnected = false;
+            this.connected = false;
             resolve('Closed');
         });
     }
