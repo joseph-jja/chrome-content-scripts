@@ -10,9 +10,7 @@ export default class SocketConnection extends EventEmitter {
     static dataListener(msg) {
         const results = msg.toString()
         this.data.push(results);
-        if (results.includes('#')) {
-            this.emit('readEnd');
-        }
+        this.emit('readEnd');
     };
 
     constructor() {
