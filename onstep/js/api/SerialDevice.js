@@ -21,7 +21,7 @@ export default class SerialPort extends SocketConnection {
                 return reject('Invalid ttyp device!');
             }
 
-            fs.open(ttyDevice, 'r+').then(fd => {
+            fs.open(usbDevice, 'r+').then(fd => {
                 this.socket = new Socket({ fd });
                 this.isConnected = true;
                 return resolve('Success');
