@@ -40,7 +40,7 @@ export default class SerialDevice extends SocketConnection {
                     return reject(e);
                 });
             } else {
-                return reject('Invalid ttyp device!');
+                return reject('Invalid tty device!');
             }
 
             this.device.on('error', (err) => {
