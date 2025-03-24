@@ -3,4 +3,3 @@ const PromiseWrapper = inputPromise => inputPromise
     .catch(err => [err, undefined]);
 
 export default PromiseWrapper;
-

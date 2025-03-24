@@ -1,4 +1,6 @@
-import { SerialPort } from 'serialport'
+import {
+    SerialPort
+} from 'serialport'
 
 import DeviceConnection from '#server/api/DeviceConnection.js';
 
@@ -19,14 +21,17 @@ export default class USBSerialPort extends DeviceConnection {
             }
 
             try {
-                this.device = new SerialPort({ path: usbDevice, baudRate: 9600 });
+                this.device = new SerialPort({
+                    path: usbDevice,
+                    baudRate: 9600
+                });
                 this.device.once('open', (x) => {
                     console.log('Connected open', );
-                    return resolve('Success');              
+                    return resolve('Success');
                 });
                 this.device.on('error', err => {
-                    console.log('Error opening ', err);  
-                    return reject(err);            
+                    console.log('Error opening ', err);
+                    return reject(err);
                 });
             } catch (err) {
                 console.log('Error: ', err);
@@ -34,9 +39,9 @@ export default class USBSerialPort extends DeviceConnection {
             }
         });
     }
-    
+
     isConnected() {
-        return (this.device?.port?.fd ? true: false);
+        return (this.device?.port?.fd ? true : false);
     }
 
     sendCommand(command, returnsData = true) {
@@ -53,7 +58,7 @@ export default class USBSerialPort extends DeviceConnection {
                 console.log('No reply is expected, returning firmware name');
             }*/
             this.device.once('data', data => {
-                const results = data?.toString(); 
+                const results = data?.toString();
                 console.log('Results from read ', results);
                 return resolve(results);
             });
@@ -71,4 +76,3 @@ export default class USBSerialPort extends DeviceConnection {
         });
     }
 }
-

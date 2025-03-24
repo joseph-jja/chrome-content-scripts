@@ -22,9 +22,9 @@ rl.on('line', line => {
         return;
     }
     const middle = parts[0];
-    const [description, reply] = line.split(middle); 
+    const [description, reply] = line.split(middle);
     commandOptions[parts[0].trim()] = {
-        description: description.trim(), 
+        description: description.trim(),
         reply: reply.trim()
     };
 });

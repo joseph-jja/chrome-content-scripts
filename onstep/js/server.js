@@ -26,10 +26,10 @@ let Connection;
 
 const menu = Menu.buildFromTemplate([{
     label: app.name,
-    submenu: [{ 
+    submenu: [{
         label: 'about',
         click: () => {
-            dialog.showMessageBox({ 
+            dialog.showMessageBox({
                 title: 'about',
                 message: 'OnStep/OnStepX control board desktop app'
             });
@@ -44,7 +44,7 @@ const args = process.argv;
 let enableDebug = false;
 args.forEach(arg => {
     if (arg === '--enableDebug') {
-        enableDebug = true;   
+        enableDebug = true;
     }
 });
 
@@ -94,7 +94,7 @@ app.on('window-all-closed', () => {
     if (Connection?.isConnected()) {
         Connection.disconnect();
     }
-    if (process.platform !== 'darwin') {    
+    if (process.platform !== 'darwin') {
         app.quit();
     }
 });
@@ -105,7 +105,10 @@ server.get('/setup', (req, res) => {
         const [host, port] = commandOption.split(':');
         console.log('Trying to connect');
         Connection = new SocketConnection();
-        Connection.connect({host: host, port: port}).then(resp => {
+        Connection.connect({
+            host: host,
+            port: port
+        }).then(resp => {
             console.log('Success to connect');
             res.send('Connected ' + resp);
         }).catch(e => {
@@ -114,15 +117,17 @@ server.get('/setup', (req, res) => {
         });
         return;
     } else if (commandOption.startsWith('/dev/')) {
-          console.log('Trying to connect to tty device');
-          Connection = new SerialPort();  
-          Connection.connect({usbDevice: commandOption}).then(resp => {
-              console.log('Success to connect');
-              res.send('Connected ' + resp);
-          }).catch(e => {
-              console.log('Failed to connect');
-              res.send('Connection failed ' + e);
-          });
+        console.log('Trying to connect to tty device');
+        Connection = new SerialPort();
+        Connection.connect({
+            usbDevice: commandOption
+        }).then(resp => {
+            console.log('Success to connect');
+            res.send('Connected ' + resp);
+        }).catch(e => {
+            console.log('Failed to connect');
+            res.send('Connection failed ' + e);
+        });
         return;
     }
     res.send(`Connection failed, invalid host and port values ${commandOption}`);
@@ -132,7 +137,7 @@ server.get('/command', (req, res) => {
     const command = req.query?.command;
     const returnsData = safeParse(req.query?.returnsData);
     if (Connection?.isConnected() && command) {
-        const decodedCommand = decodeURIComponent(command); 
+        const decodedCommand = decodeURIComponent(command);
         if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
             const expectResponse = (typeof returnsData === 'boolean' ? returnsData : true);
             console.log('Should be returning data? ', returnsData, expectResponse);

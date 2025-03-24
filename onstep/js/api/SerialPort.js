@@ -47,14 +47,14 @@ export default class SerialPort extends DeviceConnection {
                     end = buffer?.length || 0;
                 while (i < end) {
                     const charData = String.fromCharCode(buffer[i]);
-                    const charCode = charData.charCodeAt(0); 
+                    const charCode = charData.charCodeAt(0);
                     if (charCode > 32 && charCode < 127) {
                         //console.log('-', charData, '-', charCode);
                         result += charData;
                     }
                     i++;
                 }
-                console.log('got data ', result); 
+                console.log('got data ', result);
                 return resolve(result);
             }).catch(e => {
                 console.log('Error: ', e);
@@ -74,4 +74,3 @@ export default class SerialPort extends DeviceConnection {
         });
     }
 }
-

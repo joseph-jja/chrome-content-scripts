@@ -37,7 +37,7 @@ export default class SocketConnection extends DeviceConnection {
             });
         });
     }
-    
+
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
             this.data = [];
