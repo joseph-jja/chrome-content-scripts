@@ -25,7 +25,7 @@ export default {
         "renderer": "./js/main"
     },
     context: path.resolve(baseDir),
-    devtool: development ? 'source-map' : 'none',
+    //devtool: development ? 'source-map' : 'none',
     output: {
         "path": `${baseDir}/js`,
         "filename": "renderer.js",
