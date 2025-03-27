@@ -56,6 +56,22 @@ export default function Rates() {
             }
         }
     };
+
+    const setBacklashRateValue = async (event) => {
+        const targetObj = event?.target;
+        if (!targetObj) {
+            return;
+        }
+        const cmd = targetObj.options[targetObj.selectedIndex].value.trim();
+        if (cmd && cmd.length > 0) {
+            const [err, results] = await PromiseWrapper(sendCommand(cmd));
+            if (err || results !== 0) {
+                setTrackingRateError(err || results);
+            } else {
+                setTrackingRateError('');
+            }
+        }
+    };
     
     return ( 
         <Container class="wrapper">
@@ -77,7 +93,8 @@ export default function Rates() {
             <hr/>
             <CustomSelect id="ra-azm-backlash" name="ra_azm_backlash"
                 labelText="Set RA (Azm) backlash amount (in ArcSec)" size="1"
-                onSelectChange={setTrackingRateValue}>
+                onSelectChange={setBacklashRateValue}>
+                <CustomOption></CustomOption>
                 {TRACKING_RATE_BACKLASH?.map((item) => (
                     <CustomOption value={':$BR' + item + '#'}>
                         Rate {parseInt(item)}
@@ -87,7 +104,8 @@ export default function Rates() {
             <br/>
             <CustomSelect id="dec-alt-backlash" name="dec_alt_backlash"
                 labelText="Set Dec (Alt) backlash amount (in ArcSec)" size="1"
-                onSelectChange={setTrackingRateValue}>
+                onSelectChange={setBacklashRateValue}>
+                <CustomOption></CustomOption>
                 {TRACKING_RATE_BACKLASH?.map((item) => (
                     <CustomOption value={':$BD' + item + '#'}>
                         Rate {parseInt(item)}
