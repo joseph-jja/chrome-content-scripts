@@ -14,6 +14,10 @@ const babelTargets = {
     esJSONWP = Object.keys( esJSON.globals );
 
 esJSON.globals = esJSONWP;*/
+let development = false;
+try {
+    development = JSON.parse(process.env['DEVELOPMENT']);
+} catch(_e) { }
 
 export default {
     "mode": "production",
@@ -21,7 +25,7 @@ export default {
         "renderer": "./js/main"
     },
     context: path.resolve(baseDir),
-    //devtool: "cheap-source-map",
+    devtool: development ? 'source-map' : 'none',
     output: {
         "path": `${baseDir}/js`,
         "filename": "renderer.js",
