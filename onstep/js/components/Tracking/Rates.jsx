@@ -57,26 +57,6 @@ export default function Rates() {
         }
     };
     
-    const setTrackingRateValueWithResponse = async (event) => {
-        const targetObj = event?.target?.id;
-        let cmd;
-        if (targetObj === 'enable-refraction-tracking') {
-            cmd = ':Tr#';
-            setTrackingRate(targetObj);
-        } else if (targetObj === 'disable-refraction-tracking') {
-            cmd = ':Tn#';
-            setTrackingRate(targetObj);
-                        
-        }
-        
-        const [err, results] = await PromiseWrapper(sendCommand(cmd));
-            if (err || results !== 0) {
-                setTrackingRateError(err || results);
-            } else {
-                setTrackingRateError('');
-            }
-    }
-
     return ( 
         <Container class="wrapper">
             <CustomButton id="tracking-sidereal" 
@@ -99,8 +79,8 @@ export default function Rates() {
                 labelText="Set RA (Azm) backlash amount (in ArcSec)" size="1"
                 onSelectChange={setTrackingRateValue}>
                 {TRACKING_RATE_BACKLASH?.map((item) => (
-                    <CustomOption value={item}>
-                        {item}
+                    <CustomOption value={':$BR' + item + '#'}>
+                        Rate {parseInt(item)}
                     </CustomOption>
                 ))}
             </CustomSelect>
@@ -109,17 +89,12 @@ export default function Rates() {
                 labelText="Set Dec (Alt) backlash amount (in ArcSec)" size="1"
                 onSelectChange={setTrackingRateValue}>
                 {TRACKING_RATE_BACKLASH?.map((item) => (
-                    <CustomOption value={item}>
-                        {item}
+                    <CustomOption value={':$BD' + item + '#'}>
+                        Rate {parseInt(item)}
                     </CustomOption>
                 ))}
-            </CustomSelect>
-            
+            </CustomSelect>            
             <hr/>
-            <CustomButton id="enable-refraction-tracking" 
-                onButtonClick={setTrackingRateValueWithResponse}>Tracking Refraction Rate Enable</CustomButton>
-            <CustomButton id="disable-refraction-tracking" 
-                onButtonClick={setTrackingRateValueWithResponse}>Tracking Refraction Rate Disable</CustomButton>
             <ErrorMessage>{trackingRateError}</ErrorMessage>                
         </Container>
     );

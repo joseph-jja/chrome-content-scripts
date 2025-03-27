@@ -27,6 +27,14 @@ export default function ToggleTracking() {
             cmd = ':Td#';
             setTrackingToggle(targetId);
             StorageBox.setItem('tracking', targetId);
+        } else if (targetObj === 'enable-refraction-tracking') {
+            cmd = ':Tr#';
+            setTrackingToggle(targetObj);
+            StorageBox.setItem('tracking', targetId);
+        } else if (targetObj === 'disable-refraction-tracking') {
+            cmd = ':Tn#';
+            setTrackingToggle(targetObj); 
+            StorageBox.setItem('tracking', targetId);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
@@ -51,6 +59,15 @@ export default function ToggleTracking() {
                 enabled={trackingToggle === 'tracking-disable'}
                 onButtonClick={setTracking}>
                 Disable Tracking
+            </CustomButton>
+            &nbsp;&nbsp;&nbsp;
+            <CustomButton id="enable-refraction-tracking" 
+                onButtonClick={setTracking}>
+                Tracking Refraction Rate Enable
+            </CustomButton>
+            <CustomButton id="disable-refraction-tracking" 
+                onButtonClick={setTracking}>
+                Tracking Refraction Rate Disable
             </CustomButton>
             <ErrorMessage>{trackingError}</ErrorMessage>                
         </Container>
