@@ -7,6 +7,7 @@ import Tracking from 'js/tabs/Tracking.jsx';
 import Movement from 'js/tabs/Movement.jsx';
 import Advanced from 'js/tabs/Advanced.jsx';
 import Status from 'js/components/Information/Status.jsx';
+import Align from 'js/tabs/Align.jsx';
 import StorageBox from "js/storage/StorageBox.js";
 
 const {
@@ -37,10 +38,13 @@ export default function MainApp() {
             <CustomButton id="movement"
                 enabled={tabField === 'movement'}
                 onButtonClick={showSetupTag}>Movement</CustomButton>
+            <CustomButton id="align"
+                enabled={tabField === 'align'}
+                onButtonClick={showSetupTag}>Align</CustomButton>
             <CustomButton id="advanced"
                 enabled={tabField === 'advanced'}
                 onButtonClick={showSetupTag}>Advanced</CustomButton>
-                
+            
             {/*<CustomButton id="close" onButtonClick={() => closeApp()}>
                 Close App
             </CustomButton>*/}
@@ -49,6 +53,7 @@ export default function MainApp() {
                     tabField === 'tracking' ? <Tracking/> :
                         tabField === 'advanced' ? <Advanced/> :
                         tabField === 'movement' ? <Movement/> :
+                        tabField === 'align' ? <Align/> :
                         <Setup/>
                 }
             </Container> 
