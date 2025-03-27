@@ -19,13 +19,12 @@ try {
     development = JSON.parse(process.env['DEVELOPMENT']);
 } catch(_e) { }
 
-export default {
+const CONFIG = {
     "mode": "production",
     "entry": {
         "renderer": "./js/main"
     },
     context: path.resolve(baseDir),
-    //devtool: development ? 'source-map' : 'none',
     output: {
         "path": `${baseDir}/js`,
         "filename": "renderer.js",
@@ -65,3 +64,9 @@ export default {
     },
     plugins: []
 };
+
+if (development) {
+    CONFIG.devtool = 'source-map';
+}
+
+export default CONFIG;

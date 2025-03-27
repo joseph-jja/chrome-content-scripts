@@ -1,3 +1,3 @@
 *.pem
 **/node_modules/**
-onstep/js/renderer.js
+onstep/js/renderer.*

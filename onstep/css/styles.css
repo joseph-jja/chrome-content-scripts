@@ -40,3 +40,6 @@ label {
 table {
     border-collapse: collapse;
 }
+select {
+    margin: 0.5em;
+}
