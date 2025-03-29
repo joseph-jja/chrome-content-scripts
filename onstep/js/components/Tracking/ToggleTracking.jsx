@@ -4,8 +4,8 @@ import Container from 'js/components/base/Container.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
-    sendCommand
-} from 'js/api/request.js';
+    daisyChainBooleanCommands
+} from 'js/utils/commandUtils.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 import StorageBox from "js/storage/StorageBox.js";
 
@@ -37,7 +37,7 @@ export default function ToggleTracking() {
             StorageBox.setItem('tracking', targetId);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd));
+            const [err, results] = await PromiseWrapper(daisyChainBooleanCommands([cmd, ':GT#']));
             if (err || results !== 0) {
                 setTrackingError(err || results);
                 setTrackingToggle('tracking-disable');
