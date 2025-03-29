@@ -6,7 +6,6 @@ import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
     daisyChainBooleanCommands
 } from 'js/utils/commandUtils.js';
-import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
@@ -37,11 +36,12 @@ export default function ToggleTracking() {
             StorageBox.setItem('tracking', targetId);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(daisyChainBooleanCommands([cmd, ':GT#']));
+            const [err, results] = await daisyChainBooleanCommands([cmd, ':GT#']);
             if (err || results !== 0) {
                 setTrackingError(err || results);
                 setTrackingToggle('tracking-disable');
                 StorageBox.setItem('tracking', 'tracking-disable');
+                StorageBox.setItem('trackingRate', results);
             } else {
                 setTrackingError('');
             }

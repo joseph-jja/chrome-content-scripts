@@ -8,7 +8,7 @@ import CustomOption from 'js/components/base/CustomOption.jsx';
 import {
     daisyChainBooleanCommands
 } from 'js/utils/commandUtils.js';
-import PromiseWrapper from 'js/utils/PromiseWrapper.js';
+import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
 
@@ -48,9 +48,10 @@ export default function Rates() {
             setTrackingRate(targetObj);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(daisyChainBooleanCommands([cmd, ':GT#']));
+            const [err, results] = await daisyChainBooleanCommands([cmd, ':GT#']);
             if (err || results !== 0) {
                 setTrackingRateError(err || results);
+                StorageBox.setItem('trackingRate', results);
             } else {
                 setTrackingRateError('');
             }
