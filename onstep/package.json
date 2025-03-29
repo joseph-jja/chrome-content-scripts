@@ -12,7 +12,8 @@
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "npx webpack --config config/webpack.js",
-    "beautify": "find js/ -type f -name \"*.js\" -exec npx js-beautify -r {} \\;"
+    "beautify": "find js/ -type f -name \"*.js\" -exec npx js-beautify -r {} \\;",
+    "jsxbeautify": "find js/ -type f -name \"*.jsx\" -exec npx js-beautify -X -r {} \\;"
   },
   "author": "",
   "license": "ISC",
