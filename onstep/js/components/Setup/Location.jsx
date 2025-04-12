@@ -55,7 +55,7 @@ export default function Location() {
     
     return (
         <Container class="wrapper">
-            <CustomInput type="text" labelText="Set Latitude (xxx:yyy)" size="8"
+            <CustomInput type="text" labelText="Set Latitude (+/-xxx:yyy)" size="8"
                 id="latitude" name="latitude" inputValue={latitude}
                 onInputChange={setField}/>
             <br/>
