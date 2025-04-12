@@ -17,6 +17,7 @@ const VALID_LAT_LONG_RE = /[\+|\-]?\d+\:\d+/;
 export default function Location() {
     const [latitude, setLatitude] = useState(StorageBox.getItem('latitude'));
     const [longitude, setLongitude] = useState(StorageBox.getItem('longitude'));
+    const [offsetField, setOffsetField] = useState(null);
     const [latitudeLongitudeError, setLatitudeLongitudeError] = useState('');    
     
     const setField = (event) => {
@@ -31,6 +32,9 @@ export default function Location() {
         } else if (fieldName === 'longitude') {
             setLongitude(value);
             StorageBox.setItem('longitude', value);
+        } else if (fieldName === 'offset') {
+            setOffsetField(value);
+            StorageBox.setItem('offset', value);
         }
     }
 
@@ -46,7 +50,12 @@ export default function Location() {
             // send message
             // latitude => :StsDD*MM#
             // longitude => :SgDDD*MM#
-            const results = await daisyChainBooleanCommands([`:Sts${latitude}#`, ':Gt#', `:Sg${longitude}#`, ':Gg#']);
+            const commands = [`:Sts${latitude}#`, ':Gt#', `:Sg${longitude}#`, ':Gg#'];
+            if (offsetField) {
+                commands.push(`:SG${offsetField}#`);
+                commands.push(':GG#');
+            }
+            const results = await daisyChainBooleanCommands(commands);
             setLatitudeLongitudeError(results);
         } else {
             setLatitudeLongitudeError('Invalid latitude and / longitude or entered!');
@@ -63,6 +72,10 @@ export default function Location() {
                 id="longitude" name="longitude" inputValue={longitude}
                 onInputChange={setField}/>
             <br/>(NOTE: Longitude uses the opposite sign from the accepted norm, per the LX200 protocol design, so if your longitude is -150, use +150 here.)
+            <br/>
+            <CustomInput type="text" labelText="Enter UTC Offset (+/-HH)" size="6"
+                id="offset" name="offset" inputValue={offsetField}
+                onInputChange={setField}/>
             <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
             <br/>
             <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Location</CustomButton>
