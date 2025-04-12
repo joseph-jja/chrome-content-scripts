@@ -62,6 +62,7 @@ export default function Location() {
             <CustomInput type="text" labelText="Set Longitude (+/-xxx:yyy)" size="8"
                 id="longitude" name="longitude" inputValue={longitude}
                 onInputChange={setField}/>
+            <br/>(NOTE: Longitude uses the opposite sign from the accepted norm, per the LX200 protocol design, so if your longitude is -150, use +150 here.)
             <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
             <br/>
             <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Location</CustomButton>
