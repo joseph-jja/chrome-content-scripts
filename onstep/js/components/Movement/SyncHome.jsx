@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Container from 'js/components/base/Container.jsx';
+import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
@@ -14,6 +15,23 @@ const { useState } = React;
 export default function SyncHome() {
     const [homeSync, setHomeSync] = useState(null);
     const [homeSyncError, setHomeSyncError] = useState(null);
+    const [azHome, setAzHome] = useState(null);
+    const [altHome, setAltHome] = useState(null);
+
+    const setField = (event) => {
+        const fieldName = event?.target?.name;
+        if (!fieldName) {
+            return;
+        }
+        const value = event?.target?.value || null;
+        if (fieldName === 'azHome') {
+            setAzHome(value);
+            StorageBox.setItem('azHome', value);
+        } else if (fieldName === 'altHome') {
+            setAltHome(value);
+            StorageBox.setItem('altHome', value);
+        }
+    }
 
     const setSyncHomeValue = async (event) => {
         const targetObj = event?.target?.id;
@@ -24,7 +42,7 @@ export default function SyncHome() {
         } else if (targetObj === 'sync-position') {
             cmd = ':CM#';
             setHomeSync(targetObj);
-        } else if (targetObj === 'stop-mvoement') {
+        } else if (targetObj === 'stop-movement') {
             cmd = ':Q#';
             setHomeSync(targetObj);
         }
@@ -38,14 +56,30 @@ export default function SyncHome() {
         }
     };
 
+    const setCoordinates = async (event) => {
+
+    };
+
     return ( 
         <Container class="wrapper">
             <CustomButton id="go-home" 
                 onButtonClick={setSyncHomeValue}>Go To Home Position</CustomButton>
             <CustomButton id="sync-position" 
                 onButtonClick={setSyncHomeValue}>Sync Position</CustomButton>
-            <CustomButton id="stop-mvoement" 
+            <CustomButton id="stop-movement" 
                 onButtonClick={setSyncHomeValue}>Stop Movement</CustomButton>
+            <br/>
+            <CustomInput type="text" labelText="Set Azimuth" size="12"
+                id="azimuth" name="azimuth" inputValue={azHome}
+                onInputChange={setField}/>
+            <br/>
+            <CustomInput type="text" labelText="Set Altitude" size="12"
+                id="altHome" name="altHome" inputValue={altHome}
+                onInputChange={setField}/>
+            <br/>
+            <CustomButton id="set-coords" 
+                onButtonClick={setCoordinates}>Set Coordinates</CustomButton>
+            <br/>
             <ErrorMessage>{homeSyncError}</ErrorMessage>                
         </Container>
     );
