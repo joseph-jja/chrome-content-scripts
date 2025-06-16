@@ -68,6 +68,7 @@ export default function SyncHome() {
             // send message
             const commands = [`:Sz${azHome}#`, ':GZ#', `:Sa${altHome}#`, ':GA#'];
             const results = await daisyChainBooleanCommands(commands);
+            setHomeSyncError(results);
             // do something with results
             // setAzHome(value);
             // StorageBox.setItem('azHome', value);
