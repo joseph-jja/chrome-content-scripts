@@ -8,6 +8,10 @@ import {
     sendCommand
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
+import {
+    daisyChainBooleanCommands
+} from 'js/utils/commandUtils.js';
+import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
 
@@ -69,11 +73,6 @@ export default function SyncHome() {
             const commands = [`:Sz${azHome}#`, ':GZ#', `:Sa${altHome}#`, ':GA#'];
             const results = await daisyChainBooleanCommands(commands);
             setHomeSyncError(results);
-            // do something with results
-            // setAzHome(value);
-            // StorageBox.setItem('azHome', value);
-            // setAltHome(value);
-            // StorageBox.setItem('altHome', value);
         }
     };
     
@@ -93,7 +92,7 @@ export default function SyncHome() {
                 onButtonClick={setSyncHomeValue}>Stop Movement</CustomButton>
             <br/>
             <CustomInput type="text" labelText="Set Azimuth" size="12"
-                id="azimuth" name="azimuth" inputValue={azHome}
+                id="azHome" name="azHome" inputValue={azHome}
                 onInputChange={setField}/>
             <br/>
             <CustomInput type="text" labelText="Set Altitude" size="12"
