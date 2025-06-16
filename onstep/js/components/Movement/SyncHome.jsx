@@ -57,7 +57,23 @@ export default function SyncHome() {
     };
 
     const setCoordinates = async (event) => {
-
+        let haveAlt = false, haveAz = false;
+        if (azHome && azHome.length >= 0) {
+            haveAz = true;
+        }
+        if (altHome && altHome.length >= 0) {
+            haveAlt = true;
+        }
+        if (haveAlt && haveAz) {
+            // send message
+            const commands = [`:Sz${azHome}#`, ':GZ#', `:Sa${altHome}#`, ':GA#'];
+            const results = await daisyChainBooleanCommands(commands);
+            // do something with results
+            // setAzHome(value);
+            // StorageBox.setItem('azHome', value);
+            // setAltHome(value);
+            // StorageBox.setItem('altHome', value);
+        }
     };
 
     return ( 
