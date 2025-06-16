@@ -11,7 +11,7 @@ import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
 
-const VALID_LAT_LONG_RE = /[\+|\-]?\d+\:\d+/;
+const VALID_LAT_LONG_RE = /[\+|\-]\d+\:\d+/;
 
 // TODO figure out how this would work cross platform
 export default function Location() {
