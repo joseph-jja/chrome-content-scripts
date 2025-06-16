@@ -27,7 +27,7 @@ export default class USBSerialPort extends DeviceConnection {
                     baudRate: 9600
                 });
                 this.device.once('open', (x) => {
-                    console.log('Connected open', );
+                    console.log('Connected open', x || '');
                     return resolve('Success');
                 });
                 this.device.on('error', err => {
@@ -37,6 +37,7 @@ export default class USBSerialPort extends DeviceConnection {
                 this.device.on('data', msg => {
                     const results = msg.toString()
                     this.data.push(results);
+                    console.log('Data', results);
                     this.emit('readEnd');
                 });
             } catch (err) {

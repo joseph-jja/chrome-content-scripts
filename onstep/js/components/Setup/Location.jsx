@@ -66,11 +66,6 @@ export default function Location() {
         const commands = [':Gt#', ':Gg#', ':GG#'];
         const results = await daisyChainBooleanCommands(commands);
         setLatitudeLongitudeError(results);
-        // do something with results
-        // setLatitude(value);
-        // StorageBox.setItem('latitude', value);
-        // setLongitude(value);
-        // StorageBox.setItem('longitude', value);
     }
     
     return (
