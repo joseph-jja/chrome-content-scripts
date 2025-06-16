@@ -61,6 +61,12 @@ export default function Location() {
             setLatitudeLongitudeError('Invalid latitude and / longitude or entered!');
         }
     }
+
+    const getLatLong = () => {
+        const commands = [':Gt#', ':Gg#'];
+        const results = await daisyChainBooleanCommands(commands);
+        alert(results);
+    }
     
     return (
         <Container class="wrapper">
@@ -79,6 +85,7 @@ export default function Location() {
             <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
             <br/>
             <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set Location</CustomButton>
+            <CustomButton id="get-lat-long" onButtonClick={getLatLong}>Get Location</CustomButton>
         </Container>
     )
 }
