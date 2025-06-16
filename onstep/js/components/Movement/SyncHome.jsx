@@ -76,6 +76,12 @@ export default function SyncHome() {
             // StorageBox.setItem('altHome', value);
         }
     };
+    
+    const getCoordinates = async (event) => {
+        const commands = [':GZ#', ':GA#'];
+        const results = await daisyChainBooleanCommands(commands);
+        setHomeSyncError(results);
+    };
 
     return ( 
         <Container class="wrapper">
@@ -96,6 +102,8 @@ export default function SyncHome() {
             <br/>
             <CustomButton id="set-coords" 
                 onButtonClick={setCoordinates}>Set Coordinates</CustomButton>
+            <CustomButton id="get-coords" 
+                onButtonClick={getCoordinates}>Get Coordinates</CustomButton>
             <br/>
             <ErrorMessage>{homeSyncError}</ErrorMessage>                
         </Container>

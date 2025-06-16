@@ -60,6 +60,12 @@ export default function DateTime() {
         }
     }
     
+    const getDateTime = async () => {
+        const commands = [':GC#', ':GL#'];
+        const results = await daisyChainBooleanCommands(commands);
+        setDateTimeErrorField(results);
+    }
+    
     return (
         <Container class="wrapper">
             <CustomInput type="text" labelText="Enter Date (MM/DD/YY)" size="12"
@@ -73,6 +79,8 @@ export default function DateTime() {
             <br/>
             <CustomButton id="date-time-fields" 
                  onButtonClick={setDateTime}>Set Date & Time</CustomButton>
+            <CustomButton id="get-date-time" 
+                 onButtonClick={getDateTime}>Get Date & Time</CustomButton>
         </Container>
     );
 }
