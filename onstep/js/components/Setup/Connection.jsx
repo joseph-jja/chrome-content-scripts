@@ -9,6 +9,9 @@ import {
     teardownConnection
 } from 'js/api/request.js';
 import StorageBox from "js/storage/StorageBox.js";
+import {
+    daisyChainBooleanCommands
+} from 'js/utils/commandUtils.js';
 
 const {
     useState
@@ -31,7 +34,13 @@ export default function Connection() {
 
     const remoteConnect= (connectString) => {
         setupConnection(connectString).then(data => {
-            setSerialOrHostPortError(data);    
+            setSerialOrHostPortError(data);  
+            daisyChainBooleanCommands([':GVP#', ':GVN#', ':GVD#', ':GVT#']).then(results => {
+                const content = [data].concat(results);
+                setSerialOrHostPortError(content);
+            }).catch(err => {
+                setSerialOrHostPortError(data + err);
+            });  
         }).catch(e => {
             setSerialOrHostPortError(e);
         });
