@@ -50,7 +50,7 @@ export default function Location() {
             // send message
             // latitude => :StsDD*MM#
             // longitude => :SgDDD*MM#
-            const commands = [`:Sts${latitude}#`, ':Gt#', `:Sg${longitude}#`, ':Gg#'];
+            const commands = [`:Sts${latitude}#`, ':Gt#', `:Sg${longitude}#`, ':Gg#', ':GG#'];
             if (offsetField) {
                 commands.push(`:SG${offsetField}#`);
                 commands.push(':GG#');
@@ -63,8 +63,9 @@ export default function Location() {
     }
 
     const getLatLong = async () => {
-        const commands = [':Gt#', ':Gg#'];
+        const commands = [':Gt#', ':Gg#', ':GG#'];
         const results = await daisyChainBooleanCommands(commands);
+        setLatitudeLongitudeError(results);
         // do something with results
         // setLatitude(value);
         // StorageBox.setItem('latitude', value);
