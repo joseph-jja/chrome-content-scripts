@@ -15,7 +15,7 @@ export default class SerialPort extends DeviceConnection {
                 usbDevice
             } = options;
             if (!usbDevice) {
-                return reject('Invalid ttyp device!');
+                return reject('Invalid tty device!');
             }
 
             fs.open(usbDevice, 'r+').then(fd => {
