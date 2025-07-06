@@ -9,7 +9,10 @@ import {
 } from 'js/utils/commandUtils.js';
 import StorageBox from "js/storage/StorageBox.js";
 
-const { useState } = React;
+const {
+    useState,
+    useEffect
+} = React;
 
 const VALID_LAT_LONG_RE = /[\+|\-]\d+\:\d+/;
 
@@ -19,6 +22,12 @@ export default function Location() {
     const [longitude, setLongitude] = useState(StorageBox.getItem('longitude'));
     const [offsetField, setOffsetField] = useState(null);
     const [latitudeLongitudeError, setLatitudeLongitudeError] = useState('');    
+
+    useEffect(() => {
+        const now = new Date();
+        const offset = now.getTimzoneOffset() / 60;
+        setOffsetField(offset);
+    }, []);
     
     const setField = (event) => {
         const fieldName = event?.target?.name;
