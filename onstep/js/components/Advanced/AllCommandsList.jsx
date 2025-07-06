@@ -44,8 +44,7 @@ function useCommandList() {
 }
 
 export default function AllCommandsList() {
-
-const [options, setOptions] = useState(null);
+    const [options, setOptions] = useState(null);
     const data = useCommandList(); 
     
     const selectionFieldChange = (event) => {
