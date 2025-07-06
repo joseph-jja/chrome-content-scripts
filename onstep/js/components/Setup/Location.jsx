@@ -25,7 +25,7 @@ export default function Location() {
 
     useEffect(() => {
         const now = new Date();
-        const offset = now.getTimzoneOffset() / 60;
+        const offset = now.getTimezoneOffset() / 60;
         setOffsetField(offset);
     }, []);
     
