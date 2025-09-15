@@ -29,7 +29,7 @@ const COMMANDS_WITH_NO_REPLY = [
   ':CS#',
   ':LB#', 
   ':LN#', 
-  ':LCn', 
+  ':LC', 
   ':LD#',
   ':LL#', 
   ':L!#', 
