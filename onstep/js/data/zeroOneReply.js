@@ -29,4 +29,11 @@ const COMMANDS_WITH_ZERO_OR_ONE_REPLY = [
  ];
 
 
-export default COMMANDS_WITH_ZERO_OR_ONE_REPLY;
+const checkZeroResponse = command => {
+   const results = COMMANDS_WITH_ZERO_OR_ONE_REPLY.find(item => {
+        return command.startsWith(item);
+    });
+    return (results?.length > 0);
+};
+
+export default checkZeroResponse;

@@ -132,10 +132,18 @@ server.get('/setup', (req, res) => {
     res.send(`Connection failed, invalid host and port values ${commandOption}`);
 });
 
+const checkNoReply = command => {
+    const results = COMMANDS_WITH_NO_REPLY.find(item => {
+
+        return command.startsWith(item);
+    });
+    return (results?.length > 0);
+}
+
 server.get('/command', (req, res) => {
     const command = req.query?.command;
     // values NOT in this array then 
-    const returnsData = !COMMANDS_WITH_NO_REPLY.includes(command);
+    const returnsData = !checkNoReply(command);
     if (Connection?.isConnected() && command) {
         const decodedCommand = decodeURIComponent(command);
         if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
