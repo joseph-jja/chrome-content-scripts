@@ -3,12 +3,14 @@ import {
 } from 'node:net';
 
 import DeviceConnection from '#server/api/DeviceConnection.js';
+import checkZeroResponse from '#server/data/zeroOneReply.js';
 
 export default class SocketConnection extends DeviceConnection {
 
     constructor() {
         super();
         this.data = [];
+        this.endsWithHash = false;
     }
 
     connect(options) {
@@ -33,7 +35,14 @@ export default class SocketConnection extends DeviceConnection {
             this.device.on('data', msg => {
                 const results = msg.toString()
                 this.data.push(results);
-                this.emit('readEnd');
+                
+                // TODO test this more
+                if (this.endsWithHash && 
+                    this.data?.charAt(this.data?.length - 1) === '#') {
+                    this.emit('readEnd');
+                } else if (this.data?.length > 0) {
+                    this.emit('readEnd');
+                }
             });
         });
     }
@@ -43,6 +52,10 @@ export default class SocketConnection extends DeviceConnection {
             this.data = [];
             if (!this.device) {
                 return reject('Not connected!');
+            }
+            
+            if (returnsData && !checkZeroResponse(command)) {
+                this.endsWithHash = true;
             }
 
             this.once('readEnd', () => {
