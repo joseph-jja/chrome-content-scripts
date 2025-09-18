@@ -66,12 +66,12 @@ export default class SerialPort extends DeviceConnection {
                         }
                         i++;
                     }
-                    if (this.endsWithHash && 
-                        result?.charAt(result?.length - 1) === '#') {
-                        
-                        foundEnd = true;;
+                    if (this.endsWithHash) {
+                        if (result?.charAt(result?.length - 1) === '#') {
+                            foundEnd = true;
+                        }
                     } else if (result?.length > 0) {
-                        foundEnd = true;;
+                        foundEnd = true;
                     }
                     currentTime = Date.now();
                 }
