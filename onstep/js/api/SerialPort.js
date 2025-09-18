@@ -3,6 +3,8 @@ import fs from 'node:fs/promises';
 import DeviceConnection from '#server/api/DeviceConnection.js';
 import checkZeroResponse from '#server/data/zeroOneReply.js';
 
+const FIVE_SECONDS = 5000;
+
 export default class SerialPort extends DeviceConnection {
 
     constructor() {
@@ -48,7 +50,9 @@ export default class SerialPort extends DeviceConnection {
                 }
                 let result = '';
                 let foundEnd = false;
-                while (!foundEnd) {
+                let currentTime = Date.now();
+                const endTime = +currentTime + +FIVE_SECONDS
+                while (!foundEnd && currentTime < endTime()) {
                     const data = await this.device.read();
                     const buffer = new Int8Array(data?.buffer);
                         let i = 0,
@@ -69,6 +73,7 @@ export default class SerialPort extends DeviceConnection {
                     } else if (result?.length > 0) {
                         foundEnd = true;;
                     }
+                    currentTime = Date.now();
                 }
                 console.log('got data ', result);
                 return resolve(result);
