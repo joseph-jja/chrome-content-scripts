@@ -11,6 +11,7 @@ export default class SerialPort extends DeviceConnection {
         super();
         this.data = [];
         this.endsWithHash = false;
+        this.returnsZeroOrOne = false;
     }
 
     connect(options) {
@@ -39,9 +40,13 @@ export default class SerialPort extends DeviceConnection {
             if (!this.isConnected()) {
                 return reject('Not connected!');
             }
-            
-            if (returnsData && !checkZeroResponse(command)) {
-                this.endsWithHash = true;
+            this.endsWithHash = false;
+            this.returnsZeroOrOne = false;
+            if (returnsData) {
+                this.returnsZeroOrOne = checkZeroResponse(command);
+                if (!this.returnsZeroOrOne) {
+                    this.endsWithHash = true;
+                }
             }
 
             this.device.write(command).then(async res => {
@@ -52,10 +57,10 @@ export default class SerialPort extends DeviceConnection {
                 let foundEnd = false;
                 let currentTime = Date.now();
                 const endTime = +currentTime + +FIVE_SECONDS
-                while (!foundEnd && currentTime < endTime()) {
+                while (!foundEnd && currentTime < endTime) {
                     const data = await this.device.read();
                     const buffer = new Int8Array(data?.buffer);
-                        let i = 0,
+                    let i = 0,
                         end = buffer?.length || 0;
                     while (i < end) {
                         const charData = String.fromCharCode(buffer[i]);
@@ -67,7 +72,7 @@ export default class SerialPort extends DeviceConnection {
                         i++;
                     }
                     if (this.endsWithHash) {
-                        if (result?.charAt(result?.length - 1) === '#') {
+                        if (result?.includes('#')) {
                             foundEnd = true;
                         }
                     } else if (result?.length > 0) {

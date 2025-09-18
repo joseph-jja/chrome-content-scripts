@@ -4,7 +4,7 @@ import process from 'node:process';
 import {
     safeParse
 } from '#server/utils/jsonUtils.js';
-    
+
 const NO_REPLY = 'Reply: [none]';
 
 const basedir = process.cwd();
@@ -18,9 +18,9 @@ export async function loadCommandDataFile() {
 
     const commandsWithNoReply = Object.keys(commands).filter(key => {
         const item = commands[key];
-        return (item.reply === NO_REPLY); 
+        return (item.reply === NO_REPLY);
     });
-    
+
     /*.map(key => {
         const item = commands[key];
         return item; 
@@ -30,7 +30,3 @@ export async function loadCommandDataFile() {
 }
 
 loadCommandDataFile();
-
-
-
-

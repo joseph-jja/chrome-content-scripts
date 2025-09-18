@@ -35,9 +35,9 @@ export default class SocketConnection extends DeviceConnection {
             this.device.on('data', msg => {
                 const results = msg.toString()
                 this.data.push(results);
-                
+
                 // TODO test this more
-                if (this.endsWithHash && 
+                if (this.endsWithHash &&
                     this.data?.charAt(this.data?.length - 1) === '#') {
                     this.emit('readEnd');
                 } else if (this.data?.length > 0) {
@@ -53,7 +53,7 @@ export default class SocketConnection extends DeviceConnection {
             if (!this.device) {
                 return reject('Not connected!');
             }
-            
+
             if (returnsData && !checkZeroResponse(command)) {
                 this.endsWithHash = true;
             }
