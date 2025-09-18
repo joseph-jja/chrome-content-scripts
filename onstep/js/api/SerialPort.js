@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import DeviceConnection from '#server/api/DeviceConnection.js';
 import checkZeroResponse from '#server/data/zeroOneReply.js';
 
-const FIVE_SECONDS = 5000;
+const TIMEOUT = 2500;
 
 export default class SerialPort extends DeviceConnection {
 
@@ -56,18 +56,20 @@ export default class SerialPort extends DeviceConnection {
                 let result = '';
                 let foundEnd = false;
                 let currentTime = Date.now();
-                const endTime = +currentTime + +FIVE_SECONDS
+                const endTime = +currentTime + +TIMEOUT
                 while (!foundEnd && currentTime < endTime) {
                     const data = await this.device.read();
-                    const buffer = new Int8Array(data?.buffer);
-                    let i = 0,
-                        end = buffer?.length || 0;
+                    const buffer = data ? new Int8Array(data.buffer) : undefined;
+                    const end = buffer?.length || 0;
+                    let i = 0;
                     while (i < end) {
-                        const charData = String.fromCharCode(buffer[i]);
-                        const charCode = charData.charCodeAt(0);
-                        if (charCode > 32 && charCode < 127) {
-                            //console.log('-', charData, '-', charCode);
-                            result += charData;
+                        if (buffer[i]) {
+                            const charData = String.fromCharCode(buffer[i]);
+                            const charCode = charData.charCodeAt(0);
+                            if (charCode > 32 && charCode < 127) {
+                                //console.log('-', charData, '-', charCode);
+                                result += charData;
+                            }
                         }
                         i++;
                     }
