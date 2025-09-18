@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import DeviceConnection from '#server/api/DeviceConnection.js';
 import checkZeroResponse from '#server/data/zeroOneReply.js';
 
-const TIMEOUT = 2500;
+const TIMEOUT = 1500;
 
 export default class SerialPort extends DeviceConnection {
 
