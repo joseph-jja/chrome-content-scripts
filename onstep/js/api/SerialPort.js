@@ -26,20 +26,16 @@ export default class SerialPort extends DeviceConnection {
             fs.open(usbDevice, 'r+').then(fd => {
                 this.device = fd;
                 this.connected = true;
-                /*this.deviceStream = this.device.createReadStream({ encoding: 'utf8', highWaterMark: 1 });
-                this.deviceStream.on('data', msg => {
-                    const results = msg.toString()
-                    this.data += results;
-
-                    if (this.endsWithHash) {
-                        if (this.data?.includes('#')) {
-                            this.emit('readEnd');
-                        }
-                    } else if (this.data?.length > 0) {
-                        this.emit('readEnd');
+                this.deviceStream = this.device.createReadStream({ encoding: 'utf8', highWaterMark: 1 });
+                this.deviceStream.on('readable', () => {
+                    let char = this.deviceStream.read(1);
+                    this.data = [];
+                    while (char) {
+                        this.data.push(char.toString());
+                        char = this.deviceStream.read(1);
                     }
-                });*/
-                
+                    this.emit('readEnd');
+                });
                 return resolve('Success');
             }).catch(e => {
                 console.log('Error: ', e);
@@ -67,31 +63,21 @@ export default class SerialPort extends DeviceConnection {
                 if (!returnsData) {
                     return resolve('no reply');
                 }
-
-                /*this.once('readEnd', () => {
-                    return resolve(this.data.join(''));
-                });*/
                 
+                const readChar = async () => {
+                    return new Promise((resolve) => {
+                        this.once('readEnd', () => {
+                            return resolve(this.data.join(''));
+                        });
+                    });
+                };
+
                 let result = '';
                 let foundEnd = false;
                 let currentTime = Date.now();
                 const endTime = +currentTime + +TIMEOUT
                 while (!foundEnd && currentTime < endTime) {
-                    const data = await this.device.read();
-                    const buffer = data ? new Int8Array(data.buffer) : undefined;
-                    const end = buffer?.length || 0;
-                    let i = 0;
-                    while (i < end) {
-                        if (buffer[i]) {
-                            const charData = String.fromCharCode(buffer[i]);
-                            const charCode = charData.charCodeAt(0);
-                            if (charCode > 32 && charCode < 127) {
-                                //console.log('-', charData, '-', charCode);
-                                result += charData;
-                            }
-                        }
-                        i++;
-                    }
+                    result += await readChar();
                     if (this.endsWithHash) {
                         if (result?.includes('#')) {
                             foundEnd = true;
