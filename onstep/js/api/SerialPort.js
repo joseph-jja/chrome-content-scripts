@@ -9,7 +9,7 @@ export default class SerialPort extends DeviceConnection {
 
     constructor() {
         super();
-        this.data = [];
+        this.data = '';
         this.endsWithHash = false;
         this.returnsZeroOrOne = false;
     }
@@ -26,7 +26,20 @@ export default class SerialPort extends DeviceConnection {
             fs.open(usbDevice, 'r+').then(fd => {
                 this.device = fd;
                 this.connected = true;
-                //this.deviceStream = this.device.createReadStream();
+                /*this.deviceStream = this.device.createReadStream({ encoding: 'utf8', highWaterMark: 1 });
+                this.deviceStream.on('data', msg => {
+                    const results = msg.toString()
+                    this.data += results;
+
+                    if (this.endsWithHash) {
+                        if (this.data?.includes('#')) {
+                            this.emit('readEnd');
+                        }
+                    } else if (this.data?.length > 0) {
+                        this.emit('readEnd');
+                    }
+                });*/
+                
                 return resolve('Success');
             }).catch(e => {
                 console.log('Error: ', e);
@@ -34,18 +47,6 @@ export default class SerialPort extends DeviceConnection {
             });
         });
     }
-
-    /*readByte() {
-        return new Promise((resolve, reject) => {
-           this.deviceStream.once('data', () => {
-                let chunk;
-                while (null !== (chunk = this.deviceStream.read())) { 
-                    console.log(chunk); 
-                    resolve(chunk);//.toString());
-                }
-            });
-        });
-    }*/
 
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
@@ -66,12 +67,16 @@ export default class SerialPort extends DeviceConnection {
                 if (!returnsData) {
                     return resolve('no reply');
                 }
+
+                /*this.once('readEnd', () => {
+                    return resolve(this.data.join(''));
+                });*/
+                
                 let result = '';
                 let foundEnd = false;
                 let currentTime = Date.now();
                 const endTime = +currentTime + +TIMEOUT
                 while (!foundEnd && currentTime < endTime) {
-                    //const data = await this.readByte();
                     const data = await this.device.read();
                     const buffer = data ? new Int8Array(data.buffer) : undefined;
                     const end = buffer?.length || 0;
