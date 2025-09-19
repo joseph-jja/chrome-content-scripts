@@ -26,6 +26,7 @@ export default class SerialPort extends DeviceConnection {
             fs.open(usbDevice, 'r+').then(fd => {
                 this.device = fd;
                 this.connected = true;
+                //this.deviceStream = this.device.createReadStream();
                 return resolve('Success');
             }).catch(e => {
                 console.log('Error: ', e);
@@ -33,6 +34,18 @@ export default class SerialPort extends DeviceConnection {
             });
         });
     }
+
+    /*readByte() {
+        return new Promise((resolve, reject) => {
+           this.deviceStream.once('data', () => {
+                let chunk;
+                while (null !== (chunk = this.deviceStream.read())) { 
+                    console.log(chunk); 
+                    resolve(chunk);//.toString());
+                }
+            });
+        });
+    }*/
 
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
@@ -58,6 +71,7 @@ export default class SerialPort extends DeviceConnection {
                 let currentTime = Date.now();
                 const endTime = +currentTime + +TIMEOUT
                 while (!foundEnd && currentTime < endTime) {
+                    //const data = await this.readByte();
                     const data = await this.device.read();
                     const buffer = data ? new Int8Array(data.buffer) : undefined;
                     const end = buffer?.length || 0;
