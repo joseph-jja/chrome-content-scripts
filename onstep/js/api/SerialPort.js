@@ -25,9 +25,10 @@ export default class SerialPort extends DeviceConnection {
                 return reject('Invalid tty device!');
             }
 
-            const command = `stty -F ${usbDevice} ${this.baudRate}`;
+            const command = 'stty';
+            const commandArgs = ['-F', usbDevice, this.baudRate];
             try {
-                const results = execFileSync(command);
+                const results = execFileSync(command, commandArgs);
                 console.log('Success: ', results);
             } catch(e) {
                 console.error('ERROR setting baud rate: ', e);
