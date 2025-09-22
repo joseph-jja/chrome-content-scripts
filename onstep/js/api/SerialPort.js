@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { execFileSync } from'node:child_process';
 
 import DeviceConnection from '#server/api/DeviceConnection.js';
 import checkZeroResponse from '#server/data/zeroOneReply.js';
@@ -9,6 +10,7 @@ export default class SerialPort extends DeviceConnection {
 
     constructor() {
         super();
+        this.baudRate = 9600;
         this.data = '';
         this.endsWithHash = false;
         this.returnsZeroOrOne = false;
@@ -21,6 +23,14 @@ export default class SerialPort extends DeviceConnection {
             } = options;
             if (!usbDevice) {
                 return reject('Invalid tty device!');
+            }
+
+            const command = `stty -F ${usbDevice} ${this.baudRate}`;
+            try {
+                const results = execFileSync(command);
+                console.log('Success: ', results);
+            } catch(e) {
+                console.error('ERROR setting baud rate: ', e);
             }
 
             fs.open(usbDevice, 'r+').then(fd => {
