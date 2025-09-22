@@ -16,6 +16,7 @@ export async function daisyChainBooleanCommands(commands = []) {
         if (err) {
             success = false;
             response.push(err);
+            console.error('Error sending command: ', err);
         } else {
             response.push(result);
         }
