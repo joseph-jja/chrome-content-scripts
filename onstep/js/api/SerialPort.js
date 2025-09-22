@@ -29,7 +29,7 @@ export default class SerialPort extends DeviceConnection {
             const commandArgs = ['-F', usbDevice, this.baudRate];
             try {
                 const results = execFileSync(command, commandArgs);
-                console.log('Success: ', results);
+                console.log('Success: ', results?.toString());
             } catch(e) {
                 console.error('ERROR setting baud rate: ', e);
             }
