@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
     }
 
     // --- Communication Test ---
-    const char* outgoing_message = "Hello, Serial World!\n";
+    const char* outgoing_message = ":Gt#";
     char incoming_buffer[BUFFER_SIZE];
 
     // 1. Write data
