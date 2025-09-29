@@ -9,6 +9,12 @@
 #include <termios.h>  // POSIX terminal control definitions
 #include <unistd.h>   // POSIX standard functions (read, write, close)
 
+// Define the serial port device file path
+// NOTE: Change this to your actual serial port (e.g., "/dev/ttyACM0" or "COM3" equivalent)
+#define SERIAL_PORT "/dev/ttyUSB0"
+#define BAUD_RATE B9600
+#define BUFFER_SIZE 256
+
 // Global file stream (for simplicity; real apps might manage this per-instance or context)
 int fd;
 
@@ -188,7 +194,7 @@ Napi::Value Write(const Napi::CallbackInfo& info) {
         Napi::Error::New(env, "Error during file write").ThrowAsJavaScriptException();
         return -1;
     }
-    printf("Wrote %d bytes: '%s'\n", n, data);
+    printf("Wrote %d bytes: '%s'\n", n, data.c_str());
     return n;
 
     return env.Undefined();
