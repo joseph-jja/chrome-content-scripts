@@ -177,7 +177,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
             buffer[i] = incomingByte[0];
             if (isBinaryReply && (incomingByte[0] == '0' || incomingByte[0] == '1')) {
                 foundEnd = true;
-            } else if (endingType.isNull() && endings[0] == incomingByte[0]) {
+            } else if (endingType.isNull() && endingType[0] == incomingByte[0]) {
                 foundEnd = true;
             }
             i++;
