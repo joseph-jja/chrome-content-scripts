@@ -146,10 +146,11 @@ Napi::Value Close(const Napi::CallbackInfo& info) {
 Napi::Value Read(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    /*if (!global_file_stream.is_open()) {
+    if (fd <0) {
         Napi::Error::New(env, "File is not open for reading").ThrowAsJavaScriptException();
-        return env.Undefined();
+        return Napi::Number::New(env, -2);
     }
+    /*
 
     char ch;
     if (global_file_stream.get(ch)) {
@@ -174,12 +175,12 @@ Napi::Value Write(const Napi::CallbackInfo& info) {
     // 1. Check arguments
     if (info.Length() != 1 || !info[0].IsString()) {
         Napi::TypeError::New(env, "Expected one string argument: data to write").ThrowAsJavaScriptException();
-        return env.Undefined();
+        return Napi::Number::New(env, -2);
     }
 
     if (fd <0) {
         Napi::Error::New(env, "File is not open for writing").ThrowAsJavaScriptException();
-        return env.Undefined();
+        return Napi::Number::New(env, -3);
     }
 
     // 2. Extract argument
