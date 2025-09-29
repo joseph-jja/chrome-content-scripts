@@ -192,7 +192,8 @@ Napi::Value Write(const Napi::CallbackInfo& info) {
     if (n < 0) {
         perror("Error writing to serial port");
         Napi::Error::New(env, "Error during file write").ThrowAsJavaScriptException();
-        //return -1;
+        napi_value = -1;
+        return napi_value;
     }
     printf("Wrote %d bytes: '%s'\n", n, data.c_str());
     //return n;
