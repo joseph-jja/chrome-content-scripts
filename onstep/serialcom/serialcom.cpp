@@ -160,6 +160,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     
     bool isBinaryReply = info[0].As<Napi::Boolean>().Value(); 
     std::string endingType = info[1].As<Napi::String>().Utf8Value();
+    bool hasEnding = info[1].isNull() ? false : true;
         
     char buffer[129];
     char incomingByte[2];
@@ -177,7 +178,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
             buffer[i] = incomingByte[0];
             if (isBinaryReply && (incomingByte[0] == '0' || incomingByte[0] == '1')) {
                 foundEnd = true;
-            } else if (endingType.isNull() && endingType[0] == incomingByte[0]) {
+            } else if (hasEnding && endingType[0] == incomingByte[0]) {
                 foundEnd = true;
             }
             i++;
