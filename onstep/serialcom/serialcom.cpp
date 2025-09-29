@@ -203,18 +203,18 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
 }
 
 // void write(string data)
-Napi::Value Write(const Napi::CallbackInfo& info) {
+Napi::Number Write(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     // 1. Check arguments
     if (info.Length() != 1 || !info[0].IsString()) {
         Napi::TypeError::New(env, "Expected one string argument: data to write").ThrowAsJavaScriptException();
-        //return Napi::Number::New(env, -2);
+        return Napi::Number::New(env, -2.0);
     }
 
     if (fd <0) {
         Napi::Error::New(env, "File is not open for writing").ThrowAsJavaScriptException();
-        //return Napi::Number::New(env, -3);
+        return Napi::Number::New(env, -3.0);
     }
 
     // 2. Extract argument
@@ -227,11 +227,11 @@ Napi::Value Write(const Napi::CallbackInfo& info) {
     if (n < 0) {
         perror("Error writing to serial port");
         Napi::Error::New(env, "Error during file write").ThrowAsJavaScriptException();
-        //return Napi::Number::New(env, -1);
+        return Napi::Number::New(env, -4.0);
     }
     printf("Wrote %d bytes: '%s'\n", n, data.c_str());
     
-    return env.Undefined();
+    return Napi::Number::New(env, (double)n);
 }
 
 // --- Module Initialization ---
