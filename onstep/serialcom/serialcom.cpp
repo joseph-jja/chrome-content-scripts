@@ -165,7 +165,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
             // but since we set VTIME, this should generally not happen unless timeout expires.
             printf("No data available (timeout).\n");
         }
-        if (n > 0 && tmp != NULL) {
+        if (n > 0 && strlen(tmp) > 0) {
             if (tmp[0] == ':') {
                capture = true;
             }
