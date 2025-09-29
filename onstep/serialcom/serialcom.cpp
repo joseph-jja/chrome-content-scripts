@@ -152,34 +152,38 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         //return Napi::Number::New(env, -2);
     }
     
+    // Check if the first argument is a boolean
+    if (!info[0].IsBoolean()) {
+        Napi::TypeError::New(env, "Argument 1 must be a boolean").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
+    
+    bool isBinaryReply = info[0].As<Napi::Boolean>().Value(); 
+    std::string endingType = info[1].As<Napi::String>().Utf8Value();
+        
     char buffer[129];
-    char tmp[2];
+    char incomingByte[2];
     long max_len = 1;
-    bool sentance = true;
-    bool capture = false;
+    bool foundEnd = true;
     int i = 0;
-    int n = read(fd, tmp, max_len);
-    while (n < 0 || sentance) { 
+    int n = read(fd, incomingByte, max_len);    
+    while (n < 0 || !foundEnd) { 
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             // This is not necessarily an error, just means no data was available
             // but since we set VTIME, this should generally not happen unless timeout expires.
             printf("No data available (timeout).\n");
         }
-        if (n > 0 && strlen(tmp) > 0) {
-            if (tmp[0] == ':') {
-               capture = true;
+        if (n > 0 && strlen(tmp) > 0 && (int)tmp[0] > 32 && int(tmp[0] < 127) {
+            buffer[i] = incomingByte[0];
+            if (isBinaryReply && (incomingByte[0] == '0' || incomingByte[0] == '1')) {
+                foundEnd = true;
+            } else if (endingType != NULL && endings[0] == incomingByte[0]) {
+                foundEnd = true;
             }
-            if (capture) {
-              buffer[i] = tmp[0];
-              i++;
-            }
-            if (tmp[0] == '#') {
-              capture = false;
-              sentance = false;
-            }
+            i++;
         }
-        if (sentance) {
-           n = read(fd, tmp, max_len);
+        if (!foundEnd) {
+           n = read(fd, incomingByte, max_len);
         }
     }
     
