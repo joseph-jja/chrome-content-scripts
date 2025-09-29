@@ -3,12 +3,11 @@
         "target_name": "serialcom",
         "sources": ["serialcom.cpp"],
         "include_dirs": [ 
-            "<!(node -p \"require('node-addon-api').include \")",
+            "./include",
+            "./",
             "./node_modules/node-addon-api"
         ],
-        "libraries": [
-            "<!(node -p \"require('node-addon-api').lib \")"
-        ],
+        "libraries": [],
         "defines": [
             "NAPI_DISABLE_CPP_EXCEPTIONS"
         ],
