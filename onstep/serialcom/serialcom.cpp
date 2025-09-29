@@ -94,13 +94,14 @@ int configure_port(int fd) {
 
 
 // void open(string path, string mode)
-Napi::Value Open(const Napi::CallbackInfo& info) {
+Napi::Number Open(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
+
 
     // 1. Check arguments
     if (info.Length() != 2 || !info[0].IsString() || !info[1].IsString()) {
         Napi::TypeError::New(env, "Expected two string arguments: path and mode").ThrowAsJavaScriptException();
-        return env.Undefined();
+        return Napi::Number::New(env, -2.0);
     }
 
     // 2. Extract arguments
@@ -113,8 +114,7 @@ Napi::Value Open(const Napi::CallbackInfo& info) {
         // perror is a standard C function that prints a descriptive error message 
         // to stderr, based on the current value of 'errno'.
         perror("Error opening serial port");
-        // In idiomatic C++, you might use:
-        // std::cerr << "Error opening serial port: " << strerror(errno) << std::endl;
+        return Napi::Number::New(env, -3.0);
     } else {
         // Clear the O_NDELAY flag after opening to restore blocking behavior
         // fcntl(fd, F_SETFL, 0) sets the file status flags to 0 (blocking).
@@ -122,13 +122,15 @@ Napi::Value Open(const Napi::CallbackInfo& info) {
             perror("Error clearing O_NDELAY flag");
             // Although the port is open, a failure here might warrant closing it or logging
             // a more severe error. For simplicity, we just log the fcntl error.
+            return Napi::Number::New(env, -4.0);
         }
         if (configure_port(fd) < 0) {
             perror("Error configuring port");
+            return Napi::Number::New(env, -5.0);
         }
     }
     
-    return env.Undefined();
+    return Napi::Number::New(env, 0.0);
 }
 
 // void close()
