@@ -173,7 +173,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
             // but since we set VTIME, this should generally not happen unless timeout expires.
             printf("No data available (timeout).\n");
         }
-        if (n > 0 && strlen(tmp) > 0 && (int)tmp[0] > 32 && int(tmp[0] < 127) {
+        if (n > 0 && strlen(incomingByte) > 0 && (int)incomingByte[0] > 32 && (int)incomingByte[0] < 127) {
             buffer[i] = incomingByte[0];
             if (isBinaryReply && (incomingByte[0] == '0' || incomingByte[0] == '1')) {
                 foundEnd = true;
