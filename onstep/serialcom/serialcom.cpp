@@ -145,31 +145,49 @@ Napi::Value Close(const Napi::CallbackInfo& info) {
 // int read() - simplified to return a single byte/character as an int
 Napi::Value Read(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
+    //Napi::Number returnCode = Napi::Number::New(env, -2);
 
     if (fd <0) {
         Napi::Error::New(env, "File is not open for reading").ThrowAsJavaScriptException();
-        return Napi::Number::New(env, -2);
+        //return Napi::Number::New(env, -2);
     }
-    /*
-
-    char ch;
-    if (global_file_stream.get(ch)) {
-        // Return the character as a JavaScript number (its ASCII/UTF-8 code)
-        return Napi::Number::New(env, (int)ch);
-    } else {
-        // End of file or error
-        if (global_file_stream.eof()) {
-            return Napi::Number::New(env, -1); // Common convention for EOF
-        } else {
-            // Error during read
-            Napi::Error::New(env, "Error during file read").ThrowAsJavaScriptException();
-            return env.Undefined();
+    
+    char buffer[129];
+    char tmp[2];
+    long max_len = 1;
+    bool sentance = true;
+    bool capture = false;
+    int i = 0;
+    int n = read(fd, tmp, max_len);
+    while (n < 0 || sentance) { 
+        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+            // This is not necessarily an error, just means no data was available
+            // but since we set VTIME, this should generally not happen unless timeout expires.
+            printf("No data available (timeout).\n");
         }
-    }*/
+        if (n > 0 && tmp != NULL) {
+            if (tmp[0] == ':') {
+               capture = true;
+            }
+            if (capture) {
+              buffer[i] = tmp[0];
+              i++;
+            }
+            if (tmp[0] == '#') {
+              capture = false;
+              sentance = false;
+            }
+        }
+        if (sentance) {
+           n = read(fd, tmp, max_len);
+        }
+    }
+    
+    return env.Undefined();
 }
 
 // void write(string data)
-Napi::Value Write(const Napi::CallbackInfo& info) {
+Napi::Number Write(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     // 1. Check arguments
