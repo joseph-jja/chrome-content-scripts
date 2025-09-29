@@ -152,7 +152,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
 
     if (fd <0) {
         Napi::Error::New(env, "File is not open for reading").ThrowAsJavaScriptException();
-        //return Napi::Number::New(env, -2);
+        return env.Undefined();
     }
     
     // Check if the first argument is a boolean
@@ -169,6 +169,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     
         
     char buffer[129];
+    memset(buffer, '\0', 129);
     char incomingByte[2];
     long max_len = 1;
     bool foundEnd = true;
@@ -192,6 +193,10 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         if (!foundEnd) {
            n = read(fd, incomingByte, max_len);
         }
+    }
+    
+    if (strlen(buffer) > 0) {
+        return Napi::String::New(env, buffer);
     }
     
     return env.Undefined();
