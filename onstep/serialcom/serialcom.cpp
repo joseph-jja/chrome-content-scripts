@@ -134,14 +134,15 @@ Napi::Number Open(const Napi::CallbackInfo& info) {
 }
 
 // void close()
-Napi::Value Close(const Napi::CallbackInfo& info) {
+Napi::Number Close(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     if (close(fd) < 0) {
         perror("Error closing serial port");
+        return Napi::Number::New(env, -1.0);
     }
 
-    return env.Undefined();
+    return Napi::Number::New(env, 0.0);
 }
 
 // int read() - simplified to return a single byte/character as an int
