@@ -187,7 +187,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
 }
 
 // void write(string data)
-Napi::Number Write(const Napi::CallbackInfo& info) {
+Napi::value Write(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     // 1. Check arguments
