@@ -159,7 +159,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     }
     
     Napi::Value value = info[1];
-    bool hasEnding = value.isNull() ? false : true;
+    bool hasEnding = value.IsNull() ? false : true;
     
     bool isBinaryReply = info[0].As<Napi::Boolean>().Value(); 
     std::string endingType = info[1].As<Napi::String>().Utf8Value();
