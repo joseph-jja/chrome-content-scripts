@@ -193,7 +193,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         }
         // we have data so lets make sure it is something ascii
         if (n > 0 && strlen(incomingByte) > 0) {
-            bool isCharacter = (int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
+            bool isCharacter = ((int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
             bool isAck = (int)incomingByte[0] == 6;
             if (isAck || isCharacter) {
                 buffer[i] = incomingByte[0];
