@@ -1,6 +1,5 @@
 #include <napi.h>
 #include <iostream>
-#include <string>
 #include <fstream>
 #include <string>
 #include <fcntl.h>   // For open, fcntl, O_*, F_*
@@ -248,17 +247,26 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
     // 2. Extract argument
     Napi::Value value = info[1];
     if (value.IsArrayBuffer()) {
-        Napi::ArrayBuffer buffer = info[0].As<Napi::ArrayBuffer>();
+    
+        Napi::ArrayBuffer arrayBuffer = info[0].As<Napi::ArrayBuffer>();
         
-        // Get the raw data pointer and length from the Napi::Buffer
-        void* bufferData = buffer.Data();
-        size_t bufferLength = buffer.ByteLength();
+        // Get a pointer to the ArrayBuffer's data and its length
+        void* arrayBufferData = arrayBuffer.Data();
+        size_t arrayBufferLength = arrayBuffer.ByteLength();
+        
+        Napi::Buffer buffer = Napi::Buffer<char>::Copy(env, static_cast<char*>(arrayBufferData), arrayBufferLength);
 
-        cppString(static_cast<char*>(bufferData), bufferLength);
-        Napi::String xdata = Napi::String::New(env, cppString);
+        // Get the raw data pointer and length from the Napi::Buffer
+        const char* bufferData = buffer.Data();
+        size_t bufferLength = buffer.Length();  
+
+        std::string resultString(bufferData, bufferLength);
+        Napi::String xdata = Napi::String::New(env, resultString);
                 
         data = xdata.As<Napi::String>().Utf8Value();
+        
     } else if (value.IsBuffer()) {
+    
         Napi::Buffer<char> buffer = value.As<Napi::Buffer<char>>();  
         // Get the raw data pointer and length from the Napi::Buffer
         const char* bufferData = buffer.Data();
@@ -268,6 +276,7 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
         Napi::String xdata = Napi::String::New(env, resultString);
                 
         data = xdata.As<Napi::String>().Utf8Value();
+        
     } else {
         data = value.As<Napi::String>().Utf8Value();
     }
