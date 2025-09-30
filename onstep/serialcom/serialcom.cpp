@@ -227,11 +227,19 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     // 1. Check arguments
-    if (info.Length() != 1 || (!info[0].IsString() && !info[0].IsBuffer())) {
-        Napi::TypeError::New(env, "Expected one string or Buffer argument: data to write").ThrowAsJavaScriptException();
+    if (info.Length() != 1) {
+        Napi::TypeError::New(env, "Expected one argument: data to write").ThrowAsJavaScriptException();
         return Napi::Number::New(env, -2.0);
     }
-
+    
+    napi_valuetype valueType;
+    napi_status napi_typeof(env, info[0], &valueType);
+        
+    if (!info[0].IsString() && !info[0].IsBuffer() && !info[0].IsArrayBuffer()) {
+        Napi::TypeError::New(env, "Expected string or Buffer or ArrayBuffer argument: data to write").ThrowAsJavaScriptException();
+        return Napi::Number::New(env, -2.0);
+    }    
+        
     if (fd < 0) {
         Napi::Error::New(env, "File is not open for writing").ThrowAsJavaScriptException();
         return Napi::Number::New(env, -3.0);
