@@ -40,7 +40,7 @@ export default class SerialPort extends DeviceConnection {
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
 
-            const returnsZeroOrOne = returnsData ? checkZeroResponse(command) false;
+            const returnsZeroOrOne = returnsData ? checkZeroResponse(command) : false;
             const endsWithHash  = returnsData && !returnsZeroOrOne ? '#' : false;
             
             // we can write data at any time;
