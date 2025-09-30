@@ -13,7 +13,7 @@
 // NOTE: Change this to your actual serial port (e.g., "/dev/ttyACM0" or "COM3" equivalent)
 #define SERIAL_PORT "/dev/ttyUSB0"
 #define BAUD_RATE B9600
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 128
 
 // Global file stream (for simplicity; real apps might manage this per-instance or context)
 int fd;
@@ -97,15 +97,22 @@ int configure_port(int fd) {
 Napi::Number Open(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    // 1. Check arguments
-    if (info.Length() != 2 || !info[0].IsString() || !info[1].IsString()) {
-        Napi::TypeError::New(env, "Expected two string arguments: path and mode").ThrowAsJavaScriptException();
-        return Napi::Number::New(env, -2.0);
-    }
-
     // 2. Extract arguments
-    std::string path = info[0].As<Napi::String>().Utf8Value();
-    std::string baud_rate = info[1].As<Napi::String>().Utf8Value();
+    std::string path;
+    std::string baud_rate;
+
+    if (info.Length() < 1 || !info[0].IsString()) {
+        path = SERIAL_PORT;
+    } else {
+        path = info[0].As<Napi::String>().Utf8Value();
+    }
+        
+    // 1. Check arguments
+    if (info.Length() < 2 || !info[1].IsString()) {
+        baud_rate = BAUD_RATE;
+    } else {
+        baud_rate = info[1].As<Napi::String>().Utf8Value();
+    }
 
     fd = open(path.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
 
@@ -113,7 +120,7 @@ Napi::Number Open(const Napi::CallbackInfo& info) {
         // perror is a standard C function that prints a descriptive error message 
         // to stderr, based on the current value of 'errno'.
         perror("Error opening serial port");
-        return Napi::Number::New(env, -3.0);
+        return Napi::Number::New(env, -2.0);
     } else {
         // Clear the O_NDELAY flag after opening to restore blocking behavior
         // fcntl(fd, F_SETFL, 0) sets the file status flags to 0 (blocking).
@@ -121,11 +128,11 @@ Napi::Number Open(const Napi::CallbackInfo& info) {
             perror("Error clearing O_NDELAY flag");
             // Although the port is open, a failure here might warrant closing it or logging
             // a more severe error. For simplicity, we just log the fcntl error.
-            return Napi::Number::New(env, -4.0);
+            return Napi::Number::New(env, -3.0);
         }
         if (configure_port(fd) < 0) {
             perror("Error configuring port");
-            return Napi::Number::New(env, -5.0);
+            return Napi::Number::New(env, -4.0);
         }
     }
     
@@ -145,11 +152,12 @@ Napi::Number Close(const Napi::CallbackInfo& info) {
 }
 
 // int read() - simplified to return a single byte/character as an int
+// read in data from the serial port
 Napi::Value Read(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     //Napi::Number returnCode = Napi::Number::New(env, -2);
 
-    if (fd <0) {
+    if (fd < 0) {
         Napi::Error::New(env, "File is not open for reading").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -166,20 +174,24 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     bool isBinaryReply = info[0].As<Napi::Boolean>().Value(); 
     std::string endingType = info[1].As<Napi::String>().Utf8Value();
     
-        
-    char buffer[129];
-    memset(buffer, '\0', 129);
+    // output buffer
+    char buffer[BUFFER_SIZE + 1];
+    memset(buffer, '\0', BUFFER_SIZE + 1);
+
+    // temp storage space
     char incomingByte[2];
+    memset(incomingByte, '\0', 2);
     long max_len = 1;
-    bool foundEnd = true;
+    bool foundEnd = false;
     int i = 0;
-    int n = read(fd, incomingByte, max_len);    
-    while (n < 0 || !foundEnd) { 
+    int n = read(fd, incomingByte, max_len);
+    while (!foundEnd) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             // This is not necessarily an error, just means no data was available
             // but since we set VTIME, this should generally not happen unless timeout expires.
             printf("No data available (timeout).\n");
         }
+        // we have data so lets make sure it is something ascii
         if (n > 0 && strlen(incomingByte) > 0 && (int)incomingByte[0] > 32 && (int)incomingByte[0] < 127) {
             buffer[i] = incomingByte[0];
             if (isBinaryReply && (incomingByte[0] == '0' || incomingByte[0] == '1')) {
@@ -189,6 +201,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
             }
             i++;
         }
+        // we are not at the end of the data so keep going
         if (!foundEnd) {
            n = read(fd, incomingByte, max_len);
         }
@@ -202,6 +215,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
 }
 
 // void write(string data)
+// write data out the usb port 
 Napi::Number Write(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -211,7 +225,7 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
         return Napi::Number::New(env, -2.0);
     }
 
-    if (fd <0) {
+    if (fd < 0) {
         Napi::Error::New(env, "File is not open for writing").ThrowAsJavaScriptException();
         return Napi::Number::New(env, -3.0);
     }
@@ -236,7 +250,6 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
 }
 
 // --- Module Initialization ---
-
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(
         "open", 
