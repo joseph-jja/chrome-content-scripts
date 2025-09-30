@@ -246,7 +246,18 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
     
     // 2. Extract argument
     Napi::Value value = info[1];
-    if (value.IsBuffer()) {
+    if (value.IsArrayBuffer()) {
+        Napi::ArrayBuffer<char> buffer = value.As<Napi::ArrayBuffer<char>>();  
+        
+        // Get the raw data pointer and length from the Napi::Buffer
+        const char* bufferData = buffer.Data();
+        size_t bufferLength = buffer.Length();  
+
+        std::string resultString(bufferData, bufferLength);
+        Napi::String xdata = Napi::String::New(env, resultString);
+                
+        data = xdata.As<Napi::String>().Utf8Value();
+    } else if (value.IsBuffer()) {
         Napi::Buffer<char> buffer = value.As<Napi::Buffer<char>>();  
         // Get the raw data pointer and length from the Napi::Buffer
         const char* bufferData = buffer.Data();
