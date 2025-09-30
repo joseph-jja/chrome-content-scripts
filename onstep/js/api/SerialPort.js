@@ -30,6 +30,8 @@ export default class SerialPort extends DeviceConnection {
             // sync code
             const openResponseCode = serialcom.open(usbDevice, 'B9600');
             if (+openResponseCode === 0) {
+                this.device = true;
+                this.connected = true;
                 return resolve('Success: ' + openResponseCode);
             } else {
                 return reject('ERROR: ' + openResponseCode);
@@ -63,6 +65,8 @@ export default class SerialPort extends DeviceConnection {
             if (!this.device && !this.isConnected()) {
                 return reject('Not connected!');
             }
+            this.device = undefined;
+            this.connected = false;
             this.device.close();
             this.connected = false;
             resolve('Closed');
