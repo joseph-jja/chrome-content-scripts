@@ -227,8 +227,8 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     // 1. Check arguments
-    if (info.Length() != 1 || (!info[0].IsString() || !info[0].IsNumber())) {
-        Napi::TypeError::New(env, "Expected one string or number argument: data to write").ThrowAsJavaScriptException();
+    if (info.Length() != 1 || (!info[0].IsString() || !info[0].IsBuffer())) {
+        Napi::TypeError::New(env, "Expected one string or Buffer argument: data to write").ThrowAsJavaScriptException();
         return Napi::Number::New(env, -2.0);
     }
 
@@ -236,10 +236,24 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
         Napi::Error::New(env, "File is not open for writing").ThrowAsJavaScriptException();
         return Napi::Number::New(env, -3.0);
     }
-
+    
+    std::string data;
+    
     // 2. Extract argument
-    std::string data = info[0].As<Napi::String>().Utf8Value();
+    Napi::Value value = info[1];
+    if (value.IsBuffer()) {
+        Napi::Buffer<char> buffer = value.As<Napi::Buffer<char>>();  
+        // Get the raw data pointer and length from the Napi::Buffer
+        const char* bufferData = buffer.Data();
+        size_t bufferLength = buffer.Length();  
 
+        std::string resultString(bufferData, bufferLength);
+        Napi::String xdata = Napi::String::New(env, resultString);
+                
+        data = xdata.As<Napi::String>().Utf8Value();
+    } else {
+        data = value.As<Napi::String>().Utf8Value();
+    }
 
     int len = strlen(data.c_str());
     int n = write(fd, data.c_str(), len);
