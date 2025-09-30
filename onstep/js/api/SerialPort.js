@@ -30,7 +30,7 @@ export default class SerialPort extends DeviceConnection {
             // sync code
             const openResponseCode = serialcom.open(usbDevice, 'B9600');
             if (+openResponseCode === 0) {
-                this.device = true;
+                this.device = serialcom;
                 this.connected = true;
                 return resolve('Success: ' + openResponseCode);
             } else {
@@ -46,12 +46,12 @@ export default class SerialPort extends DeviceConnection {
             const endsWithHash  = returnsData && !returnsZeroOrOne ? '#' : false;
             
             // we can write data at any time;
-            const writeReturnCode = serialcom.write(command);
-            if (+writeReturnCode === 0) {
+            const writeReturnCode = this.device.write(command);
+            if (+writeReturnCode >= 0) {
                 if (!returnsData) {
                     return resolve('no reply');
                 }
-                const readData = serialcom.read(returnsZeroOrOne, endsWithHash);
+                const readData = this.device.read(returnsZeroOrOne, endsWithHash);
                 resolve(readData);
                 
             } else {
@@ -65,9 +65,9 @@ export default class SerialPort extends DeviceConnection {
             if (!this.device && !this.isConnected()) {
                 return reject('Not connected!');
             }
+            this.device.close();
             this.device = undefined;
             this.connected = false;
-            this.device.close();
             this.connected = false;
             resolve('Closed');
         });
