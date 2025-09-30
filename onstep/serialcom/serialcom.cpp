@@ -231,10 +231,7 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
         Napi::TypeError::New(env, "Expected one argument: data to write").ThrowAsJavaScriptException();
         return Napi::Number::New(env, -2.0);
     }
-    
-    napi_valuetype valueType;
-    napi_status napi_typeof(env, info[0], &valueType);
-        
+       
     if (!info[0].IsString() && !info[0].IsBuffer() && !info[0].IsArrayBuffer()) {
         Napi::TypeError::New(env, "Expected string or Buffer or ArrayBuffer argument: data to write").ThrowAsJavaScriptException();
         return Napi::Number::New(env, -2.0);
