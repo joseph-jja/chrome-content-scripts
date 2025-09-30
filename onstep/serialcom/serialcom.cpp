@@ -228,7 +228,7 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
 
     // 1. Check arguments
     if (info.Length() != 1 || (!info[0].IsString() || !info[0].IsNumber())) {
-        Napi::TypeError::New(env, "Expected one string argument: data to write").ThrowAsJavaScriptException();
+        Napi::TypeError::New(env, "Expected one string or number argument: data to write").ThrowAsJavaScriptException();
         return Napi::Number::New(env, -2.0);
     }
 
