@@ -1,8 +1,13 @@
-import fs from 'node:fs/promises';
-import { execFileSync } from'node:child_process';
-
 import DeviceConnection from '#server/api/DeviceConnection.js';
 import checkZeroResponse from '#server/data/zeroOneReply.js';
+
+// so node modules can only use require
+import { createRequire } from 'module';
+import { resolve as pathResolve } from 'node:path';
+const require = createRequire(import.meta.url);
+
+const basedir = process.cwd();
+const serialcom = require(`${basedir}/serialcom/build/Release/serialcom.node`);
 
 const TIMEOUT = 1500;
 
@@ -11,9 +16,6 @@ export default class SerialPort extends DeviceConnection {
     constructor() {
         super();
         this.baudRate = 9600;
-        this.data = '';
-        this.endsWithHash = false;
-        this.returnsZeroOrOne = false;
     }
 
     connect(options) {
@@ -25,85 +27,34 @@ export default class SerialPort extends DeviceConnection {
                 return reject('Invalid tty device!');
             }
 
-            const command = 'stty';
-            const commandArgs = ['-F', usbDevice, this.baudRate];
-            try {
-                const results = execFileSync(command, commandArgs);
-                console.log('Success setting baud rate: ', results?.toString());
-            } catch(e) {
-                console.error('ERROR setting baud rate: ', e);
+            // sync code
+            const openResponseCode = serialcom.open(usbDevice, 'B9600');
+            if (+openResponseCode === 0) {
+                return resolve('Success: ' + openResponseCode);
+            } else {
+                return reject('ERROR: ' + openResponseCode);
             }
-
-            fs.open(usbDevice, 'r+').then(fd => {
-                this.device = fd;
-                this.connected = true;
-                this.deviceStream = this.device.createReadStream({ encoding: 'utf8', highWaterMark: 1 });
-                this.deviceStream.on('readable', () => {
-                    let char = this.deviceStream.read(1);
-                    this.data = [];
-                    while (char) {
-                        this.data.push(char.toString());
-                        char = this.deviceStream.read(1);
-                    }
-                    this.emit('readEnd');
-                });
-                return resolve('Success');
-            }).catch(e => {
-                console.log('Error: ', e);
-                return reject(e);
-            });
         });
     }
 
     sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
-            this.data = [];
-            if (!this.isConnected()) {
-                return reject('Not connected!');
-            }
-            this.endsWithHash = false;
-            this.returnsZeroOrOne = false;
-            if (returnsData) {
-                this.returnsZeroOrOne = checkZeroResponse(command);
-                if (!this.returnsZeroOrOne) {
-                    this.endsWithHash = true;
-                }
-            }
 
-            this.device.write(command).then(async res => {
+            const returnsZeroOrOne = returnsData ? checkZeroResponse(command) false;
+            const endsWithHash  = returnsData && !returnsZeroOrOne ? '#' : false;
+            
+            // we can write data at any time;
+            const writeReturnCode = serialcom.write(command);
+            if (+writeReturnCode === 0) {
                 if (!returnsData) {
                     return resolve('no reply');
                 }
+                const readData = serialcom.read(returnsZeroOrOne, endsWithHash);
+                resolve(readData);
                 
-                const readChar = async () => {
-                    return new Promise((resolve) => {
-                        this.once('readEnd', () => {
-                            return resolve(this.data.join(''));
-                        });
-                    });
-                };
-
-                let result = '';
-                let foundEnd = false;
-                let currentTime = Date.now();
-                const endTime = +currentTime + +TIMEOUT
-                while (!foundEnd && currentTime < endTime) {
-                    result += await readChar();
-                    if (this.endsWithHash) {
-                        if (result?.includes('#')) {
-                            foundEnd = true;
-                        }
-                    } else if (result?.length > 0) {
-                        foundEnd = true;
-                    }
-                    currentTime = Date.now();
-                }
-                console.log('got data ', result);
-                return resolve(result);
-            }).catch(e => {
-                console.log('Error: ', e);
-                return reject(e);
-            });
+            } else {
+                reject('ERROR: writing data returned ' + writeReturnCode);
+            }
         });
     }
 
