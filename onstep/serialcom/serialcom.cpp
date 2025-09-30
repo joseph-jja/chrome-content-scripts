@@ -1,5 +1,6 @@
 #include <napi.h>
 #include <iostream>
+#include <string>
 #include <fstream>
 #include <string>
 #include <fcntl.h>   // For open, fcntl, O_*, F_*
