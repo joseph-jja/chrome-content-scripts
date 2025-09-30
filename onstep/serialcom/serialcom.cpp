@@ -247,14 +247,14 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
     // 2. Extract argument
     Napi::Value value = info[1];
     if (value.IsArrayBuffer()) {
-        Napi::ArrayBuffer<char> buffer = value.As<Napi::ArrayBuffer<char>>();  
+        Napi::ArrayBuffer buffer = info[0].As<Napi::ArrayBuffer>();
         
         // Get the raw data pointer and length from the Napi::Buffer
-        const char* bufferData = buffer.Data();
-        size_t bufferLength = buffer.Length();  
+        void* bufferData = buffer.Data();
+        size_t bufferLength = buffer.ByteLength();
 
-        std::string resultString(bufferData, bufferLength);
-        Napi::String xdata = Napi::String::New(env, resultString);
+        cppString(static_cast<char*>(bufferData), bufferLength);
+        Napi::String xdata = Napi::String::New(env, cppString);
                 
         data = xdata.As<Napi::String>().Utf8Value();
     } else if (value.IsBuffer()) {
