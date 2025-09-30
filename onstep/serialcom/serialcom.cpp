@@ -192,14 +192,21 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
             printf("No data available (timeout).\n");
         }
         // we have data so lets make sure it is something ascii
-        if (n > 0 && strlen(incomingByte) > 0 && (int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127) {
-            buffer[i] = incomingByte[0];
-            if (isBinaryReply && (incomingByte[0] == '0' || incomingByte[0] == '1')) {
-                foundEnd = true;
-            } else if (hasEnding && endingType[0] == incomingByte[0]) {
-                foundEnd = true;
+        if (n > 0 && strlen(incomingByte) > 0) {
+            bool isCharacter = (int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
+            bool isAck = (int)incomingByte[0] == 6;
+            if (isAck || isCharacter) {
+                buffer[i] = incomingByte[0];
+                if (isBinaryReply && (incomingByte[0] == '0' 
+                    || incomingByte[0] == '1'
+                    || incomingByte[0] == '6')) 
+                {
+                    foundEnd = true;
+                } else if (hasEnding && endingType[0] == incomingByte[0]) {
+                    foundEnd = true;
+                }
+                i++;
             }
-            i++;
         }
         // we are not at the end of the data so keep going
         if (!foundEnd) {
