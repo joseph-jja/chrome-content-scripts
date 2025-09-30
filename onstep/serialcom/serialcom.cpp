@@ -221,6 +221,22 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     return env.Undefined();
 }
 
+Napi::String arrayBufferToString(Napi::Env env, Napi::ArrayBuffer arrayBuffer) {
+ 
+    // Get a pointer to the ArrayBuffer's data and its length
+    void* arrayBufferData = arrayBuffer.Data();
+    size_t arrayBufferLength = arrayBuffer.ByteLength();
+    
+    Napi::Buffer buffer = Napi::Buffer<char>::Copy(env, static_cast<char*>(arrayBufferData), arrayBufferLength);
+
+    // Get the raw data pointer and length from the Napi::Buffer
+    const char* bufferData = buffer.Data();
+    size_t bufferLength = buffer.Length();  
+
+    std::string resultString(bufferData, bufferLength);
+    return Napi::String::New(env, resultString);     
+}
+
 // void write(string data)
 // write data out the usb port 
 Napi::Number Write(const Napi::CallbackInfo& info) {
@@ -242,28 +258,14 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
         return Napi::Number::New(env, -3.0);
     }
     
-    std::string data;
-    
     // 2. Extract argument
     Napi::Value value = info[1];
+    Napi::String string_data;
     if (value.IsArrayBuffer()) {
     
         Napi::ArrayBuffer arrayBuffer = info[0].As<Napi::ArrayBuffer>();
         
-        // Get a pointer to the ArrayBuffer's data and its length
-        void* arrayBufferData = arrayBuffer.Data();
-        size_t arrayBufferLength = arrayBuffer.ByteLength();
-        
-        Napi::Buffer buffer = Napi::Buffer<char>::Copy(env, static_cast<char*>(arrayBufferData), arrayBufferLength);
-
-        // Get the raw data pointer and length from the Napi::Buffer
-        const char* bufferData = buffer.Data();
-        size_t bufferLength = buffer.Length();  
-
-        std::string resultString(bufferData, bufferLength);
-        Napi::String xdata = Napi::String::New(env, resultString);
-                
-        data = xdata.As<Napi::String>().Utf8Value();
+        string_data = arrayBufferToString(env, arrayBuffer);
         
     } else if (value.IsBuffer()) {
     
@@ -273,17 +275,16 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
         size_t bufferLength = buffer.Length();  
 
         std::string resultString(bufferData, bufferLength);
-        Napi::String xdata = Napi::String::New(env, resultString);
-                
-        data = xdata.As<Napi::String>().Utf8Value();
+        string_data = Napi::String::New(env, resultString);
         
     } else {
-        data = value.As<Napi::String>().Utf8Value();
+       string_data = value.As<Napi::String>();
     }
-
+                    
+    std::string data = string_data.As<Napi::String>().Utf8Value();
+   
     int len = strlen(data.c_str());
     int n = write(fd, data.c_str(), len);
-
     if (n < 0) {
         perror("Error writing to serial port");
         Napi::Error::New(env, "Error during file write").ThrowAsJavaScriptException();
