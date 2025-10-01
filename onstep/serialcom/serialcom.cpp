@@ -259,30 +259,29 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
     }
     
     // 2. Extract argument
-    Napi::Value value = info[1];
     Napi::String string_data;
-    if (value.IsArrayBuffer()) {
-    
+    if (info[0].IsArrayBuffer()) {
+        // todo test
         Napi::ArrayBuffer arrayBuffer = info[0].As<Napi::ArrayBuffer>();
-        
+   
         string_data = arrayBufferToString(env, arrayBuffer);
-        
-    } else if (value.IsBuffer()) {
-    
-        Napi::Buffer<char> buffer = value.As<Napi::Buffer<char>>();  
+
+    } else if (info[0].IsBuffer()) {
+
+        Napi::Buffer<char> buffer = info[0].As<Napi::Buffer<char>>();
         // Get the raw data pointer and length from the Napi::Buffer
         const char* bufferData = buffer.Data();
-        size_t bufferLength = buffer.Length();  
+        size_t bufferLength = buffer.Length();
 
         std::string resultString(bufferData, bufferLength);
         string_data = Napi::String::New(env, resultString);
-        
-    } else {
-       string_data = value.As<Napi::String>();
-    }
-                    
-    std::string data = string_data.As<Napi::String>().Utf8Value();
    
+    } else {
+       string_data = info[0].As<Napi::String>();
+    }
+   
+    std::string data = string_data.As<Napi::String>().Utf8Value();
+ 
     int len = strlen(data.c_str());
     int n = write(fd, data.c_str(), len);
     if (n < 0) {
@@ -291,9 +290,9 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
         return Napi::Number::New(env, -4.0);
     }
     printf("Wrote %d bytes: '%s'\n", n, data.c_str());
-    
+   
     double rc = n;
-    
+
     return Napi::Number::New(env, rc);
 }
 
