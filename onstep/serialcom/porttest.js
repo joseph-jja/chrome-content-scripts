@@ -4,7 +4,7 @@
 
 const basedir = process.cwd();
 
-const serialcom = require(basedir + '/serialcom.node');
+const serialcom = require(basedir + '/build/Release/serialcom.node');
 
 const openResponseCode = serialcom.open('/dev/ttyUSB0', 'B9600');
 
