@@ -1,6 +1,6 @@
 // so node modules can only use require
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
+//import { createRequire } from 'module';
+//const require = createRequire(import.meta.url);
 
 const basedir = process.cwd();
 
