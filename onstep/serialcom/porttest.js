@@ -11,6 +11,16 @@ const openResponseCode = serialcom.open('/dev/ttyUSB0', 'B9600');
 const writeResponseCode = serialcom.write(':GVT#');
 const readResponseCode = serialcom.read(false, '#');
 
+console.log(openResponseCode, writeResponseCode, readResponseCode);
+
+const ACK = 0x06;
+const ACKString = Buffer.from([ACK], 'hex');
+console.log(ACKString);
+const wrc = serialcom.write(ACKString);
+const results = serialcom.read(true, '');
+
 const closeResponseCode = serialcom.close();
 
-console.log(openResponseCode, writeResponseCode, readResponseCode, closeResponseCode);
+console.log(wrc, results, closeResponseCode);
+
+
