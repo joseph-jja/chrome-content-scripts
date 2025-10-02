@@ -161,17 +161,32 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         Napi::Error::New(env, "File is not open for reading").ThrowAsJavaScriptException();
         return env.Undefined();
     }
-    
+
+    // check for first argument
+    if (info.Length() < 1 || info[0].IsEmpty() || info[0].IsNull()) {
+        Napi::Error::New(env, "At least 1 argument is required for reading data").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
+
     // Check if the first argument is a boolean
     if (!info[0].IsBoolean()) {
         Napi::TypeError::New(env, "Argument 1 must be a boolean").ThrowAsJavaScriptException();
         return env.Undefined();
     }
-    
-    bool hasEnding = info[1].IsNull() ? false : true;
-    
+
+    // we now know we have a boolean reply or not
     bool isBinaryReply = info[0].As<Napi::Boolean>().Value(); 
-    std::string endingType = hasEnding ? info[1].As<Napi::String>().Utf8Value() : NULL;
+
+    // does this have an ending
+    bool hasEnding = true;
+    if (isBinaryReply || info.Length() < 2 || info[1].IsEmpty() || info[1].IsNull()) {
+        hasEnding = false;
+    }
+
+    char endingChar[2]; 
+    if (hasEnding && info[1].IsString()) {
+        endingChar[0] = info[1].As<Napi::String>().Utf8Value().c_str()[0];
+    }
     
     // output buffer
     char buffer[BUFFER_SIZE + 1];
@@ -193,16 +208,11 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         // we have data so lets make sure it is something ascii
         if (n > 0 && strlen(incomingByte) > 0) {
             bool isCharacter = ((int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
-            bool isAck = (int)incomingByte[0] == 6;
-            if (isAck || isCharacter) {
+            if (isCharacter) {
                 buffer[i] = incomingByte[0];
-                if (isBinaryReply && (incomingByte[0] == '0' 
-                    || incomingByte[0] == '1'
-                    || incomingByte[0] == 'P' 
-                    || incomingByte[0] == 'A')) 
-                {
+                if (isBinaryReply && strlen(incomingByte) > 0) {
                     foundEnd = true;
-                } else if (hasEnding && endingType.c_str()[0] == incomingByte[0]) {
+                } else if (hasEnding && endingType[0] == incomingByte[0]) {
                     foundEnd = true;
                 }
                 i++;
