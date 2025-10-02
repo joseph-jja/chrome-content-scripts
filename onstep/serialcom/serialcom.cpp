@@ -183,8 +183,15 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         hasEnding = false;
     }
 
-    char endingChar[2] = (hasEnding && info[1].IsString()) 
-        ? info[1].As<Napi::String>().Utf8Value().c_str() : {0};
+    if (hasEnding && !info[1].IsString()) {
+        hasEnding = false;
+    }
+
+    char endingChar[2];
+    memset(endingChar, '\0', 2);
+    if (hasEnding) {
+       endingChar[0] = info[1].As<Napi::String>().Utf8Value().c_str()[0];
+    }
     
     // output buffer
     char buffer[BUFFER_SIZE + 1];
