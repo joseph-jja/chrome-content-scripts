@@ -1,4 +1,5 @@
 const COMMANDS_WITH_ZERO_OR_ONE_REPLY = [
+    ':S',
     ':Te#',
     ':Td#',
     ':Tr#',
