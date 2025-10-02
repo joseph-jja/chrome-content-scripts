@@ -184,6 +184,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     }
 
     char endingChar[2]; 
+    memset(endingChar, '\0', 2);
     if (hasEnding && info[1].IsString()) {
         endingChar[0] = info[1].As<Napi::String>().Utf8Value().c_str()[0];
     }
@@ -212,7 +213,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
                 buffer[i] = incomingByte[0];
                 if (isBinaryReply && strlen(incomingByte) > 0) {
                     foundEnd = true;
-                } else if (hasEnding && endingChar[0] == incomingByte[0]) {
+                } else if (hasEnding && endingChar != NULL && endingChar[0] == incomingByte[0]) {
                     foundEnd = true;
                 }
                 i++;
