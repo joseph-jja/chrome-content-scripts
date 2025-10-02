@@ -177,22 +177,18 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     // we now know we have a boolean reply or not
     bool isBinaryReply = info[0].As<Napi::Boolean>().Value(); 
 
-    // does this have an ending
-    bool hasEnding = true;
-    if (isBinaryReply || info.Length() < 2 || info[1].IsEmpty() || info[1].IsNull()) {
-        hasEnding = false;
-    }
-
-    if (hasEnding && !info[1].IsString()) {
-        hasEnding = false;
-    }
-
+    bool hasEnding = false;
     char endingChar[2];
     memset(endingChar, '\0', 2);
-    if (hasEnding) {
-       endingChar[0] = info[1].As<Napi::String>().Utf8Value().c_str()[0];
-    }
-    
+    if (!isBinaryReply) {
+        if (info.Length() > 1 && !info[1].IsEmpty() &&
+            !info[1].IsNull() && info[1].IsString()) 
+        {
+            hasEnding = true;
+            endingChar[0] = info[1].As<Napi::String>().Utf8Value().c_str()[0];
+        }
+    } 
+
     // output buffer
     char buffer[BUFFER_SIZE + 1];
     memset(buffer, '\0', BUFFER_SIZE + 1);
@@ -210,9 +206,12 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
             // but since we set VTIME, this should generally not happen unless timeout expires.
             printf("No data available (timeout).\n");
         }
+        //printf("Found %d %s \n", n, endingChar, incomingByte); 
+            
         // we have data so lets make sure it is something ascii
         if (n > 0 && strlen(incomingByte) > 0) {
             bool isCharacter = ((int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
+            //printf("Character %d %s %s\n", isCharacter, endingChar, incomingByte); 
             if (isCharacter) {
                 buffer[i] = incomingByte[0];
                 if (isBinaryReply && strlen(incomingByte) > 0) {
