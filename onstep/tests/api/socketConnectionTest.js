@@ -30,8 +30,8 @@ Connection.connect({ host: host, port: port }).then(async resp => {
     }
 
     try {
-        const res = await Connection.sendCommand(':FM#');
-        console.log(res);
+        const res = await Connection.sendCommand(':Gt#', true);
+        console.log("Got 3", res);
     } catch(e) {
         console.log('Command error 3', e);
     }

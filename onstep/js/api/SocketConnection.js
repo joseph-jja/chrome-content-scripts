@@ -37,9 +37,14 @@ export default class SocketConnection extends DeviceConnection {
                 this.data.push(results);
 
                 // TODO test this more
-                if (this.endsWithHash &&
-                    this.data?.charAt(this.data?.length - 1) === '#') {
-                    this.emit('readEnd');
+                if (this.endsWithHash) {
+		        const cdata = this.data.join('').trim();
+			    //console.log(cdata, "\n");
+		    //console.log (cdata.charAt(cdata.length - 1));
+		    if (cdata.charAt(cdata.length - 1) === '#') {
+			//console.log("emitting");
+                        this.emit('readEnd');
+		    }
                 } else if (this.data?.length > 0) {
                     this.emit('readEnd');
                 }
