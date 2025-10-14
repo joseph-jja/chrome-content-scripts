@@ -12,28 +12,28 @@ Connection.connect({ host: host, port: port }).then(async resp => {
     //console.log('Success to connect', resp, Connection.usbPort, Connection.isConnected); 
     console.log('Success ', resp, Connection.isConnected());
     if (Connection.isConnected()) {
-        console.log('We have a usb port and fd', Connection.device);
+        console.log('We have a usb port and fd');//, Connection.device);
     }      
     
     try {
-        const res = await Connection.sendCommand(':GC#');
-        console.log(res);
+        const res = await Connection.sendCommand(':FA#');
+        console.log("Got 1", res);
     } catch(e) {
-        console.log('Command error', e);
+        console.log('Command error 1', e);
     }
     
     try {
-        const res = await Connection.sendCommand(':Qe#', false);
-        console.log(res);
+        const res = await Connection.sendCommand(':Fa#', false);
+        console.log("Got 2", res);
     } catch(e) {
-        console.log('Command error', e);
+        console.log('Command error 2', e);
     }
 
     try {
-        const res = await Connection.sendCommand(':Ga#');
+        const res = await Connection.sendCommand(':FM#');
         console.log(res);
     } catch(e) {
-        console.log('Command error', e);
+        console.log('Command error 3', e);
     }
     
     await Connection.disconnect();
