@@ -1,5 +1,6 @@
 import DeviceConnection from '#server/api/DeviceConnection.js';
 import checkZeroResponse from '#server/data/zeroOneReply.js';
+import checkAsterickResponse from '#server/data/checkAsterickResponse.js';
 
 // so node modules can only use require
 import { createRequire } from 'module';
@@ -40,11 +41,12 @@ export default class SerialPort extends DeviceConnection {
         });
     }
 
-    sendCommand(command, returnsData = true, endChar = '#') {
+    sendCommand(command, returnsData = true) {
         return new Promise((resolve, reject) => {
 
             const returnsZeroOrOne = returnsData ? checkZeroResponse(command) : false;
-            const endsWithHash  = returnsData && !returnsZeroOrOne ? endChar : false;
+            const hasEndChar = returnsData && !returnsZeroOrOne ? true : false;
+            const endChar = hasEndChar ? ( checkAsterickResponse(command) ? '*' : '#' ) : false;
             
             // we can write data at any time;
             const writeReturnCode = this.device.write(command);
@@ -52,7 +54,7 @@ export default class SerialPort extends DeviceConnection {
                 if (!returnsData) {
                     return resolve('no reply');
                 }
-                const readData = this.device.read(returnsZeroOrOne, endsWithHash);
+                const readData = this.device.read(returnsZeroOrOne, endChar);
                 resolve(readData);
                 
             } else {
