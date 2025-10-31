@@ -34,6 +34,14 @@ export default function ToggleTracking() {
             cmd = ':Tn#';
             setTrackingToggle(targetObj); 
             StorageBox.setItem('tracking', targetId);
+        } else if (targetObj === 'enable-dualaxis-tracking') {
+            cmd = ':T2#';
+            setTrackingToggle(targetObj); 
+            StorageBox.setItem('tracking', targetId);
+        } else if (targetObj === 'disable-dualaxis-tracking') {
+            cmd = ':T1#';
+            setTrackingToggle(targetObj); 
+            StorageBox.setItem('tracking', targetId);
         }
         if (cmd) {
             const [err, results] = await daisyChainBooleanCommands([cmd, ':GT#']);
@@ -60,7 +68,7 @@ export default function ToggleTracking() {
                 onButtonClick={setTracking}>
                 Disable Tracking
             </CustomButton>
-            &nbsp;&nbsp;&nbsp;
+            <hr/>
             <CustomButton id="enable-refraction-tracking" 
                 onButtonClick={setTracking}>
                 Tracking Refraction Rate Enable
@@ -68,6 +76,15 @@ export default function ToggleTracking() {
             <CustomButton id="disable-refraction-tracking" 
                 onButtonClick={setTracking}>
                 Tracking Refraction Rate Disable
+            </CustomButton>
+            <hr/>
+            <CustomButton id="enable-dualaxis-tracking" 
+                onButtonClick={setTracking}>
+                Tracking Dual Axis Enable
+            </CustomButton>
+            <CustomButton id="disable-dualaxis-tracking" 
+                onButtonClick={setTracking}>
+                Tracking Dual Axis Disable
             </CustomButton>
             <ErrorMessage>{trackingError}</ErrorMessage>                
         </Container>
