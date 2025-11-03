@@ -31,7 +31,7 @@ button {
     display: block;
 }
 div.wrapper {
-    margin: 0.5em;
+    margin: 0.75em;
 }
 label {
     margin-right: 0.5em:
@@ -44,6 +44,10 @@ label {
 }
 table {
     border-collapse: collapse;
+}
+fieldset {
+    display: inline-block;
+    margin: 0.25em 0.7em;
 }
 select {
     margin: 0.5em;

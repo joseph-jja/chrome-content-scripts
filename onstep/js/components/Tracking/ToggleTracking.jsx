@@ -2,6 +2,7 @@ import React from 'react';
 
 import Container from 'js/components/base/Container.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
+import CustomFieldset from 'js/components/base/CustomFieldset.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
     daisyChainBooleanCommands
@@ -58,34 +59,38 @@ export default function ToggleTracking() {
 
     return ( 
         <Container class="wrapper">
-            <CustomButton id="tracking-enable" 
-                enabled={trackingToggle === 'tracking-enable'}
-                onButtonClick={setTracking}>
-                Enable Tracking
-            </CustomButton>
-            <CustomButton id="tracking-disable" 
-                enabled={trackingToggle === 'tracking-disable'}
-                onButtonClick={setTracking}>
-                Disable Tracking
-            </CustomButton>
-            <hr/>
-            <CustomButton id="enable-refraction-tracking" 
-                onButtonClick={setTracking}>
-                Tracking Refraction Rate Enable
-            </CustomButton>
-            <CustomButton id="disable-refraction-tracking" 
-                onButtonClick={setTracking}>
-                Tracking Refraction Rate Disable
-            </CustomButton>
-            <hr/>
-            <CustomButton id="enable-dualaxis-tracking" 
-                onButtonClick={setTracking}>
-                Tracking Dual Axis Enable
-            </CustomButton>
-            <CustomButton id="disable-dualaxis-tracking" 
-                onButtonClick={setTracking}>
-                Tracking Dual Axis Disable
-            </CustomButton>
+            <CustomFieldset legendtext="Tracking">
+                <CustomButton id="tracking-enable" 
+                    enabled={trackingToggle === 'tracking-enable'}
+                    onButtonClick={setTracking}>
+                    Enable
+                </CustomButton>
+                <CustomButton id="tracking-disable" 
+                    enabled={trackingToggle === 'tracking-disable'}
+                    onButtonClick={setTracking}>
+                    Disable
+                </CustomButton>
+            </CustomFieldset>
+            <CustomFieldset legendtext="Refraction Rate Tracking">
+                <CustomButton id="enable-refraction-tracking" 
+                    onButtonClick={setTracking}>
+                    Enable
+                </CustomButton>
+                <CustomButton id="disable-refraction-tracking" 
+                    onButtonClick={setTracking}>
+                    Disable
+                </CustomButton>
+            </CustomFieldset>
+            <CustomFieldset legendtext="Dual Axis Tracking">
+                <CustomButton id="enable-dualaxis-tracking" 
+                    onButtonClick={setTracking}>
+                    Enable
+                </CustomButton>
+                <CustomButton id="disable-dualaxis-tracking" 
+                    onButtonClick={setTracking}>
+                    Disable
+                </CustomButton>
+            </CustomFieldset>
             <ErrorMessage>{trackingError}</ErrorMessage>                
         </Container>
     );

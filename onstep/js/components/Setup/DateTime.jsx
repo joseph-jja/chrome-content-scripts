@@ -68,12 +68,14 @@ export default function DateTime() {
     
     return (
         <Container class="wrapper">
-            <CustomInput type="text" labelText="Enter Date (MM/DD/YY)" size="12"
+            <CustomInput type="text" labelText="Enter Date" size="12"
                 id="date-field" name="date_field" inputValue={dateField}
+                placeholderText="MM/DD/YY"
                 onInputChange={setDateFieldFromForm}/>
             <br/>
-            <CustomInput type="text" labelText="Enter Time (HH:MM:SS)" size="12"
+            <CustomInput type="text" labelText="Enter Time" size="12"
                 id="time-field" name="time_field" inputValue={timeField}
+                placeholderText="HH:MM:SS"
                 onInputChange={setTimeFieldFromForm}/>
             <ErrorMessage>{dateTimeErrorField}</ErrorMessage>
             <br/>

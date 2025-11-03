@@ -30,6 +30,9 @@ export default function Directions() {
         } else if (targetObj === 'direction-west') {
             cmd = ':Qw#';
             setDirection(targetObj);
+        } else if (targetObj === 'direction-west') {
+            cmd = ':CM#';
+            setDirection(targetObj);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
@@ -56,9 +59,10 @@ export default function Directions() {
                         <CustomButton id="direction-east" 
                             onButtonClick={setMovementValue}>East</CustomButton>
                     </td>
-                    <td>&nbsp;</td>
+                    <td><CustomButton id="direction-west" 
+                            onButtonClick={setMovementValue}>Sync</CustomButton></td>
                     <td>
-                        <CustomButton id="direction-west" 
+                        <CustomButton id="direction-sync" 
                             onButtonClick={setMovementValue}>West</CustomButton>
                     </td>
                 </tr>
