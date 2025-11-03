@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Container from 'js/components/base/Container.jsx';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
+import CustomFieldset from 'js/components/base/CustomFieldset.jsx';
 import {
     daisyChainBooleanCommands
 } from 'js/utils/commandUtils.js';
@@ -67,23 +67,23 @@ export default function DateTime() {
     }
     
     return (
-        <Container class="wrapper">
-            <CustomInput type="text" labelText="Enter Date" size="12"
-                id="date-field" name="date_field" inputValue={dateField}
-                placeholderText="MM/DD/YY"
-                onInputChange={setDateFieldFromForm}/>
-            <br/>
-            <CustomInput type="text" labelText="Enter Time" size="12"
-                id="time-field" name="time_field" inputValue={timeField}
-                placeholderText="HH:MM:SS"
-                onInputChange={setTimeFieldFromForm}/>
-            <ErrorMessage>{dateTimeErrorField}</ErrorMessage>
-            <br/>
-            <CustomButton id="date-time-fields" 
-                 onButtonClick={setDateTime}>Set Date & Time</CustomButton>
-            <CustomButton id="get-date-time" 
-                 onButtonClick={getDateTime}>Get Date & Time</CustomButton>
-        </Container>
+            <CustomFieldset legendtext="Time and Date">
+                <CustomInput type="text" labelText="Enter Date" size="12"
+                    id="date-field" name="date_field" inputValue={dateField}
+                    placeholderText="MM/DD/YY"
+                    onInputChange={setDateFieldFromForm}/>
+                <br/><br/>
+                <CustomInput type="text" labelText="Enter Time" size="12"
+                    id="time-field" name="time_field" inputValue={timeField}
+                    placeholderText="HH:MM:SS"
+                    onInputChange={setTimeFieldFromForm}/>
+                <ErrorMessage>{dateTimeErrorField}</ErrorMessage>
+                <br/>
+                <CustomButton id="date-time-fields" 
+                     onButtonClick={setDateTime}>Set</CustomButton>
+                <CustomButton id="get-date-time" 
+                     onButtonClick={getDateTime}>Get</CustomButton>
+             </CustomFieldset>
     );
 }
 

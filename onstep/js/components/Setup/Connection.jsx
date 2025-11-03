@@ -4,6 +4,7 @@ import Container from 'js/components/base/Container.jsx';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
+import CustomFieldset from 'js/components/base/CustomFieldset.jsx';
 import {
     setupConnection,
     teardownConnection
@@ -62,7 +63,7 @@ export default function Connection() {
             // and send to server
             remoteConnect(serialPort);
         } else {
-            setSerialOrHostPortError('Invalid host and port or COM / tty port entered!');
+            setSerialOrHostPortError('Invalid host CustomFieldsetand port or COM / tty port entered!');
         }
     }
     
@@ -75,23 +76,22 @@ export default function Connection() {
     }
     
     return (
-        <Container class="wrapper">
+        <CustomFieldset legendtext="Connection">
             <CustomInput type="text" labelText="Enter Host:Port"
                     id="host-port" name="host_port" inputValue={hostPort} size="22"
                     placeholderText="xxx.xxx.xxx.xxx:yyyy"
                     onInputChange={setHostPortField}/>
-            { window.electron.operatingSystem() === 'linux' ? <br/> : null }
-            { window.electron.operatingSystem() === 'linux' ? 
-                <CustomInput type="text" labelText="Enter Serial Port"
+            <br/>OR<br/>
+            <CustomInput type="text" labelText="Enter Serial Port"
                     id="serial-port" name="serial_port" inputValue={serialPort} size="22"
                     placeholderText="/dev/ttyxxxx"
-                    onInputChange={setSerialPortField}/>  : null }
+                    onInputChange={setSerialPortField}/>
             <ErrorMessage>{serialOrHostPortError}</ErrorMessage>
             <br/>
             <CustomButton id="serial-connect" 
                 onButtonClick={sendConnectCommand}>Connect</CustomButton>
             <CustomButton id="serial-disconnect" 
                 onButtonClick={sendDisconnectCommand}>Disconnect</CustomButton>
-        </Container>
+        </CustomFieldset>
     );
 }

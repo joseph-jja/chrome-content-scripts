@@ -3,6 +3,7 @@ import React from 'react';
 import Container from 'js/components/base/Container.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
+import CustomFieldset from 'js/components/base/CustomFieldset.jsx';
 import {
     sendCommand
 } from 'js/api/request.js';
@@ -46,36 +47,38 @@ export default function Directions() {
 
     return ( 
         <Container class="wrapper">
-            <table>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>
-                        <CustomButton id="direction-north" 
-                            onButtonClick={setMovementValue}>North</CustomButton></td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>
-                        <CustomButton id="direction-east" 
-                            onButtonClick={setMovementValue}>East</CustomButton>
-                    </td>
-                    <td><CustomButton id="direction-west" 
-                            onButtonClick={setMovementValue}>Sync</CustomButton></td>
-                    <td>
-                        <CustomButton id="direction-sync" 
-                            onButtonClick={setMovementValue}>West</CustomButton>
-                    </td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>
-                        <CustomButton id="direction-south" 
-                            onButtonClick={setMovementValue}>South</CustomButton>
-                    </td>
-                    <td>&nbsp;</td>
-                </tr>
-            </table>
-            <ErrorMessage>{directionError}</ErrorMessage>                
+            <CustomFieldset legendtext="Movement">
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <CustomButton id="direction-north" 
+                                onButtonClick={setMovementValue}>North</CustomButton></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <CustomButton id="direction-east" 
+                                onButtonClick={setMovementValue}>East</CustomButton>
+                        </td>
+                        <td><CustomButton id="direction-west" 
+                                onButtonClick={setMovementValue}>Sync</CustomButton></td>
+                        <td>
+                            <CustomButton id="direction-sync" 
+                                onButtonClick={setMovementValue}>West</CustomButton>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <CustomButton id="direction-south" 
+                                onButtonClick={setMovementValue}>South</CustomButton>
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+                <ErrorMessage>{directionError}</ErrorMessage>  
+            </CustomFieldset>              
         </Container>
     );
 }
