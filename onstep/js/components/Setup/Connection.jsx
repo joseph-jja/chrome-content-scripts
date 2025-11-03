@@ -76,13 +76,15 @@ export default function Connection() {
     
     return (
         <Container class="wrapper">
-            <CustomInput type="text" labelText="Enter Host:Port (xxx.xxx.xxx.xxx:yyyy)"
+            <CustomInput type="text" labelText="Enter Host:Port"
                     id="host-port" name="host_port" inputValue={hostPort} size="22"
+                    placeholderText="xxx.xxx.xxx.xxx:yyyy"
                     onInputChange={setHostPortField}/>
             { window.electron.operatingSystem() === 'linux' ? <br/> : null }
             { window.electron.operatingSystem() === 'linux' ? 
-                <CustomInput type="text" labelText="Enter Serial Port (/dev/xxxx)"
+                <CustomInput type="text" labelText="Enter Serial Port"
                     id="serial-port" name="serial_port" inputValue={serialPort} size="22"
+                    placeholderText="/dev/ttyxxxx"
                     onInputChange={setSerialPortField}/>  : null }
             <ErrorMessage>{serialOrHostPortError}</ErrorMessage>
             <br/>

@@ -36,6 +36,13 @@ const menu = Menu.buildFromTemplate([{
     }, {
         role: 'quit'
     }]
+}, {
+    label: 'Edit',
+    submenu: [
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' }
+    ]
 }]);
 Menu.setApplicationMenu(menu);
 

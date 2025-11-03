@@ -32,8 +32,9 @@ export default function CustomCommand() {
         
     return (
         <Container class="wrapper">
-            <CustomInput type="text" labelText="Enter command (:xxxx#)" size="12"
+            <CustomInput type="text" labelText="Enter command" size="12"
                 id="command-field" name="command_field" inputValue={commandField}
+                placeholderText=":xxxx#"
                 onInputChange={setCommandFromForm}/>
             <ErrorMessage>{commandFieldError}</ErrorMessage>
             <br/>
