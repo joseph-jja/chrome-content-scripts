@@ -31,8 +31,20 @@ export default function Directions() {
         } else if (targetObj === 'direction-west') {
             cmd = ':Qw#';
             setDirection(targetObj);
-        } else if (targetObj === 'direction-west') {
+        } else if (targetObj === 'direction-sync') {
             cmd = ':CM#';
+            setDirection(targetObj);
+        } else if (targetObj === 'stop-east') {
+            cmd = ':Qe#';
+            setDirection(targetObj);
+        } else if (targetObj === 'stop-west') {
+            cmd = ':Qw#';
+            setDirection(targetObj);
+        } else if (targetObj === 'stop-north') {
+            cmd = ':Qn#';
+            setDirection(targetObj);
+        } else if (targetObj === 'stop-south') {
+            cmd = ':Qs#';
             setDirection(targetObj);
         }
         if (cmd) {
@@ -47,7 +59,7 @@ export default function Directions() {
 
     return ( 
         <Container class="wrapper">
-            <CustomFieldset legendtext="Movement">
+            <CustomFieldset legendtext="Start Movement">
                 <table>
                     <tr>
                         <td>&nbsp;</td>
@@ -61,10 +73,10 @@ export default function Directions() {
                             <CustomButton id="direction-east" 
                                 onButtonClick={setMovementValue}>East</CustomButton>
                         </td>
-                        <td><CustomButton id="direction-west" 
+                        <td><CustomButton id="direction-sync" 
                                 onButtonClick={setMovementValue}>Sync</CustomButton></td>
                         <td>
-                            <CustomButton id="direction-sync" 
+                            <CustomButton id="direction-west" 
                                 onButtonClick={setMovementValue}>West</CustomButton>
                         </td>
                     </tr>
@@ -72,6 +84,37 @@ export default function Directions() {
                         <td>&nbsp;</td>
                         <td>
                             <CustomButton id="direction-south" 
+                                onButtonClick={setMovementValue}>South</CustomButton>
+                        </td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+                <ErrorMessage>{directionError}</ErrorMessage>  
+            </CustomFieldset> 
+            <CustomFieldset legendtext="Stop Movement">
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <CustomButton id="stop-north" 
+                                onButtonClick={setMovementValue}>North</CustomButton></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <CustomButton id="stop-east" 
+                                onButtonClick={setMovementValue}>East</CustomButton>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>
+                            <CustomButton id="stop-west" 
+                                onButtonClick={setMovementValue}>Sync</CustomButton>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <CustomButton id="stop-south" 
                                 onButtonClick={setMovementValue}>South</CustomButton>
                         </td>
                         <td>&nbsp;</td>
