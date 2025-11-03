@@ -79,17 +79,20 @@ export default function Location() {
     
     return (
         <Container class="wrapper">
-            <CustomInput type="text" labelText="Set Latitude (+/-xxx:yyy)" size="8"
+            <CustomInput type="text" labelText="Set Latitude" size="8"
                 id="latitude" name="latitude" inputValue={latitude}
+                placeholderText="+/-xxx*yyy"
                 onInputChange={setField}/>
             <br/>
-            <CustomInput type="text" labelText="Set Longitude (+/-xxx:yyy)" size="8"
+            <CustomInput type="text" labelText="Set Longitude" size="8"
                 id="longitude" name="longitude" inputValue={longitude}
+                placeholderText="+/-xxx*yyy"
                 onInputChange={setField}/>
             <br/>(NOTE: Longitude uses the opposite sign from the accepted norm, per the LX200 protocol design, so if your longitude is -150, use +150 here.)
             <br/>
-            <CustomInput type="text" labelText="Enter UTC Offset (+/-HH)" size="6"
+            <CustomInput type="text" labelText="Enter UTC Offset" size="6"
                 id="offset" name="offset" inputValue={offsetField}
+                placeholderText="+/-HH"
                 onInputChange={setField}/>
             <ErrorMessage>{latitudeLongitudeError}</ErrorMessage>
             <br/>

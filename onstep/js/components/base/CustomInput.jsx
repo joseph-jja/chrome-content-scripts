@@ -9,6 +9,7 @@ export default function CustomInput(props) {
         inputValue = '',
         onInputChange,
         defaultChecked,
+        placeholderText = '',
         labelText = '',
         size
     } = props;
@@ -19,6 +20,7 @@ export default function CustomInput(props) {
             <input type={type} id={id} 
                 name={name} size={size}
                 defaultChecked={defaultChecked}
+                placeholder={placeholderText}
                 onChange={onInputChange} value={inputValue}/>
         </>
     );
