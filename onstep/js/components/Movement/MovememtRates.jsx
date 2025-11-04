@@ -8,6 +8,7 @@ import {
     sendCommand
 } from 'js/api/request.js';
 import StorageBox from "js/storage/StorageBox.js";
+import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
 const { useState } = React;
 
@@ -27,25 +28,25 @@ export default function MovememtRates() {
             cmd = ':RC#';
             setMoveToggle(targetId);
             StorageBox.setItem('move', targetId);
-        } else if (targetObj === 'move-move') {
+        } else if (targetId === 'move-move') {
             cmd = ':RM#';
-            setMoveToggle(targetObj);
+            setMoveToggle(targetId);
             StorageBox.setItem('move', targetId);
-        } else if (targetObj === 'move-slewe') {
+        } else if (targetId === 'move-slew') {
             cmd = ':RS#';
-            setMoveToggle(targetObj); 
+            setMoveToggle(targetId); 
             StorageBox.setItem('move', targetId);
-        } else if (targetObj === 'go-home') {
+        } else if (targetId === 'go-home') {
             cmd = ':hC#';
-            setMoveToggle(targetObj);
+            setMoveToggle(targetId);
             StorageBox.setItem('move', targetId);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
-                setDirectionError(err || results);
+                setMoveError(err || results);
             } else {
-                setDirectionError('');
+                setMoveError('');
             }
         }
     };

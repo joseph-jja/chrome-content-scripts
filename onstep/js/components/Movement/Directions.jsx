@@ -129,7 +129,7 @@ export default function Directions() {
                         </td>
                         <td>
                             <CustomButton id="stop-west" 
-                                onButtonClick={setStopMovementValue}>Sync</CustomButton>
+                                onButtonClick={setStopMovementValue}>West</CustomButton>
                         </td>
                     </tr>
                     <tr>
