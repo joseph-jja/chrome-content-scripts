@@ -11,7 +11,8 @@ import StorageBox from "js/storage/StorageBox.js";
 
 const { useState } = React;
 
-const DOBSONIAN_COLLIMATION_POSITION = '//:Sas10:00:00#';
+const DOBSONIAN_COLLIMATION_ALTITUDE = 	':Sa+00:00:00#';
+const DOBSONIAN_COLLIMATION_AZMIUTH = ':Szs00:00:00#';
 
 // TODO figure out how this would work cross platform
 export default function CollimationPosition() {
@@ -23,7 +24,12 @@ export default function CollimationPosition() {
     const [collimateError, setCollimateError] = useState(null);
 
     const setCollimationPosition = async (event) => {
-        const results = await daisyChainBooleanCommands([DOBSONIAN_COLLIMATION_POSITION, ':MA#', ':GA#']);
+        const cmds = [
+            DOBSONIAN_COLLIMATION_ALTITUDE,
+            DOBSONIAN_COLLIMATION_AZMIUTH,
+            ':MA#', ':GA#', ':GZ#'
+        ];
+        const results = await daisyChainBooleanCommands(cmds);
         setCollimateError(results);
     };
 
@@ -68,18 +74,20 @@ export default function CollimationPosition() {
         <CustomFieldset legendtext="Move To Position">
             <CustomInput type="text" labelText="Set Azimuth" size="12"
                 id="azHome" name="azHome" inputValue={azHome}
+                placeholderText="+/-00:00:00"
                 onInputChange={setField}/>
-            <br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <CustomInput type="text" labelText="Set Altitude" size="12"
                 id="altHome" name="altHome" inputValue={altHome}
+                placeholderText="+/-00:00:00"
                 onInputChange={setField}/>
             <br/>
             <CustomButton id="set-coords" 
-                onButtonClick={setCoordinates}>Set Coordinates</CustomButton>
+                onButtonClick={setCoordinates}>Set</CustomButton>
             <CustomButton id="get-coords" 
-                onButtonClick={getCoordinates}>Get Coordinates</CustomButton>
+                onButtonClick={getCoordinates}>Get</CustomButton>
             <CustomButton id="collimate-position" 
-                onButtonClick={setCollimationPosition}>Goto Collimation Position</CustomButton>
+                onButtonClick={setCollimationPosition}>Collimation Position</CustomButton>
             <ErrorMessage>{collimateError}</ErrorMessage>                
         </CustomFieldset>
     );
