@@ -10,8 +10,8 @@ export default function Setup() {
     return (
         <Container class="wrapper">
             <Connection/>
-            <Location/>
             <DateTime/>
+            <Location/>
         </Container>
     );
 }
