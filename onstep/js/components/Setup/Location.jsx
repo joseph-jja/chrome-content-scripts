@@ -79,7 +79,7 @@ export default function Location() {
     
     return (
             <CustomFieldset legendtext="Location">
-                <CustomInput type="text" labelText="Latitude" size="8"
+                <CustomInput type="text" labelText="Latitude" size="10"
                     id="latitude" name="latitude" inputValue={latitude}
                     placeholderText="+/-xx*yyy"
                     onInputChange={setField}/>
@@ -87,7 +87,7 @@ export default function Location() {
                 <br/>
                 NOTE: Longitude uses the opposite sign from the accepted norm, per the LX200 protocol design, if your longitude is -150, use +150 here.
                 <br/>
-                <CustomInput type="text" labelText="Longitude" size="8"
+                <CustomInput type="text" labelText="Longitude" size="12"
                     id="longitude" name="longitude" inputValue={longitude}
                     placeholderText="+/-xxx*yyy"
                     onInputChange={setField}/>

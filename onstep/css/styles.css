@@ -45,6 +45,9 @@ label {
 table {
     border-collapse: collapse;
 }
+td {
+    text-align: center
+}
 fieldset {
     display: inline-block;
     margin: 0.25em 0.7em;

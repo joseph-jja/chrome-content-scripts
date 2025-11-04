@@ -15,7 +15,8 @@ const { useState } = React;
 export default function Directions() {
     const [direction, setDirection] = useState(null);
     const [directionError, setDirectionError] = useState(null);
-
+    const [stopError, setStopError] = useState(null);
+    
     const setMovementValue = async (event) => {
         const targetObj = event?.target?.id;
         let cmd;
@@ -34,7 +35,21 @@ export default function Directions() {
         } else if (targetObj === 'direction-sync') {
             cmd = ':CM#';
             setDirection(targetObj);
-        } else if (targetObj === 'stop-east') {
+        }
+        if (cmd) {
+            const [err, results] = await PromiseWrapper(sendCommand(cmd));
+            if (err || results !== 0) {
+                setDirectionError(err || results);
+            } else {
+                setDirectionError('');
+            }
+        }
+    };
+    
+    const setStopMovementValue = async (event) => {
+        const targetObj = event?.target?.id;
+        let cmd;
+        if (targetObj === 'stop-east') {
             cmd = ':Qe#';
             setDirection(targetObj);
         } else if (targetObj === 'stop-west') {
@@ -53,9 +68,9 @@ export default function Directions() {
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
             if (err || results !== 0) {
-                setDirectionError(err || results);
+                setStopError(err || results);
             } else {
-                setDirectionError('');
+                setStopError('');
             }
         }
     };
@@ -100,33 +115,33 @@ export default function Directions() {
                         <td>&nbsp;</td>
                         <td>
                             <CustomButton id="stop-north" 
-                                onButtonClick={setMovementValue}>North</CustomButton></td>
+                                onButtonClick={setStopMovementValue}>North</CustomButton></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td>
                             <CustomButton id="stop-east" 
-                                onButtonClick={setMovementValue}>East</CustomButton>
+                                onButtonClick={setStopMovementValue}>East</CustomButton>
                         </td>
                         <td>
                             <CustomButton id="stop-movement" 
-                                onButtonClick={setMovementValue}>Stop</CustomButton>
+                                onButtonClick={setStopMovementValue}>Stop</CustomButton>
                         </td>
                         <td>
                             <CustomButton id="stop-west" 
-                                onButtonClick={setMovementValue}>Sync</CustomButton>
+                                onButtonClick={setStopMovementValue}>Sync</CustomButton>
                         </td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
                         <td>
                             <CustomButton id="stop-south" 
-                                onButtonClick={setMovementValue}>South</CustomButton>
+                                onButtonClick={setStopMovementValue}>South</CustomButton>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
                 </table>
-                <ErrorMessage>{directionError}</ErrorMessage>  
+                <ErrorMessage>{stopError}</ErrorMessage>  
             </CustomFieldset>          
         </Container>
     );

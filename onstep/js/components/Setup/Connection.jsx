@@ -77,12 +77,12 @@ export default function Connection() {
     
     return (
         <CustomFieldset legendtext="Connection">
-            <CustomInput type="text" labelText="Enter Host:Port"
+            <CustomInput type="text" labelText="Host:Port"
                     id="host-port" name="host_port" inputValue={hostPort} size="22"
                     placeholderText="xxx.xxx.xxx.xxx:yyyy"
                     onInputChange={setHostPortField}/>
             <br/>OR<br/>
-            <CustomInput type="text" labelText="Enter Serial Port"
+            <CustomInput type="text" labelText="Serial Port"
                     id="serial-port" name="serial_port" inputValue={serialPort} size="22"
                     placeholderText="/dev/ttyxxxx"
                     onInputChange={setSerialPortField}/>

@@ -9,7 +9,7 @@ export default function Tracking() {
     return (
         <>
             <ToggleTracking/>
-            <hr/>
+            <br/>
             <Rates/>
         </>
     );

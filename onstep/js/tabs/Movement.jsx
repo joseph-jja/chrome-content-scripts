@@ -10,7 +10,7 @@ export default function Movement() {
         <>
             <Directions/>
             <MovememtRates/>
-            <hr/>       
+            <br/>       
             <CollimationPosition/>
         </>
     );

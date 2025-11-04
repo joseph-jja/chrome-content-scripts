@@ -99,6 +99,7 @@ export default function Rates() {
                         onButtonClick={setTrackingRateValue}>King</CustomButton>
                 </CustomFieldset>
             </Container>
+            <br/>
             <Container class="wrapper">
                 <CustomFieldset legendtext="Backlash in ArcSec">
                     <CustomSelect id="ra-azm-backlash" name="ra_azm_backlash"
