@@ -10,7 +10,7 @@ body {
 button {
     font-size: 1.0em;
     font-weight: bold;
-    margin: 1.0em;
+    margin: 0.5em;
     border: 2px solid red;
     border-radius: 40px;
     background-color: black;
