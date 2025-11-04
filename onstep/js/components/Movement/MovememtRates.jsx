@@ -35,6 +35,10 @@ export default function MovememtRates() {
             cmd = ':RS#';
             setMoveToggle(targetObj); 
             StorageBox.setItem('move', targetId);
+        } else if (targetObj === 'go-home') {
+            cmd = ':hC#';
+            setMoveToggle(targetObj);
+            StorageBox.setItem('move', targetId);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
@@ -65,7 +69,11 @@ export default function MovememtRates() {
                     onButtonClick={setMove}>
                     Slew
                 </CustomButton>
-            </CustomFieldset>            
+            </CustomFieldset>   
+            <CustomFieldset legendtext="Home">
+                 <CustomButton id="go-home" 
+                    onButtonClick={setMove}>Go Home</CustomButton>
+            </CustomFieldset> 
             <ErrorMessage>{moveError}</ErrorMessage>                
         </Container>
     );

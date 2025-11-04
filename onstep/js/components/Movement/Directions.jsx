@@ -46,6 +46,9 @@ export default function Directions() {
         } else if (targetObj === 'stop-south') {
             cmd = ':Qs#';
             setDirection(targetObj);
+        } else if (targetObj === 'stop-movement') {
+            cmd = ':Q#';
+            setDirection(targetObj);
         }
         if (cmd) {
             const [err, results] = await PromiseWrapper(sendCommand(cmd));
@@ -105,7 +108,10 @@ export default function Directions() {
                             <CustomButton id="stop-east" 
                                 onButtonClick={setMovementValue}>East</CustomButton>
                         </td>
-                        <td>&nbsp;</td>
+                        <td>
+                            <CustomButton id="stop-movement" 
+                                onButtonClick={setMovementValue}>Stop</CustomButton>
+                        </td>
                         <td>
                             <CustomButton id="stop-west" 
                                 onButtonClick={setMovementValue}>Sync</CustomButton>
@@ -121,7 +127,7 @@ export default function Directions() {
                     </tr>
                 </table>
                 <ErrorMessage>{directionError}</ErrorMessage>  
-            </CustomFieldset>              
+            </CustomFieldset>          
         </Container>
     );
 }
