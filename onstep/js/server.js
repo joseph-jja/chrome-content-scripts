@@ -54,6 +54,15 @@ args.forEach(arg => {
     }
 });
 
+const CONFIG_JSON = `${basedir}/js/config.json`;
+try {
+    const configData = fs.readFileSync(CONFIG_JSON);
+    console.log(configData);
+} catch(e) {
+    console.error('No config found. Some functionality will be disabled!');
+    console.error(e?.message);
+}
+
 const createWindow = () => {
     // define the window as a let so we can null it out later
     let win = new BrowserWindow({
