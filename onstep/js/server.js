@@ -54,10 +54,15 @@ args.forEach(arg => {
     }
 });
 
+const CONFIG_DATA = {};
+
 const CONFIG_JSON = `${basedir}/js/config.json`;
 try {
     const configData = fs.readFileSync(CONFIG_JSON);
-    console.log(configData);
+    const jsonConfigData = JSON.parse(configData);
+    Object.keys(jsonConfigData).forEach(item => {
+        CONFIG_DATA[item] = jsonConfigData[item];
+    });
 } catch(e) {
     console.error('No config found. Some functionality will be disabled!');
     console.error(e?.message);
