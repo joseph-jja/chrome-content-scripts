@@ -1,3 +1,4 @@
 *.pem
 **/node_modules/**
 onstep/js/renderer.*
+onstep/js/config.json
