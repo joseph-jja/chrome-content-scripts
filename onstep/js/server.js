@@ -61,7 +61,9 @@ try {
     const configData = fs.readFileSync(CONFIG_JSON);
     const jsonConfigData = JSON.parse(configData);
     Object.keys(jsonConfigData).forEach(item => {
-        CONFIG_DATA[item] = jsonConfigData[item];
+        if (item !== 'ApplicationID' && item !== 'SecretID') {
+            CONFIG_DATA[item] = jsonConfigData[item];
+        }
     });
 } catch(e) {
     console.error('No config found. Some functionality will be disabled!');
@@ -159,7 +161,7 @@ const checkNoReply = command => {
         return command.startsWith(item);
     });
     return (results?.length > 0);
-}
+};
 
 server.get('/command', (req, res) => {
     const command = req.query?.command;
@@ -194,7 +196,60 @@ server.get('/disconnect', (req, res) => {
 
 server.get('/commandsList', (req, res) => {
     fs.createReadStream(`${basedir}/js/data/commands.json`).pipe(res);
-})
+});
+
+server.get('/listofstars', (req, res) => {
+    const authToken = req.query?.authToken;
+    if (!authToken) {
+        res.writeHead(403, {
+            'Content-Type': 'application/json'
+        });
+        res.json({
+           'error': 'No configuration found for astronomy api' 
+        });
+        return;
+    }
+    
+    const now = new Date();
+    const month = `${now.getMonth() + 1}`.padStart(2, '0');
+    const date = `${now.getDay()}`.padStart(2, '0');;
+    const dateStamp = `${now.getFullYear()}-${month}-${date}`;
+    const hours = `${now.getHours() + 1}`.padStart(2, '0');
+    const minutes = `${now.getMinutes() + 1}`.padStart(2, '0');
+    const seconds = `${now.getSeconds() + 1}`.padStart(2, '0');
+    const timeStamp = `${hours}:${minutes}:${seconds}`;
+    
+    const location = {
+        latitude: CONFIG_DATA.latitude,
+        longitude: CONFIG_DATA.longitude,            
+        elevation: CONFIG_DATA.elevation,
+        fromDate: dateStamp,
+        toDate: dateStamp,
+        time: timeStamp
+    };
+    const params = Object.keys(location).map(key => {
+        return `${key}=${location[key]}`;
+    }).reduce((acc, next) => {
+        return `${acc}&${next}`;
+    });
+    
+    const options = {
+        method: 'GET',
+        headers: {
+            Authorization: `Basic ${authToken}`
+        }
+    };
+    
+    
+    console.log(authData);
+    /*fetch(`https://api.astronomyapi.com/api/v2/bodies/positions?${params}`, options).then(async resp => {
+        const results = await resp.text();
+        console.log(results);
+    }).catch(e => {
+        console.error(e);
+    });*/
+    res.end('done');
+});
 
 server.listen(LISTEN_PORT, () => {
     console.log(`Example app listening on port ${LISTEN_PORT}`);
