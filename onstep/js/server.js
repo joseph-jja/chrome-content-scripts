@@ -223,8 +223,8 @@ server.get('/listofstars', (req, res) => {
         latitude: CONFIG_DATA.latitude,
         longitude: CONFIG_DATA.longitude,            
         elevation: CONFIG_DATA.elevation,
-        fromDate: dateStamp,
-        toDate: dateStamp,
+        from_date: dateStamp,
+        to_date: dateStamp,
         time: timeStamp
     };
     const params = Object.keys(location).map(key => {
@@ -240,15 +240,15 @@ server.get('/listofstars', (req, res) => {
         }
     };
     
-    
-    console.log(authData);
-    /*fetch(`https://api.astronomyapi.com/api/v2/bodies/positions?${params}`, options).then(async resp => {
+    fetch(`https://api.astronomyapi.com/api/v2/bodies/positions?${params}`, options).then(async resp => {
         const results = await resp.text();
-        console.log(results);
+        res.writeHead(200);
+        res.end(results);
     }).catch(e => {
-        console.error(e);
-    });*/
-    res.end('done');
+        res.writeHead(500);
+        res.end(e);
+    });
+    
 });
 
 server.listen(LISTEN_PORT, () => {

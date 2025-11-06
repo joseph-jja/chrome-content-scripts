@@ -6,12 +6,19 @@ import CustomSelect from 'js/components/base/CustomSelect.jsx';
 import CustomOption from 'js/components/base/CustomOption.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
-    sendCommand
+    sendCommand,
+    getStarList
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
-import StorageBox from "js/storage/StorageBox.js";
+import StorageBox from "js/config.js";
+import {
+   ASTRONOMY_API
+} from "js/storage/StorageBox.js";
 
-const { useState } = React;
+const {
+    useState,
+    useEffect
+} = React;
 
 const STAR_ALIGN = [];
 for ( let i = 1; i <= 9; i++) {
@@ -20,6 +27,15 @@ for ( let i = 1; i <= 9; i++) {
 
 export default function ToggleTracking() {
     const [alignmentError, setAlignmentError] = useState(null);
+    
+    useEffect(() => {
+        const authCode = btoa(`${electron?.CONFIG_KEYS?.ApplicationID}:${electron?.CONFIG_KEYS?.SecretID}`);
+        getStarList(authCode).then(results => {
+            console.log(results);
+        }).catch(e => {
+            console.error(e);
+        }) 
+    }, []);
 
     const setBacklashRateValue = async (event) => {
         const targetObj = event?.target;
