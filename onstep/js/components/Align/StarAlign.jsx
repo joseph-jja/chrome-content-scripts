@@ -29,7 +29,7 @@ export default function ToggleTracking() {
     const [alignmentError, setAlignmentError] = useState(null);
     
     useEffect(() => {
-        const authCode = btoa(`${electron?.CONFIG_KEYS?.ApplicationID}:${electron?.CONFIG_KEYS?.SecretID}`);
+        const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
         getStarList(authCode).then(results => {
             console.log(results);
         }).catch(e => {

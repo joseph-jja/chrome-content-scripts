@@ -26,7 +26,23 @@ export default function Location() {
     useEffect(() => {
         const now = new Date();
         const offset = now.getTimezoneOffset() / 60;
-        setOffsetField(offset);
+        if (electron?.config?.latitude) { 
+            setLatitude(electron?.config?.latitude);
+        }
+        if (electron?.config?.longitude) { 
+            if (electron?.config?.longitude.startsWith('-')) { 
+                setLongitude('+' + electron?.config?.longitude.substring(1));
+            } else if (electron?.config?.longitude.startsWith('+')) { 
+                setLongitude('-' + electron?.config?.longitude.substring(1));
+            } else {
+                setLongitude('-' + electron?.config?.longitude.substring(1));
+            }
+        }
+        if (electron?.config?.offset) { 
+            setOffsetField(electron?.config?.offset);
+        } else {
+            setOffsetField(offset);
+        }
     }, []);
     
     const setField = (event) => {

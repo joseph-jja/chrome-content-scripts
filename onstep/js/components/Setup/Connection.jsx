@@ -15,7 +15,8 @@ import {
 } from 'js/utils/commandUtils.js';
 
 const {
-    useState
+    useState,
+    useEffect
 } = React;
 
 const HOST_PORT_RE = /\d+\.\d+\.\d+\.\d+\:\d*/;
@@ -26,6 +27,14 @@ export default function Connection() {
     const [serialPort, setSerialPort] = useState(StorageBox.getItem('serialPort'));
     const [serialOrHostPortError, setSerialOrHostPortError] = useState('');
   
+    useEffect(() => {
+        if (electron?.config?.device) { 
+            setSerialPort(electron?.config?.device);
+        } else if (electron?.config?.hostPost) { 
+            setHostPort(electron?.config?.hostPost);
+        }
+    }, []);
+    
     const setSerialPortField = (event) => {
         setSerialPort(event?.target?.value);
     }
