@@ -211,7 +211,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             // This is not necessarily an error, just means no data was available
             // but since we set VTIME, this should generally not happen unless timeout expires.
-            sprintf("Read timeout, no data available, waiting %dus.\n", READ_SLEEP_DELAY);
+            printf("Read timeout, no data available, waiting %dus.\n", READ_SLEEP_DELAY);
             usleep(READ_SLEEP_DELAY);
         }
         //printf("Found %d %s \n", n, endingChar, incomingByte); 
