@@ -15,6 +15,12 @@
 #define BAUD_RATE B9600
 #define BUFFER_SIZE 128
 
+// multiply these to times each other
+// to see how long to wait when no data is to read
+// so 
+#define READ_SLEEP_DELAY  200 // micro second delay between reads
+#define MAX_READ_COUNT 250   // number of times to try to read in data
+
 // Global file stream (for simplicity; real apps might manage this per-instance or context)
 int fd;
 
@@ -199,12 +205,14 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     long max_len = 1;
     bool foundEnd = false;
     int i = 0;
+    int loop_count = 0;
     int n = read(fd, incomingByte, max_len);
-    while (!foundEnd) {
+    while (!foundEnd && loop_count < MAX_READ_COUNT) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             // This is not necessarily an error, just means no data was available
             // but since we set VTIME, this should generally not happen unless timeout expires.
-            printf("No data available (timeout).\n");
+            sprintf("Read timeout, no data available, waiting %dus.\n", READ_SLEEP_DELAY);
+            usleep(READ_SLEEP_DELAY);
         }
         //printf("Found %d %s \n", n, endingChar, incomingByte); 
             
@@ -226,6 +234,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         if (!foundEnd) {
            n = read(fd, incomingByte, max_len);
         }
+        loop_count++;
     }
     
     if (strlen(buffer) > 0) {
