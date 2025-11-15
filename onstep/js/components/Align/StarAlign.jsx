@@ -17,12 +17,12 @@ import {
 
 import AstronomyMath from 'js/EcmaScripts/onstepx.js';
 
-const {
+/*const {
     AMU,
     ADU,
     altAzToRaDec,
     mathFunctions
-} = AstronomyMath;
+} = AstronomyMath;*/
 
 const {
     useState,
