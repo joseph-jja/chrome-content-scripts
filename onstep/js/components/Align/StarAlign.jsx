@@ -13,7 +13,16 @@ import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 import StorageBox from "js/config.js";
 import {
    ASTRONOMY_API
-} from "js/storage/StorageBox.js";
+} from 'js/storage/StorageBox.js';
+
+import AstronomyMath from 'js/EcmaScripts/onstepx.js';
+
+const {
+    AMU,
+    ADU,
+    altAzToRaDec,
+    mathFunctions
+} = AstronomyMath;
 
 const {
     useState,
@@ -30,11 +39,11 @@ export default function ToggleTracking() {
     
     useEffect(() => {
         const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
-        getStarList(authCode).then(results => {
+        /*getStarList(authCode).then(results => {
             console.log(results);
         }).catch(e => {
             console.error(e);
-        }) 
+        })*/
     }, []);
 
     const setBacklashRateValue = async (event) => {
@@ -68,7 +77,7 @@ export default function ToggleTracking() {
                     </CustomOption>
                 ))}
             </CustomSelect>
-            
+
             <ErrorMessage>{alignmentError}</ErrorMessage>                
         </Container>
     );
