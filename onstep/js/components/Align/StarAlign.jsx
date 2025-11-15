@@ -15,15 +15,6 @@ import {
    ASTRONOMY_API
 } from 'js/storage/StorageBox.js';
 
-import AstronomyMath from 'js/EcmaScripts/onstepx.js';
-
-/*const {
-    AMU,
-    ADU,
-    altAzToRaDec,
-    mathFunctions
-} = AstronomyMath;*/
-
 const {
     useState,
     useEffect
