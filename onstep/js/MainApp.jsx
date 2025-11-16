@@ -11,7 +11,7 @@ import Align from 'js/tabs/Align.jsx';
 import StorageBox from "js/storage/StorageBox.js";
 
 // from EcmaScripts added as globals
-import AstronomyMath from 'js/EcmaScripts/onstepx.js';
+import 'js/EcmaScripts/onstepx.js';
 
 const {
     useState,
