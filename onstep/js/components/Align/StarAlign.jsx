@@ -1,7 +1,9 @@
 import React from 'react';
 
 import Container from 'js/components/base/Container.jsx';
+import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
+import CustomFieldset from 'js/components/base/CustomFieldset.jsx';
 import CustomSelect from 'js/components/base/CustomSelect.jsx';
 import CustomOption from 'js/components/base/CustomOption.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
@@ -21,8 +23,14 @@ const {
 } = React;
 
 const STAR_ALIGN = [];
+const coords = [];
 for ( let i = 1; i <= 9; i++) {
    STAR_ALIGN.push(`:A${i}#`);
+   coords.push({
+       label: `Coordinates ${i}`,
+       name: `coords_$i}`,
+       convVal: `conv_$i}`
+   });
 }
 
 export default function ToggleTracking() {
@@ -68,6 +76,20 @@ export default function ToggleTracking() {
                     </CustomOption>
                 ))}
             </CustomSelect>
+            
+            {coords.map(item => ( 
+             <>  
+             <br/>{item.label}: 
+              <CustomInput type="text" labelText="Azimuth" size="18"
+                    id={item.name} name={item.name}
+                    placeholderText="+/-hh*mm*ss.s"/>
+              <span id={item.convVal}></span> 
+              <CustomInput type="text" labelText="Altitude" size="18"
+                    id={item.name} name={item.name}
+                    placeholderText="+/-hh*mm*ss.s"/>
+              <span id={item.convVal}></span> 
+             </>        
+            ))}
 
             <ErrorMessage>{alignmentError}</ErrorMessage>                
         </Container>
