@@ -1,1 +1,176 @@
-(()=>{"use strict";function t(){return Array.from(arguments).reduce(((t,e)=>+t+ +e),0)}function e(t,e){return+t-+e}function n(){return Array.from(arguments).reduce(((t,e)=>+t*+e),1)}function r(t,e){return+t/+e}function o(t){return Math.pow(t,2)}function u(t){return Math.pow(t,3)}function s(n,r,u,s){let a=e(u,n),i=e(s,r),c=t(o(a),o(i));return Math.sqrt(c)}function a(e,n,r,o){return t(e,n,r,o)}const i=["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];function c(t,e){return e.toString(t).toUpperCase()}function h(t,e,r){const o=M(r),u=n(t,Math.sin(o)),s=n(e,Math.cos(o));return{x:Math.round(u),y:Math.round(s)}}function l(t,e){const r=M(e),o=n(t,Math.sin(r)),u=n(t,Math.cos(r));return{x:Math.round(o),y:Math.round(u)}}function f(t,e){return{x:Math.floor(r(t,2)),y:Math.floor(r(e,2))}}function M(t){return t*Math.PI/180}function g(t){return 180*t/Math.PI}const d={add:t,subtract:e,multiply:n,divide:r,square:o,cube:u,computeLineLength:s,computePerimeter:function(t,e,n,r,o,u,i,c){return a(s(t,e,n,r),s(n,r,o,u),s(o,u,i,c),s(i,c,t,e))},computePerimeterByLength:a,computePerimeterOfSquare:function(t){return n(t,4)},areaOfTriangle:function(t,e){return n(t,e,.5)},areaOfTrapizoid:function(e,o,u){let s,a;return s=t(o,u),a=r(s,2),n(e,a)},pythagorean:function(t,e){return Math.sqrt(o(t)+o(e))},average:function(){let e=0;return Object.keys(arguments).forEach((n=>{e=t(e,arguments[n])})),r(e,arguments.length)},areaOfCircle:function(t){return n(Math.PI,o(t))},circumferenceOfACircle:function(t){return n(2,Math.PI,t)},surfaceAreaCone:function(e,r){let u=Math.sqrt(n(Math.PI,o(e))),s=t(o(e),o(r));return t(u,n(e,Math.PI,s))},volumeCone:function(t,e){return n(1/3,Math.PI,o(t),e)},surfaceAreaCylinder:function(e,r){return t(n(2,Math.PI,o(e)),n(2,Math.PI,e,r))},volumeCylinder:function(t,e){return n(Math.PI,o(t),e)},surfaceAreaSphere:function(t){return n(4,Math.PI,o(t))},volumeSphere:function(t){return n(4/3,Math.PI,u(t))},inverse:function(t){return n(-1,t)},oneOver:function(t){return r(1,t)},factorial:function t(e){return+e<=1?1:n(e,t(+e-1))},convertFromBaseTenToBaseX:c,convertFromBaseXToBaseTen:function(r,o){let u=0,s=1;function a(t){let e="";for(let n=0,r=i.length;n<r;n+=1)if(i[n]===t){e=n;break}return e}for(;s<=o.length;){let i=Math.pow(r,e(s,1)),c=e(o.length,s);u=t(u,n(a(o.charAt(c)),i)),s++}return u},getEllipsePoint:h,getEllipsePoints:function(t,e){const n=[];for(let r=0;r<=360;r++){const o=h(t,e,r);n.push(o)}return n},getCirclePoint:l,getCirclePoints:function(t){const e=[];for(let n=0;n<=360;n++){const r=l(t,n);e.push(r)}return e},distanceBetweenCirclesCenters:function(n,r,u,s){const a=o(e(n,u)),i=o(e(r,s));return Math.sqrt(t(a,i))},getRectangleCenter:f,getRectangleCorner:function(t,e){const n=f(t,e),o=Math.ceil(r(n.x,2)),u=Math.ceil(r(n.y,2));return o<u?o:u},degreesToRadians:M,radiansToDegrees:g,generateGUID:function(){const t=c(16,1e6*(new Date).getTime());let e="";for(let n=0,r=t.length;n<r;n+=1)e+=t[n]<<1;e=t+c(16,e);let n="";for(let t=0,r=e.length;t<r;t+=1)n+=e[t],t>0&&t%5==0&&t%10!=0&&(n+="-"),t>0&&t%9==0&&(n+="-");return"-"===n.substring(n.length-1)&&(n=n.substring(0,n.length-1)),n}},T=d;const m=new class{pad(t){return`${t}`.padStart(2,"0")}raDegreesToHourMinutesSeconds(e){const o=r(e<0?t(e,360):e,15),u=Math.floor(o)%24,s=n(this.getFraction(o),60);return{hours:u,minutes:Math.floor(s),seconds:+Number(n(this.getFraction(s),60)).toFixed(2)}}decDegreesToHourMinutesSeconds(t){const e=t,r=+`${e}`.split(".")[0],o=n(this.getFraction(e),60);return{hours:r,minutes:Math.floor(o),seconds:+Number(n(this.getFraction(o),60)).toFixed(2)}}hoursMinutesSeconds(r){let o=Math.floor(r);o=o<0?t(24,o):o,o=o>24?o%24:o;const u=n(60,this.getFraction(r));let s=Math.floor(u),a=Math.round(n(60,e(u,s)));return a>=60&&(a=0,s++),s>=60&&(s=0,o++),o>=24&&(o%=24),`${o}:${this.pad(s)}:${this.pad(a)}`}degreeHHMMSSToDegrees(e,n,o){return t(e,r(n,60),r(o,3600))}mapTo24Hour(t){let o=t;return o<0?o=e(o,n(24,e(r(o,24),1))):t>=24&&(o=e(o,n(r(o,24),24))),o}getFraction(n){const r=e(n,Math.floor(n));return r<0?t(r,1):r}},C=Date.UTC(2e3,0,1,12,0,0,0),S=2451545;const p=new class{toUTC(t){return{year:t.getUTCFullYear(),month:t.getUTCMonth(),date:t.getUTCDate(),hours:t.getUTCHours(),minutes:t.getUTCMinutes(),seconds:t.getUTCSeconds(),milliseconds:t.getUTCMilliseconds()}}toJulian(o){const{year:u,month:s,date:a,hours:i,minutes:c,seconds:h}=o;let l=t(s,1),f=u,M=t(i,r(c,60),r(h,3600));l<=2&&(l=t(l,12),f=e(f,1));Math.floor(r(f,100));const g=Math.floor(n(365.25,t(f,4716))),d=Math.floor(n(30.6001,t(l,1))),T=t(e(e(t(g,d,a),13),1524.5),r(M,24));return Number(T).toFixed(6)}toJulianLT(n){const o=r(e(n.getTime(),C),864e5),u=t(S,o);return Number(u).toFixed(6)}toGMST(o){const u=e(o,2400000.5),s=Math.floor(u),a=r(e(s,51544.5),36525),i=n(e(.093104,n(62e-7,a)),a),c=n(t(8640184.812866,i),r(a,3600));return Number(t(6.697374558,n(24,e(u,s),1.0027379093),c)).toFixed(6)}toGMST2(o){const u=e(o,S),s=r(u,36525),a=n(Math.pow(s,2),387933e-9),i=r(Math.pow(s,3),3871e4),c=e(t(280.46061837,n(u,360.98564736629),a),i);return Number(c%360).toFixed(6)}gmstToLST(e,o){return Number(n(24,m.getFraction(r(t(e,r(o,15)),24)))).toFixed(6)}gmstToLST2(e,n){const r=n<0?t(360,n):n,o=t(e,r)%360;return Number(o).toFixed(6)}lstDecimalToLstDecimalHours(t){return r(t/15)}isDST(t){const e=new Date(t.getFullYear(),0,1).getTimezoneOffset(),n=new Date(t.getFullYear(),6,1).getTimezoneOffset();return Math.max(e,n)!==t.getTimezoneOffset()}utcToLST(t,e){const n=this.toJulian(t),r=this.toGMST(n);return this.gmstToLST(r,e)}calculateLST(o,u){const s=e(t(r(o.getTime(),864e5),2440587.5),S),a=t(o.getUTCHours(),r(o.getUTCMinutes(),60),r(o.getUTCSeconds(),3600)),i=t(6.697374558,n(.06570982441908,s),n(1.00273790935,a));return n(24,m.getFraction(r(t(i,r(u,15)),24)))}};window.AMU=m,window.ADU=p,window.altAzToRaDec=function(o,u,s,a,i){const c=p.toUTC(i),h=p.toJulian(c),l=p.toGMST2(h);let f=p.gmstToLST2(l,a);const d=M(s),T=M(u),C=M(o),S=Math.sin(d),F=Math.cos(d),w=Math.sin(C),P=Math.cos(C),D=Math.cos(T),U=Math.sin(T),I=t(n(w,S),n(P,F,D)),b=Math.asin(I),y=Math.cos(b),x=g(b),A=r(n(n(-1,U),P),y),H=r(e(w,n(I,S)),n(y,F)),L=g(Math.atan2(A,H)),O=e(f,L);return{dec:x,decInHMS:m.decDegreesToHourMinutesSeconds(x),ra:O,raInHMS:m.raDegreesToHourMinutesSeconds(O),hourAngle:L}},window.mathFunctions=T})();
+(() => {
+    "use strict";
+
+    function t() {
+        return Array.from(arguments).reduce((t, e) => +t + +e, 0)
+    }
+
+    function e(t, e) {
+        return +t - +e
+    }
+
+    function o() {
+        return Array.from(arguments).reduce((t, e) => +t * +e, 1)
+    }
+
+    function r(t, e) {
+        return +t / +e
+    }
+
+    function n(t) {
+        return t * Math.PI / 180
+    }
+
+    function s(t) {
+        return 180 * t / Math.PI
+    }
+    const a = new class AstronomyMathUtilities {
+            pad(t) {
+                return `${t}`.padStart(2, "0")
+            }
+            raDegreesToHourMinutesSeconds(e) {
+                const n = r(e < 0 ? t(e, 360) : e, 15),
+                    s = Math.floor(n) % 24,
+                    a = o(this.getFraction(n), 60);
+                return {
+                    hours: s,
+                    minutes: Math.floor(a),
+                    seconds: +Number(o(this.getFraction(a), 60)).toFixed(2)
+                }
+            }
+            decDegreesToHourMinutesSeconds(t) {
+                const e = t,
+                    r = +`${e}`.split(".")[0] % 90,
+                    n = o(this.getFraction(e), 60);
+                return {
+                    hours: r,
+                    minutes: Math.floor(n),
+                    seconds: +Number(o(this.getFraction(n), 60)).toFixed(2)
+                }
+            }
+            hoursMinutesSeconds(t) {
+                const r = Math.floor(t) % 360,
+                    n = o(60, this.getFraction(t));
+                let s = Math.floor(n),
+                    a = Math.round(o(60, e(n, s)));
+                return a >= 60 && (a = 0, s++), s >= 60 && (s = 0, r++), `${r}:${this.pad(s)}:${this.pad(a)}`
+            }
+            hoursMinutesSecondsTo24(r) {
+                let n = Math.floor(r);
+                n = n < 0 ? t(24, n) : n, n = n > 24 ? n % 24 : n;
+                const s = o(60, this.getFraction(r));
+                let a = Math.floor(s),
+                    i = Math.round(o(60, e(s, a)));
+                return i >= 60 && (i = 0, a++), a >= 60 && (a = 0, n++), n >= 24 && (n %= 24), `${n}:${this.pad(a)}:${this.pad(i)}`
+            }
+            degreeHHMMSSToDegrees(e, o, n) {
+                return Number(t(e, r(o, 60), r(n, 3600))).toFixed(6)
+            }
+            mapTo24Hour(t) {
+                let o = t;
+                return o < 0 ? o = e(24, Math.abs(o)) % 24 : o >= 24 && (o %= 24), o
+            }
+            getFraction(o) {
+                const r = e(Math.abs(o), Math.abs(Math.floor(o)));
+                return r < 0 ? t(r, 1) : r
+            }
+        },
+        i = Date.UTC(2e3, 0, 1, 12, 0, 0, 0),
+        u = 2451545;
+    const c = new class AstronomyDateUtilities {
+        toUTC(t) {
+            return {
+                year: t.getUTCFullYear(),
+                month: t.getUTCMonth(),
+                date: t.getUTCDate(),
+                hours: t.getUTCHours(),
+                minutes: t.getUTCMinutes(),
+                seconds: t.getUTCSeconds(),
+                milliseconds: t.getUTCMilliseconds()
+            }
+        }
+        toJulian(n) {
+            const {
+                year: s,
+                month: a,
+                date: i,
+                hours: u,
+                minutes: c,
+                seconds: h
+            } = n;
+            let M = t(a, 1),
+                d = s,
+                l = t(u, r(c, 60), r(h, 3600));
+            M <= 2 && (M = t(M, 12), d = e(d, 1));
+            Math.floor(r(d, 100));
+            const T = Math.floor(o(365.25, t(d, 4716))),
+                m = Math.floor(o(30.6001, t(M, 1))),
+                g = t(e(e(t(T, m, i), 13), 1524.5), r(l, 24));
+            return Number(g).toFixed(6)
+        }
+        toJulianLT(o) {
+            const n = r(e(o.getTime(), i), 864e5),
+                s = t(u, n);
+            return Number(s).toFixed(6)
+        }
+        toGMST(n) {
+            const s = e(n, u),
+                a = r(s, 36525),
+                i = o(Math.pow(a, 2), 387933e-9),
+                c = r(Math.pow(a, 3), 3871e4),
+                h = e(t(280.46061837, o(s, 360.98564736629), i), c);
+            return Number(h % 360).toFixed(6)
+        }
+        gmstToLST(e, o) {
+            const r = o < 0 ? t(360, o) : o,
+                n = t(e, r) % 360;
+            return Number(n).toFixed(6)
+        }
+        lstDecimalToLstDecimalHours(t) {
+            return r(t / 15)
+        }
+        isDST(t) {
+            const e = new Date(t.getFullYear(), 0, 1).getTimezoneOffset(),
+                o = new Date(t.getFullYear(), 6, 1).getTimezoneOffset();
+            return Math.max(e, o) !== t.getTimezoneOffset()
+        }
+        utcToLST(t, e) {
+            const o = this.toJulian(t),
+                r = this.toGMST(o);
+            return this.gmstToLST(r, e)
+        }
+        calculateLST(t, e) {
+            const o = this.toUTC(t),
+                r = this.utcToLST(o, e);
+            return Number(r % 24).toFixed(6)
+        }
+    };
+    window.AMU = a, window.ADU = c, window.altAzToRaDec = function(i, u, h, M, d) {
+        const l = c.toUTC(d),
+            T = c.toJulian(l),
+            m = c.toGMST(T),
+            g = c.gmstToLST(m, M),
+            f = n(h),
+            S = n(u),
+            F = n(i),
+            D = Math.sin(f),
+            U = Math.cos(f),
+            w = Math.sin(F),
+            b = Math.cos(F),
+            C = Math.cos(S),
+            H = Math.sin(S),
+            p = t(o(w, D), o(b, U, C)),
+            x = Math.asin(p),
+            L = Math.cos(x),
+            N = s(x),
+            $ = r(o(o(-1, H), b), L),
+            A = r(e(w, o(p, D)), o(L, U)),
+            y = e(g, s(Math.atan2($, A)));
+        return {
+            dec: N,
+            decInHMS: a.decDegreesToHourMinutesSeconds(N),
+            ra: y,
+            raInHMS: a.raDegreesToHourMinutesSeconds(y)
+        }
+    }
+})();
