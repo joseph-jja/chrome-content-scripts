@@ -18,9 +18,7 @@ try {
     const configData = fs.readFileSync(CONFIG_JSON);
     const jsonConfigData = JSON.parse(configData);
     Object.keys(jsonConfigData).forEach(item => {
-        if (item !== 'ApplicationID' && item !== 'SecretID') {
-            CONFIG_KEYS[item] = jsonConfigData[item];
-        }
+        CONFIG_KEYS[item] = jsonConfigData[item];
     });
 } catch(e) {
     console.error('No config found. Some functionality will be disabled!');

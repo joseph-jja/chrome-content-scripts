@@ -12,7 +12,7 @@ import {
     getStarList
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
-import StorageBox from "js/config.js";
+import StorageBox from "js/storage/StorageBox.js";
 import {
    ASTRONOMY_API
 } from 'js/storage/StorageBox.js';
@@ -53,11 +53,26 @@ export default function ToggleTracking() {
     
     const searchLocation = (event) => {
         const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
-        /*getStarList(authCode).then(results => {
+        if (!altitude || !azimuth) {
+            setAlignmentError('Missing altitude or azimuth!');
+            return;
+        }
+        const latitude = StorageBox.getItem('latitude') || window?.electron?.config?.latitude;
+        const longitude = StorageBox.getItem('longitude') || window?.electron?.config?.longitude;
+        if (!latitude || !longitude) {
+            setAlignmentError('Missing latitude or longitude!');
+            return;
+        }
+        const now = new Date();
+        const { 
+           ra,
+           dec
+        } = window.altAzToRaDec(altitude, azimuth, latitude, longitude, now);
+        getStarList(authCode, ra, dec).then(results => {
             console.log(results);
         }).catch(e => {
             console.error(e);
-        })*/
+        })
     };
 
     const setAlignNumberValue = async (event) => {
@@ -91,7 +106,7 @@ export default function ToggleTracking() {
                     </CustomOption>
                 ))}
             </CustomSelect>
-            
+                          
             <br/>Search Coordinate: 
               <br/>
               <CustomInput type="text" labelText="Azimuth" size="18"
@@ -106,7 +121,7 @@ export default function ToggleTracking() {
                     onInputChange={setAltitudeField}/>
               <span id="altitude_converted"></span> 
               <br/> 
-              <CustomButton id="Search Coordinates" onButtonClick={searchLocation}>Set</CustomButton>
+              <CustomButton id="Search Coordinates" onButtonClick={searchLocation}>Search</CustomButton>
             <ErrorMessage>{alignmentError}</ErrorMessage>                
         </Container>
     );

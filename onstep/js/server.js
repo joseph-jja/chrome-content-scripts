@@ -12,7 +12,8 @@ import express from 'express';
 import SerialPort from '#server/api/SerialPort.js';
 import SocketConnection from '#server/api/SocketConnection.js';
 import {
-    LISTEN_PORT
+    LISTEN_PORT,
+    ASTRONOMY_API
 } from '#server/config.js';
 
 import COMMANDS_WITH_NO_REPLY from '#server/data/noReplayCommands.js';
@@ -210,28 +211,19 @@ server.get('/listofstars', (req, res) => {
         return;
     }
     
-    const now = new Date();
-    const month = `${now.getMonth() + 1}`.padStart(2, '0');
-    const date = `${now.getDay()}`.padStart(2, '0');;
-    const dateStamp = `${now.getFullYear()}-${month}-${date}`;
-    const hours = `${now.getHours() + 1}`.padStart(2, '0');
-    const minutes = `${now.getMinutes() + 1}`.padStart(2, '0');
-    const seconds = `${now.getSeconds() + 1}`.padStart(2, '0');
-    const timeStamp = `${hours}:${minutes}:${seconds}`;
-    
-    const location = {
-        latitude: CONFIG_DATA.latitude,
-        longitude: CONFIG_DATA.longitude,            
-        elevation: CONFIG_DATA.elevation,
-        from_date: dateStamp,
-        to_date: dateStamp,
-        time: timeStamp
-    };
-    const params = Object.keys(location).map(key => {
-        return `${key}=${location[key]}`;
-    }).reduce((acc, next) => {
-        return `${acc}&${next}`;
-    });
+    const ra = req.query?.ra;
+    const dec = req.query?.dec;
+    if (!ra || !dec) {
+        res.writeHead(403, {
+            'Content-Type': 'application/json'
+        });
+        res.json({
+           'error': 'No right ascension or declination passed' 
+        });
+        return;
+    }
+        
+    const params = `ra=${ra}&dec=${dec}&limit=5`;
     
     const options = {
         method: 'GET',
@@ -239,16 +231,17 @@ server.get('/listofstars', (req, res) => {
             Authorization: `Basic ${authToken}`
         }
     };
-    
-    fetch(`https://api.astronomyapi.com/api/v2/bodies/positions?${params}`, options).then(async resp => {
+    console.log(params, options);
+    fetch(`${ASTRONOMY_API}/api/v2/search?${params}`, options).then(async resp => {
         const results = await resp.text();
         res.writeHead(200);
         res.end(results);
+        //console.log('Success ', results);
     }).catch(e => {
         res.writeHead(500);
         res.end(e);
+        //console.log('Failed ', e);
     });
-    
 });
 
 server.listen(LISTEN_PORT, () => {

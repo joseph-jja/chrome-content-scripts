@@ -13,8 +13,8 @@ async function request(url) {
         });
     });
 }
-export function getStarList(authToken) {
-    const url = `/listofstars?authToken=${authToken}`;
+export function getStarList(authToken, ra, dec) {
+    const url = `/listofstars?authToken=${authToken}&ra=${ra}&dec=${dec}`;
     return request(url);
 }
 
