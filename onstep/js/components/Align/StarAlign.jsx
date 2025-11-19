@@ -26,28 +26,41 @@ const STAR_ALIGN = [];
 const coords = [];
 for ( let i = 1; i <= 9; i++) {
    STAR_ALIGN.push(`:A${i}#`);
-   coords.push({
-       label: `Coordinates ${i}`,
-       azName: `coords_${i}_az`,
-       altName: `coords_${i}_alt`,
-       azConvVal: `conv_${i}_az`,
-       altConvVal: `conv_${i}_alt`
-   });
 }
 
 export default function ToggleTracking() {
     const [alignmentError, setAlignmentError] = useState(null);
+    const [azimuth, setAzimuth] = useState('');
+    const [altitude, setAltitude] = useState('');
+       
+    const setAzimuthField = (event) => {
+        const fieldName = event?.target?.name;
+        if (!fieldName) {
+            return;
+        }
+        const value = event?.target?.value || null;
+        setAzimuth( value );
+    };
+
+    const setAltitudeField = (event) => {
+        const fieldName = event?.target?.name;
+        if (!fieldName) {
+            return;
+        }
+        const value = event?.target?.value || null;
+        setAltitude( value );
+    };
     
-    useEffect(() => {
+    const searchLocation = (event) => {
         const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
         /*getStarList(authCode).then(results => {
             console.log(results);
         }).catch(e => {
             console.error(e);
         })*/
-    }, []);
+    };
 
-    const setBacklashRateValue = async (event) => {
+    const setAlignNumberValue = async (event) => {
         const targetObj = event?.target;
         if (!targetObj) {
             return;
@@ -71,7 +84,7 @@ export default function ToggleTracking() {
 
             <CustomSelect id="pick-star" name="pick_star"
                 labelText="Pick Number of Stars"
-                onSelectChange={setBacklashRateValue}>
+                onSelectChange={setAlignNumberValue}>
                 {STAR_ALIGN?.map((item) => (
                     <CustomOption value={item}>
                         Rate {item}
@@ -79,20 +92,21 @@ export default function ToggleTracking() {
                 ))}
             </CustomSelect>
             
-            {coords.map(item => ( 
-             <>  
-             <br/>{item.label}: 
+            <br/>Search Coordinate: 
+              <br/>
               <CustomInput type="text" labelText="Azimuth" size="18"
-                    id={item.azName} name={item.azName}
-                    placeholderText="+/-hh*mm*ss.s"/>
-              <span id={item.AzConvVal}></span> 
+                    id="azimuth" name="azimuth" inputValue={azimuth}
+                    placeholderText="+/-hh*mm*ss.s"
+                    onInputChange={setAzimuthField}/>
+              <span id="azimuth_converted"></span>
+              <br/> 
               <CustomInput type="text" labelText="Altitude" size="18"
-                    id={item.altName} name={item.altName}
-                    placeholderText="+/-hh*mm*ss.s"/>
-              <span id={item.altConvVal}></span> 
-             </>        
-            ))}
-
+                    id="altitude" name="altitude" inputValue={altitude}
+                    placeholderText="+/-hh*mm*ss.s"
+                    onInputChange={setAltitudeField}/>
+              <span id="altitude_converted"></span> 
+              <br/> 
+              <CustomButton id="Search Coordinates" onButtonClick={searchLocation}>Set</CustomButton>
             <ErrorMessage>{alignmentError}</ErrorMessage>                
         </Container>
     );
