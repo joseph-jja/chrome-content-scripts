@@ -231,7 +231,7 @@ server.get('/listofstars', (req, res) => {
             Authorization: `Basic ${authToken}`
         }
     };
-    console.log(params, options);
+
     fetch(`${ASTRONOMY_API}/api/v2/search?${params}`, options).then(async resp => {
         const results = await resp.text();
         res.writeHead(200);
