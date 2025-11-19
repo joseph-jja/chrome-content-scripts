@@ -223,7 +223,7 @@ server.get('/listofstars', (req, res) => {
         return;
     }
         
-    const params = `ra=${ra}&dec=${dec}&limit=5`;
+    const params = `ra=${ra}&dec=${dec}&limit=25`;
     
     const options = {
         method: 'GET',

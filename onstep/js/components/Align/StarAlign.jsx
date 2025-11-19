@@ -32,7 +32,9 @@ export default function ToggleTracking() {
     const [alignmentError, setAlignmentError] = useState(null);
     const [azimuth, setAzimuth] = useState('');
     const [altitude, setAltitude] = useState('');
-       
+    const [rightAscention, setRightAscention] = useState('');
+    const [declination, setDeclination] = useState('');
+               
     const setAzimuthField = (event) => {
         const fieldName = event?.target?.name;
         if (!fieldName) {
@@ -68,10 +70,30 @@ export default function ToggleTracking() {
            ra,
            dec
         } = window.altAzToRaDec(altitude, azimuth, latitude, longitude, now);
+        setRightAscention('RA: ' + ra);
+        setDeclination('DEC: ' + dec);
         getStarList(authCode, ra, dec).then(results => {
-            console.log(results);
+            try {
+                const jsonResults = JSON.parse(results)?.data;
+                const starList = jsonResults.filter(item => {
+                    return (item?.type?.name?.toLowerCase() === 'star');
+                }).filter(item => {
+                    return (item?.position?.equatorial?.declination?.string &&
+                        item?.position?.equatorial?.rightAscension?.string);
+                }).map(item => {
+                    const cname = item?.position?.constellation?.name;
+                    const rahh = item?.position?.equatorial?.rightAscension?.string;
+                    const dechh = item?.position?.equatorial?.declination?.string;
+                    return `${item.name}: (Constellation: ${cname}) RA/Dec: ${rahh}/${dechh}`;
+                });
+                //StorageBox.setItem(`${+ra + +dec}`, starList);
+                setAlignmentError(starList);
+                console.log(starList);
+            } catch(e) {
+                setAlignmentError(e);
+            }
         }).catch(e => {
-            console.error(e);
+            setAlignmentError(e);
         })
     };
 
@@ -113,13 +135,15 @@ export default function ToggleTracking() {
                     id="azimuth" name="azimuth" inputValue={azimuth}
                     placeholderText="+/-hh*mm*ss.s"
                     onInputChange={setAzimuthField}/>
-              <span id="azimuth_converted"></span>
               <br/> 
               <CustomInput type="text" labelText="Altitude" size="18"
                     id="altitude" name="altitude" inputValue={altitude}
                     placeholderText="+/-hh*mm*ss.s"
                     onInputChange={setAltitudeField}/>
-              <span id="altitude_converted"></span> 
+              <br/> 
+              <span>{rightAscention}</span>
+              <br/> 
+              <span>{declination}</span> 
               <br/> 
               <CustomButton id="Search Coordinates" onButtonClick={searchLocation}>Search</CustomButton>
             <ErrorMessage>{alignmentError}</ErrorMessage>                
