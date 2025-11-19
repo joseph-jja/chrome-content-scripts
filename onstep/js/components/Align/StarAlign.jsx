@@ -28,8 +28,10 @@ for ( let i = 1; i <= 9; i++) {
    STAR_ALIGN.push(`:A${i}#`);
    coords.push({
        label: `Coordinates ${i}`,
-       name: `coords_$i}`,
-       convVal: `conv_$i}`
+       azName: `coords_${i}_az`,
+       altName: `coords_${i}_alt`,
+       azConvVal: `conv_${i}_az`,
+       altConvVal: `conv_${i}_alt`
    });
 }
 
@@ -81,13 +83,13 @@ export default function ToggleTracking() {
              <>  
              <br/>{item.label}: 
               <CustomInput type="text" labelText="Azimuth" size="18"
-                    id={item.name} name={item.name}
+                    id={item.azName} name={item.azName}
                     placeholderText="+/-hh*mm*ss.s"/>
-              <span id={item.convVal}></span> 
+              <span id={item.AzConvVal}></span> 
               <CustomInput type="text" labelText="Altitude" size="18"
-                    id={item.name} name={item.name}
+                    id={item.altName} name={item.altName}
                     placeholderText="+/-hh*mm*ss.s"/>
-              <span id={item.convVal}></span> 
+              <span id={item.altConvVal}></span> 
              </>        
             ))}
 
