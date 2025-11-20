@@ -16,6 +16,9 @@ import StorageBox from "js/storage/StorageBox.js";
 import {
    ASTRONOMY_API
 } from 'js/storage/StorageBox.js';
+import {
+    safelyParse
+} from 'js/utils/jsonUtils.js';
 
 const {
     useState,
@@ -73,8 +76,8 @@ export default function ToggleTracking() {
         setRightAscention('RA: ' + ra);
         setDeclination('DEC: ' + dec);
         getStarList(authCode, ra, dec).then(results => {
-            try {
-                const jsonResults = JSON.parse(results)?.data;
+            const jsonResults = safelyParse(results)?.data;
+            if (jsonResults) {
                 const starList = jsonResults.filter(item => {
                     return (item?.type?.name?.toLowerCase() === 'star');
                 }).filter(item => {
@@ -89,8 +92,8 @@ export default function ToggleTracking() {
                 //StorageBox.setItem(`${+ra + +dec}`, starList);
                 setAlignmentError(starList);
                 console.log(starList);
-            } catch(e) {
-                setAlignmentError(e);
+            } else {
+                setAlignmentError('Could not parse json response');
             }
         }).catch(e => {
             setAlignmentError(e);
