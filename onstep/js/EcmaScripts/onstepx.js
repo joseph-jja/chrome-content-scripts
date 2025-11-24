@@ -76,8 +76,9 @@
             }
         },
         i = Date.UTC(2e3, 0, 1, 12, 0, 0, 0),
-        u = 2451545;
-    const c = new class AstronomyDateUtilities {
+        u = 2451545,
+        c = 365.25;
+    const h = new class AstronomyDateUtilities {
         toUTC(t) {
             return {
                 year: t.getUTCFullYear(),
@@ -95,36 +96,36 @@
                 month: a,
                 date: i,
                 hours: u,
-                minutes: c,
-                seconds: h
+                minutes: h,
+                seconds: M
             } = n;
-            let M = t(a, 1),
-                d = s,
-                l = t(u, r(c, 60), r(h, 3600));
-            M <= 2 && (M = t(M, 12), d = e(d, 1));
-            Math.floor(r(d, 100));
-            const T = Math.floor(o(365.25, t(d, 4716))),
-                m = Math.floor(o(30.6001, t(M, 1))),
-                g = t(e(e(t(T, m, i), 13), 1524.5), r(l, 24));
-            return Number(g).toFixed(6)
+            let d = t(a, 1),
+                l = s,
+                T = t(u, r(h, 60), r(M, 3600));
+            d <= 2 && (d = t(d, 12), l = e(l, 1));
+            Math.floor(r(l, 100));
+            const m = Math.floor(o(c, t(l, 4716))),
+                g = Math.floor(o(30.6001, t(d, 1))),
+                f = t(e(e(t(m, g, i), 13), 1524.5), r(T, 24));
+            return Number(f).toFixed(12)
         }
         toJulianLT(o) {
             const n = r(e(o.getTime(), i), 864e5),
                 s = t(u, n);
-            return Number(s).toFixed(6)
+            return Number(s).toFixed(12)
         }
         toGMST(n) {
             const s = e(n, u),
-                a = r(s, 36525),
+                a = r(s, o(c, 100)),
                 i = o(Math.pow(a, 2), 387933e-9),
-                c = r(Math.pow(a, 3), 3871e4),
-                h = e(t(280.46061837, o(s, 360.98564736629), i), c);
-            return Number(h % 360).toFixed(6)
+                h = r(Math.pow(a, 3), 3871e4),
+                M = e(t(280.46061837, o(s, 360.98564736629), i), h) % 360;
+            return M < 0 ? Number(t(M, 360)).toFixed(12) : Number(M).toFixed(12)
         }
         gmstToLST(e, o) {
             const r = o < 0 ? t(360, o) : o,
                 n = t(e, r) % 360;
-            return Number(n).toFixed(6)
+            return Number(n).toFixed(12)
         }
         lstDecimalToLstDecimalHours(t) {
             return r(t / 15)
@@ -142,33 +143,33 @@
         calculateLST(t, e) {
             const o = this.toUTC(t),
                 r = this.utcToLST(o, e);
-            return Number(r % 24).toFixed(6)
+            return Number(r % 24).toFixed(12)
         }
     };
-    window.AMU = a, window.ADU = c, window.altAzToRaDec = function(i, u, h, M, d) {
-        const l = c.toUTC(d),
-            T = c.toJulian(l),
-            m = c.toGMST(T),
-            g = c.gmstToLST(m, M),
-            f = n(h),
+    window.AMU = a, window.ADU = h, window.altAzToRaDec = function(i, u, c, M, d) {
+        const l = h.toUTC(d),
+            T = h.toJulian(l),
+            m = h.toGMST(T),
+            g = h.gmstToLST(m, M),
+            f = n(c),
             S = n(u),
             F = n(i),
             D = Math.sin(f),
             U = Math.cos(f),
-            w = Math.sin(F),
-            b = Math.cos(F),
+            b = Math.sin(F),
+            w = Math.cos(F),
             C = Math.cos(S),
             H = Math.sin(S),
-            p = t(o(w, D), o(b, U, C)),
+            p = t(o(b, D), o(w, U, C)),
             x = Math.asin(p),
-            L = Math.cos(x),
-            N = s(x),
-            $ = r(o(o(-1, H), b), L),
-            A = r(e(w, o(p, D)), o(L, U)),
+            N = Math.cos(x),
+            L = s(x),
+            $ = r(o(o(-1, H), w), N),
+            A = r(e(b, o(p, D)), o(N, U)),
             y = e(g, s(Math.atan2($, A)));
         return {
-            dec: N,
-            decInHMS: a.decDegreesToHourMinutesSeconds(N),
+            dec: L,
+            decInHMS: a.decDegreesToHourMinutesSeconds(L),
             ra: y,
             raInHMS: a.raDegreesToHourMinutesSeconds(y)
         }
