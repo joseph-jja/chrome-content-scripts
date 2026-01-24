@@ -3,6 +3,12 @@ import {
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
+const sleep = async sleepTime => {
+    return new Promise(resolve => {
+        setTimeout(() => return resolve(), sleepTime);
+    });
+};
+
 // useful for commands that will return 0 on success and 1 on error
 export async function daisyChainBooleanCommands(commands = []) {
 
@@ -20,6 +26,7 @@ export async function daisyChainBooleanCommands(commands = []) {
         } else {
             response.push(result);
         }
+        sleep(100);
         i++;
     }
     return response;
