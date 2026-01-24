@@ -5,7 +5,9 @@ import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
 const sleep = async sleepTime => {
     return new Promise(resolve => {
-        setTimeout(() => return resolve(), sleepTime);
+        setTimeout(() => {
+            return resolve();
+        }, sleepTime);
     });
 };
 
