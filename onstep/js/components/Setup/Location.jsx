@@ -47,19 +47,21 @@ export default function Location() {
     
     const setField = (event) => {
         const fieldName = event?.target?.name;
-        if (!fieldName) {
+        const value = event?.target?.value || null;
+        if (!fieldName || !value) {
+            setLatitudeLongitudeError('Invalid field and or no value');
             return;
         }
-        const value = event?.target?.value || null;
+        const fieldValue = value.replace(':', '*').replace('.', '*');
         if (fieldName === 'latitude') {
             setLatitude(value);
-            StorageBox.setItem('latitude', value);
+            StorageBox.setItem('latitude', fieldValue);
         } else if (fieldName === 'longitude') {
             setLongitude(value);
-            StorageBox.setItem('longitude', value);
+            StorageBox.setItem('longitude', fieldValue);
         } else if (fieldName === 'offset') {
             setOffsetField(value);
-            StorageBox.setItem('offset', value);
+            StorageBox.setItem('offset', fieldValue);
         }
     }
 
