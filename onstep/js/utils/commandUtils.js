@@ -28,7 +28,7 @@ export async function daisyChainBooleanCommands(commands = []) {
         } else {
             response.push(result);
         }
-        sleep(100);
+        sleep(250);
         i++;
     }
     return response;
