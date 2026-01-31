@@ -77,7 +77,7 @@ export default function Location() {
             // send message
             // latitude => :StsDD*MM#
             // longitude => :SgDDD*MM#
-            const commands = [`:St${latitude.replace(':', '*')}#`, ':Gt#', `:Sg${longitude.replace(':', '*')}#`, ':Gg#', ':GG#'];
+            const commands = [`:St${latitude}#`, ':Gt#', `:Sg${longitude}#`, ':Gg#', ':GG#'];
             if (offsetField) {
                 commands.push(`:SG${offsetField}#`);
                 commands.push(':GG#');
