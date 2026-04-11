@@ -322,7 +322,7 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
    
     std::string data = string_data.As<Napi::String>().Utf8Value();
  
-    int len = strlen(data.c_str());
+    int len = data.c_str().Length();
     int n = write(fd, data.c_str(), len);
     if (n < 0) {
         perror("Error writing to serial port");
