@@ -191,7 +191,8 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
             !info[1].IsNull() && info[1].IsString()) 
         {
             hasEnding = true;
-            endingChar[0] = info[1].As<Napi::String>().Utf8Value().c_str()[0];
+            std::string str = info[1].As<Napi::String>().Utf8Value(); 
+            endingChar[0] = str.c_str()[0];
         }
     } 
 
@@ -206,7 +207,16 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     bool foundEnd = false;
     int i = 0;
     int loop_count = 0;
+    errno = 0;
+    // TODO fix me 
     int n = read(fd, incomingByte, max_len);
+    if (n == 0) {
+        // end of file
+    } else if (n == -1) {
+        // read error
+    }
+    // check errno after read?
+    errno = 0; // reset again
     while (!foundEnd && loop_count < MAX_READ_COUNT) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             // This is not necessarily an error, just means no data was available
@@ -220,7 +230,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         if (n > 0 && strlen(incomingByte) > 0) {
             bool isCharacter = ((int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
             //printf("Character %d %s %s\n", isCharacter, endingChar, incomingByte); 
-            if (isCharacter) {
+            if (isCharacter && i < BUFFER_SIZE) {
                 buffer[i] = incomingByte[0];
                 if (isBinaryReply && strlen(incomingByte) > 0) {
                     foundEnd = true;
