@@ -227,7 +227,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         if (n > 0) {
 
             // Reset loop count when we actually get data
-            bool isCharacter = ((int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
+            bool isCharacter = ((int)incomingByte >= 32 && (int)incomingByte < 127);
             if (isCharacter) {
                 loop_count = 0; 
                 buffer[i++] = incomingByte;
