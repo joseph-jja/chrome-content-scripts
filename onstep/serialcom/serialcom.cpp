@@ -213,9 +213,16 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     if (n == 0) {
         // end of file
     } else if (n == -1) {
-        // read error
+        // read error, so sleep and try again
+        usleep(READ_SLEEP_DELAY);
     }
-    // check errno after read?
+    // if error sleep
+    if (errno == EAGAIN || errno == EWOULDBLOCK) {
+        // This is not necessarily an error, just means no data was available
+        // but since we set VTIME, this should generally not happen unless timeout expires.
+        printf("Read timeout, no data available, waiting %dus.\n", READ_SLEEP_DELAY);
+        usleep(READ_SLEEP_DELAY);
+    }
     errno = 0; // reset again
     while (!foundEnd && loop_count < MAX_READ_COUNT) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
