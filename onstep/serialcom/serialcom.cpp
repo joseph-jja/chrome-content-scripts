@@ -248,7 +248,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         // we have data so lets make sure it is something ascii
         if (n > 0 && strlen(incomingByte) > 0) {
             bool isCharacter = ((int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
-            isBufferFull = (i >= BUFFER_SIZE);
+            isBufferFull = (i >= (BUFFER_SIZE - 1));
             //printf("Character %d %s %s\n", isCharacter, endingChar, incomingByte); 
             if (isCharacter && !isBufferFull) {
                 buffer[i] = incomingByte[0];
