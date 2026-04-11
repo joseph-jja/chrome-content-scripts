@@ -198,7 +198,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     bool isBinaryReply = info[0].As<Napi::Boolean>().Value(); 
 
     bool hasEnding = false;
-    char endingChar
+    char endingChar;
     if (!isBinaryReply) {
         if (info.Length() > 1 && !info[1].IsEmpty() &&
             !info[1].IsNull() && info[1].IsString()) 
