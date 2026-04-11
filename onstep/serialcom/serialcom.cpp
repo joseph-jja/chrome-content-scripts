@@ -198,15 +198,14 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     bool isBinaryReply = info[0].As<Napi::Boolean>().Value(); 
 
     bool hasEnding = false;
-    char endingChar[2];
-    memset(endingChar, '\0', 2);
+    char endingChar
     if (!isBinaryReply) {
         if (info.Length() > 1 && !info[1].IsEmpty() &&
             !info[1].IsNull() && info[1].IsString()) 
         {
             hasEnding = true;
             std::string str = info[1].As<Napi::String>().Utf8Value(); 
-            endingChar[0] = str.c_str()[0];
+            endingChar = str.c_str()[0];
         }
     } 
 
@@ -237,7 +236,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
                     if (incomingByte == '0' || incomingByte == '1') {
                         foundEnd = true;
                     } // Text mode: stop at '#' or specified delimiter
-                } else if (incomingByte == '#') {
+                } else if (hasEnding && incomingByte == endingChar) {
                     foundEnd = true;
                 }
             }
