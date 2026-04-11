@@ -7,7 +7,7 @@
 #include <cstring>   // For strerror/perror
 #include <errno.h>    // Error number definitions
 #include <termios.h>  // POSIX terminal control definitions
-#include <unistd.h>   // POSIX standard functions (read, write, close)
+#include <cstdio>  // POSIX standard functions (read, write, close)
 
 // Define the serial port device file path
 // NOTE: Change this to your actual serial port (e.g., "/dev/ttyACM0" or "COM3" equivalent)
