@@ -207,24 +207,21 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     bool foundEnd = false;
     int i = 0;
     int loop_count = 0;
+    
+    // reset
     errno = 0;
-    // TODO fix me 
-    int n = read(fd, incomingByte, max_len);
-    if (n == 0) {
-        // end of file
-    } else if (n == -1) {
-        // read error, so sleep and try again
-        usleep(READ_SLEEP_DELAY);
-    }
-    // if error sleep
-    if (errno == EAGAIN || errno == EWOULDBLOCK) {
-        // This is not necessarily an error, just means no data was available
-        // but since we set VTIME, this should generally not happen unless timeout expires.
-        printf("Read timeout, no data available, waiting %dus.\n", READ_SLEEP_DELAY);
-        usleep(READ_SLEEP_DELAY);
-    }
-    errno = 0; // reset again
-    while (!foundEnd && loop_count < MAX_READ_COUNT) {
+    int n;
+    while (!foundEnd && && loop_count < MAX_READ_COUNT
+        && n = read(fd, incomingByte, max_len) {
+
+        if (n == 0) {
+            // end of file
+            // TODO what to do?
+        } else if (n == -1) {
+            // read error, so sleep and try again
+            usleep(READ_SLEEP_DELAY);
+        }
+
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             // This is not necessarily an error, just means no data was available
             // but since we set VTIME, this should generally not happen unless timeout expires.
@@ -246,10 +243,6 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
                 }
                 i++;
             }
-        }
-        // we are not at the end of the data so keep going
-        if (!foundEnd) {
-           n = read(fd, incomingByte, max_len);
         }
         loop_count++;
     }
