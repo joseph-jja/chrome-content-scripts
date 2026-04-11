@@ -29,7 +29,7 @@ int fd;
  * @param fd The file descriptor of the opened serial port.
  * @return 0 on success, -1 on failure.
  */
-int configure_port(int fd) {
+int configure_port(int fd, std::string baud_rate) {
     struct termios tty;
 
     // Get the current terminal attributes
@@ -40,9 +40,23 @@ int configure_port(int fd) {
 
     // --- Setting Control Modes ---
     // Set Baud Rate for input and output
-    cfsetospeed(&tty, BAUD_RATE);
-    cfsetispeed(&tty, BAUD_RATE);
-
+    if (!baud_rate.empty()) {
+        if (baud_rate.compare("19200")) {
+            cfsetospeed(&tty, B19200);
+            cfsetispeed(&tty, B19200);
+        } else if (baud_rate.compare("38400")) {
+            cfsetospeed(&tty, B38400);
+            cfsetispeed(&tty, B38400);
+        } else {
+            // default 
+            cfsetospeed(&tty, BAUD_RATE);
+            cfsetispeed(&tty, BAUD_RATE);
+        }
+    } else {
+        cfsetospeed(&tty, BAUD_RATE);
+        cfsetispeed(&tty, BAUD_RATE);
+    }
+    
     // CSIZE: 8 bits per byte (CS8)
     tty.c_cflag &= ~CSIZE;
     tty.c_cflag |= CS8;
