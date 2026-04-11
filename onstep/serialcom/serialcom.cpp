@@ -225,13 +225,14 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     memset(incomingByte, '\0', 2);
     long max_len = 1;
     bool foundEnd = false;
+    bool isBufferFull = false;
     int i = 0;
     int loop_count = 0;
     
     // reset
     errno = 0;
     int n;
-    while (!foundEnd && loop_count < MAX_READ_COUNT
+    while (!foundEnd && !isBufferFull && loop_count < MAX_READ_COUNT
         && (n = read(fd, incomingByte, max_len)) ) {
 
         if (n == 0) {
@@ -253,8 +254,9 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         // we have data so lets make sure it is something ascii
         if (n > 0 && strlen(incomingByte) > 0) {
             bool isCharacter = ((int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
+            isBufferFull = (i >= BUFFER_SIZE);
             //printf("Character %d %s %s\n", isCharacter, endingChar, incomingByte); 
-            if (isCharacter && i < BUFFER_SIZE) {
+            if (isCharacter && !isBufferFull) {
                 buffer[i] = incomingByte[0];
                 if (isBinaryReply && strlen(incomingByte) > 0) {
                     foundEnd = true;
