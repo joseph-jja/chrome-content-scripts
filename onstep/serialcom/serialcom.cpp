@@ -147,7 +147,7 @@ Napi::Number Open(const Napi::CallbackInfo& info) {
             // a more severe error. For simplicity, we just log the fcntl error.
             return Napi::Number::New(env, -3.0);
         }
-        if (configure_port(fd, baud_rate) < 0) {
+        if (configure_port(fd, get_baud_rate(baud_rate)) < 0) {
             perror("Error configuring port");
             return Napi::Number::New(env, -4.0);
         }
