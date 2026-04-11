@@ -22,7 +22,7 @@
 #define MAX_READ_COUNT 250   // number of times to try to read in data
 
 // Global file stream (for simplicity; real apps might manage this per-instance or context)
-int fd;
+int fd = -1;
 
 /**
  * @brief Configures the serial port settings (baud rate, data bits, parity, stop bits).
@@ -134,8 +134,11 @@ Napi::Number Open(const Napi::CallbackInfo& info) {
         baud_rate = info[1].As<Napi::String>().Utf8Value();
     }
 
-    fd = open(path.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
-
+    // we can only open a fd if it is not open already 
+    if (fd == -1 ) {
+       fd = open(path.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
+    }
+    
     if (fd < 0) {
         // perror is a standard C function that prints a descriptive error message 
         // to stderr, based on the current value of 'errno'.
@@ -168,6 +171,9 @@ Napi::Number Close(const Napi::CallbackInfo& info) {
         return Napi::Number::New(env, -1.0);
     }
 
+    // reset this to -1 so it can be opened next time
+    fd = -1;
+    
     return Napi::Number::New(env, 0.0);
 }
 
