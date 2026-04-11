@@ -225,8 +225,8 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     // reset
     errno = 0;
     int n;
-    while (!foundEnd && && loop_count < MAX_READ_COUNT
-        && n = read(fd, incomingByte, max_len) {
+    while (!foundEnd && loop_count < MAX_READ_COUNT
+        && (n = read(fd, incomingByte, max_len)) ) {
 
         if (n == 0) {
             // end of file
