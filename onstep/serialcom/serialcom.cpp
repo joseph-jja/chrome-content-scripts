@@ -8,6 +8,7 @@
 #include <errno.h>    // Error number definitions
 #include <termios.h>  // POSIX terminal control definitions
 #include <cstdio>  // POSIX standard functions (read, write, close)
+#include <map>
 
 // Define the serial port device file path
 // NOTE: Change this to your actual serial port (e.g., "/dev/ttyACM0" or "COM3" equivalent)
@@ -24,12 +25,21 @@
 // Global file stream (for simplicity; real apps might manage this per-instance or context)
 int fd = -1;
 
+speed_t get_baud_rate(std::string speed) {
+    static const std::map<std::string, speed_t> baud_map = {
+        {"9600", B9600}, {"19200", B19200}, {"38400", B38400},
+        {"57600", B57600}, {"115200", B115200}
+    };
+    auto it = baud_map.find(speed);
+    return (it != baud_map.end()) ? it->second : B9600; // Default to 9600
+}
+
 /**
  * @brief Configures the serial port settings (baud rate, data bits, parity, stop bits).
  * @param fd The file descriptor of the opened serial port.
  * @return 0 on success, -1 on failure.
  */
-int configure_port(int fd, std::string baud_rate) {
+int configure_port(int fd, speed_t speed) {
     struct termios tty;
 
     // Get the current terminal attributes
@@ -38,24 +48,8 @@ int configure_port(int fd, std::string baud_rate) {
         return -1;
     }
 
-    // --- Setting Control Modes ---
-    // Set Baud Rate for input and output
-    if (!baud_rate.empty()) {
-        if (baud_rate.compare("19200")) {
-            cfsetospeed(&tty, B19200);
-            cfsetispeed(&tty, B19200);
-        } else if (baud_rate.compare("38400")) {
-            cfsetospeed(&tty, B38400);
-            cfsetispeed(&tty, B38400);
-        } else {
-            // default 
-            cfsetospeed(&tty, BAUD_RATE);
-            cfsetispeed(&tty, BAUD_RATE);
-        }
-    } else {
-        cfsetospeed(&tty, BAUD_RATE);
-        cfsetispeed(&tty, BAUD_RATE);
-    }
+    cfsetospeed(&tty, speed);
+    cfsetispeed(&tty, speed);
     
     // CSIZE: 8 bits per byte (CS8)
     tty.c_cflag &= ~CSIZE;
