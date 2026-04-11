@@ -214,57 +214,43 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     char buffer[BUFFER_SIZE + 1];
     memset(buffer, '\0', BUFFER_SIZE + 1);
 
-    // temp storage space
-    char incomingByte[2];
-    memset(incomingByte, '\0', 2);
-    long max_len = 1;
-    bool foundEnd = false;
-    bool isBufferFull = false;
     int i = 0;
     int loop_count = 0;
-    
-    // reset
-    errno = 0;
-    int n;
-    while (!foundEnd && !isBufferFull && loop_count < MAX_READ_COUNT
-        && (n = read(fd, incomingByte, max_len)) ) {
+    bool foundEnd = false;
 
-        if (n == 0) {
-            // end of file
-            // TODO what to do?
-        } else if (n == -1) {
-            // read error, so sleep and try again
-            usleep(READ_SLEEP_DELAY);
-        }
+    // temp storage space
+    while (!foundEnd && i < (BUFFER_SIZE - 1) && loop_count < MAX_READ_COUNT) {
 
-        if (errno == EAGAIN || errno == EWOULDBLOCK) {
-            // This is not necessarily an error, just means no data was available
-            // but since we set VTIME, this should generally not happen unless timeout expires.
-            printf("Read timeout, no data available, waiting %dus.\n", READ_SLEEP_DELAY);
-            usleep(READ_SLEEP_DELAY);
-        }
-        //printf("Found %d %s \n", n, endingChar, incomingByte); 
-            
-        // we have data so lets make sure it is something ascii
-        if (n > 0 && strlen(incomingByte) > 0) {
+        char incomingByte;
+        int n = read(fd, &incomingByte, 1);
+        
+        if (n > 0) {
+
+            // Reset loop count when we actually get data
             bool isCharacter = ((int)incomingByte[0] >= 32 && (int)incomingByte[0] < 127);
-            isBufferFull = (i >= (BUFFER_SIZE - 1));
-            //printf("Character %d %s %s\n", isCharacter, endingChar, incomingByte); 
-            if (isCharacter && !isBufferFull) {
-                buffer[i] = incomingByte[0];
-                if (isBinaryReply && strlen(incomingByte) > 0) {
-                    foundEnd = true;
-                } else if (hasEnding && endingChar[0] == incomingByte[0]) {
+            if (isCharacter) {
+                loop_count = 0; 
+                buffer[i++] = incomingByte;
+
+                if (isBinaryReply) {
+                    // Binary commands: return immediately on '0' or '1'
+                    if (incomingByte == '0' || incomingByte == '1') {
+                        foundEnd = true;
+                    } // Text mode: stop at '#' or specified delimiter
+                } else if (incomingByte == '#') {
                     foundEnd = true;
                 }
-                i++;
             }
-        }
+        } else {
+            // No data available: sleep and increment attempts
+            usleep(READ_SLEEP_DELAY);
+            perror("Error reading from serial port");
+        }             
         loop_count++;
     }
     
-    if (strlen(buffer) > 0) {
-        return Napi::String::New(env, buffer);
+    if (i > 0) {
+        return Napi::String::New(env, buffer, i);
     }
     
     return env.Undefined();
