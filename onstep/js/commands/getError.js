@@ -27,6 +27,21 @@ Code	Symbol	Meaning
 23	CE_SLEW_ERR_UNSPECIFIED	Other slew error
 25	CE_1	Explicit true/success
 */
+const COMMANDS_WITH_DECIMAL_REPLY = [
+  ':GE#'
+];
+
+const checkCommandsWithDecimalReply = command => {
+    const results = COMMANDS_WITH_DECIMAL_REPLY.find(item => {
+        return command.startsWith(item);
+    });
+    return (results?.length > 0);
+};
+
+export default checkCommandsWithDecimalReply;
+
+
+
 
 
 
