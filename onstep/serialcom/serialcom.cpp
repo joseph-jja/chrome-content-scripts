@@ -19,7 +19,7 @@
 // multiply these to times each other
 // to see how long to wait when no data is to read
 // so that we do not try to read forever
-#define READ_SLEEP_DELAY  200 // micro second delay between reads
+#define READ_SLEEP_DELAY  100 // micro second delay between reads
 #define MAX_READ_COUNT 250   // number of times to try to read in data
 
 // Global file stream (for simplicity; real apps might manage this per-instance or context)
