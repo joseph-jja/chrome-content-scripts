@@ -16,7 +16,7 @@ import {
     ASTRONOMY_API
 } from '#server/config.js';
 
-import COMMANDS_WITH_NO_REPLY from '#server/data/noReplayCommands.js';
+import checkCommandsWithNoReply from '#server/data/noReplayCommands.js';
 
 const basedir = process.cwd();
 
@@ -156,18 +156,10 @@ server.get('/setup', (req, res) => {
     res.send(`Connection failed, invalid host and port values ${commandOption}`);
 });
 
-const checkNoReply = command => {
-    const results = COMMANDS_WITH_NO_REPLY.find(item => {
-
-        return command.startsWith(item);
-    });
-    return (results?.length > 0);
-};
-
 server.get('/command', (req, res) => {
     const command = req.query?.command;
     // values NOT in this array then 
-    const returnsData = !checkNoReply(command);
+    const returnsData = !checkCommandsWithNoReply(command);
     if (Connection?.isConnected() && command) {
         const decodedCommand = decodeURIComponent(command);
         if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
