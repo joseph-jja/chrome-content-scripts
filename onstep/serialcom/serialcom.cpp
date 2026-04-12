@@ -19,8 +19,10 @@
 // multiply these to times each other
 // to see how long to wait when no data is to read
 // so that we do not try to read forever
-#define READ_SLEEP_DELAY  100 // micro second delay between reads
-#define MAX_READ_COUNT 250   // number of times to try to read in data
+// also multiply by VTIME 
+// this will calculate timeout 60 * 10 + 60 * 0.25 = 600ms + 15s 
+#define READ_SLEEP_DELAY  10 // micro second delay between reads
+#define MAX_READ_COUNT 60   // number of times to try to read in data 
 
 // Global file stream (for simplicity; real apps might manage this per-instance or context)
 int fd = -1;
