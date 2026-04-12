@@ -57,5 +57,11 @@ const COMMANDS_WITH_NO_REPLY = [
     ':U#'
 ];
 
+const checkCommandsWithNoReply = command => {
+    const results = COMMANDS_WITH_NO_REPLY.find(item => {
+        return command.startsWith(item);
+    });
+    return (results?.length > 0);
+};
 
-export default COMMANDS_WITH_NO_REPLY;
+export default checkCommandsWithNoReply;
