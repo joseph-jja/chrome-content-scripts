@@ -92,9 +92,9 @@ int configure_port(int fd, speed_t speed) {
 
     // --- Setting Control Characters (VMIN/VTIME) ---
     // VMIN = 0: Minimum number of characters to read (0 means don't wait for minimum)
-    // VTIME = 10: Timeout in 10 * 0.1 seconds (1.0 second) for non-canonical read
+    // VTIME = 10: Timeout in 2.5 * 0.1 seconds (0.25 second) for non-canonical read
     tty.c_cc[VMIN]  = 0;
-    tty.c_cc[VTIME] = 10; // Timeout = 1.0 second
+    tty.c_cc[VTIME] = 2.5; // Timeout = 0.25 second
 
     // Flush pending data and apply the new configuration
     if (tcsetattr(fd, TCSANOW, &tty) != 0) {
