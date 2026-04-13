@@ -211,6 +211,17 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
         }
     } 
 
+    int readLen = BUFFER_SIZE - 1;
+    bool hasReadLengthSet = false;
+    if (info.Length() > 2 && !info[2].IsNull() && info[2].IsNumber()) {
+        int32_t len = info[2].As<Napi::Number>().Int32Value();
+        hasReadLengthSet = true;
+        if (len > 0 && len < readLen) {
+            readLen = (int)len;
+        }
+    }
+
+
     // output buffer
     char buffer[BUFFER_SIZE + 1];
     memset(buffer, '\0', BUFFER_SIZE + 1);
@@ -220,7 +231,7 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
     bool foundEnd = false;
 
     // temp storage space
-    while (!foundEnd && i < (BUFFER_SIZE - 1) && loop_count < MAX_READ_COUNT) {
+    while (!foundEnd && i < readLen && loop_count < MAX_READ_COUNT) {
 
         char incomingByte;
         int n = read(fd, &incomingByte, 1);
@@ -238,6 +249,8 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
                     if (incomingByte == '0' || incomingByte == '1') {
                         foundEnd = true;
                     } // Text mode: stop at '#' or specified delimiter
+                } else if (hasReadLengthSet && i >= readLen) {
+                    foundEnd = true;
                 } else if (hasEnding && incomingByte == endingChar) {
                     foundEnd = true;
                 }
