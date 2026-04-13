@@ -26,15 +26,15 @@ export default function Connection() {
     const [hostPort, setHostPort] = useState(StorageBox.getItem('hostPort'));
     const [serialPort, setSerialPort] = useState(StorageBox.getItem('serialPort'));
     const [serialOrHostPortError, setSerialOrHostPortError] = useState('');
-  
+
     useEffect(() => {
-        if (electron?.config?.device) { 
+        if (electron?.config?.device) {
             setSerialPort(electron?.config?.device);
-        } else if (electron?.config?.hostPost) { 
+        } else if (electron?.config?.hostPost) {
             setHostPort(electron?.config?.hostPost);
         }
     }, []);
-    
+
     const setSerialPortField = (event) => {
         setSerialPort(event?.target?.value);
     }
@@ -42,22 +42,47 @@ export default function Connection() {
         setHostPort(event?.target?.value);
     }
 
-    const remoteConnect= (connectString) => {
+    const remoteConnect = (connectString) => {
         setupConnection(connectString).then(data => {
-            setSerialOrHostPortError(data);  
-            daisyChainBooleanCommands([':GVP#', ':GVN#', ':GVD#', ':GVT#']).then(results => {
+            setSerialOrHostPortError(data);
+            daisyChainBooleanCommands([{
+                    command: ':GVP#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                },
+                {
+                    command: ':GVN#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                },
+                {
+                    command: ':GVD#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                },
+                {
+                    command: ':GVT#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                }
+            ]).then(results => {
+
                 const content = [data].concat(results);
                 setSerialOrHostPortError(content);
             }).catch(err => {
                 setSerialOrHostPortError(data + err);
-            });  
+            });
         }).catch(e => {
             setSerialOrHostPortError(e);
         });
     }
-    
+
     const sendConnectCommand = () => {
-        if (hostPort && hostPort.match(HOST_PORT_RE)) { 
+        if (hostPort && hostPort.match(HOST_PORT_RE)) {
             setSerialOrHostPortError('');
             StorageBox.setItem('hostPort', hostPort);
             StorageBox.deleteItem('serialPort');
@@ -75,15 +100,15 @@ export default function Connection() {
             setSerialOrHostPortError('Invalid host CustomFieldsetand port or COM / tty port entered!');
         }
     }
-    
+
     const sendDisconnectCommand = () => {
         teardownConnection().then(data => {
-            setSerialOrHostPortError(data);    
+            setSerialOrHostPortError(data);
         }).catch(e => {
             setSerialOrHostPortError(e);
         });
     }
-    
+
     return (
         <CustomFieldset legendtext="Connection">
             <CustomInput type="text" labelText="Host:Port"

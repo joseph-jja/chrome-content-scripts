@@ -14,7 +14,7 @@ export default function ErrorMessage(props) {
                     <span class="errorField">{item}</span>
                 ))}
             </>
-        );    
+        );
     } else {
         return null;
     }

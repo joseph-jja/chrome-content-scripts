@@ -19,8 +19,15 @@ export async function daisyChainBooleanCommands(commands = []) {
     let success = true;
     const response = [];
     while (i < end && success) {
-        const cmd = commands[i];
-        const [err, result] = await PromiseWrapper(sendCommand(cmd));
+        const {
+            command,
+            isBoolean,
+            hasResponse,
+            terminatorCharacter,
+            maxReadLength
+        } = commands[i];
+        const [err, result] = await PromiseWrapper(sendCommand(command = '', isBoolean,
+            hasResponse, terminatorCharacter, maxReadLength));
         if (err) {
             success = false;
             response.push(err);
@@ -28,7 +35,7 @@ export async function daisyChainBooleanCommands(commands = []) {
         } else {
             response.push(result);
         }
-        sleep(250);
+        sleep(50);
         i++;
     }
     return response;

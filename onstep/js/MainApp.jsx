@@ -30,7 +30,7 @@ export default function MainApp() {
         setTabField(event?.target?.id);
     }
 
-    return ( 
+    return (
         <>
             <CustomButton id="setup" 
                 enabled={tabField === 'setup'}

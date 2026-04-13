@@ -10,7 +10,9 @@ import {
 import StorageBox from "js/storage/StorageBox.js";
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
-const { useState } = React;
+const {
+    useState
+} = React;
 
 // TODO figure out how this would work cross platform
 export default function MovememtRates() {
@@ -34,7 +36,7 @@ export default function MovememtRates() {
             StorageBox.setItem('move', targetId);
         } else if (targetId === 'move-slew') {
             cmd = ':RS#';
-            setMoveToggle(targetId); 
+            setMoveToggle(targetId);
             StorageBox.setItem('move', targetId);
         } else if (targetId === 'go-home') {
             cmd = ':hC#';
@@ -51,7 +53,7 @@ export default function MovememtRates() {
         }
     };
 
-    return ( 
+    return (
         <Container class="wrapper">
             <CustomFieldset legendtext="Move Rate">
                 <CustomButton id="move-guide" 

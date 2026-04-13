@@ -9,7 +9,9 @@ import {
 } from 'js/utils/commandUtils.js';
 import StorageBox from "js/storage/StorageBox.js";
 
-const { useState } = React;
+const {
+    useState
+} = React;
 
 // TODO figure out how this would work cross platform
 export default function ToggleTracking() {
@@ -33,15 +35,15 @@ export default function ToggleTracking() {
             StorageBox.setItem('tracking', targetId);
         } else if (targetObj === 'disable-refraction-tracking') {
             cmd = ':Tn#';
-            setTrackingToggle(targetObj); 
+            setTrackingToggle(targetObj);
             StorageBox.setItem('tracking', targetId);
         } else if (targetObj === 'enable-dualaxis-tracking') {
             cmd = ':T2#';
-            setTrackingToggle(targetObj); 
+            setTrackingToggle(targetObj);
             StorageBox.setItem('tracking', targetId);
         } else if (targetObj === 'disable-dualaxis-tracking') {
             cmd = ':T1#';
-            setTrackingToggle(targetObj); 
+            setTrackingToggle(targetObj);
             StorageBox.setItem('tracking', targetId);
         }
         if (cmd) {
@@ -57,7 +59,7 @@ export default function ToggleTracking() {
         }
     };
 
-    return ( 
+    return (
         <Container class="wrapper">
             <CustomFieldset legendtext="Tracking">
                 <CustomButton id="tracking-enable" 

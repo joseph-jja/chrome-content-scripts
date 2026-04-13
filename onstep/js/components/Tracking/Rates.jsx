@@ -11,11 +11,13 @@ import {
 } from 'js/utils/commandUtils.js';
 import StorageBox from "js/storage/StorageBox.js";
 
-const { useState } = React;
+const {
+    useState
+} = React;
 
 const TRACKING_RATE_BACKLASH = [];
-for ( let i = 2; i <= 50; i++) {
-   TRACKING_RATE_BACKLASH.push(`${i}`.padStart(3, '0'));
+for (let i = 2; i <= 50; i++) {
+    TRACKING_RATE_BACKLASH.push(`${i}`.padStart(3, '0'));
 }
 
 // TODO figure out how this would work cross platform
@@ -74,8 +76,8 @@ export default function Rates() {
             }
         }
     };
-    
-    return ( 
+
+    return (
         <>
             <Container class="wrapper">
                 <CustomFieldset legendtext="Sidreal Tracking">

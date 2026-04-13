@@ -21,30 +21,30 @@ export default function Location() {
     const [latitude, setLatitude] = useState(StorageBox.getItem('latitude'));
     const [longitude, setLongitude] = useState(StorageBox.getItem('longitude'));
     const [offsetField, setOffsetField] = useState(null);
-    const [latitudeLongitudeError, setLatitudeLongitudeError] = useState('');    
+    const [latitudeLongitudeError, setLatitudeLongitudeError] = useState('');
 
     useEffect(() => {
         const now = new Date();
         const offset = now.getTimezoneOffset() / 60;
-        if (electron?.config?.latitude) { 
+        if (electron?.config?.latitude) {
             setLatitude(electron?.config?.latitude);
         }
-        if (electron?.config?.longitude) { 
-            if (electron?.config?.longitude.startsWith('-')) { 
+        if (electron?.config?.longitude) {
+            if (electron?.config?.longitude.startsWith('-')) {
                 setLongitude('+' + electron?.config?.longitude.substring(1));
-            } else if (electron?.config?.longitude.startsWith('+')) { 
+            } else if (electron?.config?.longitude.startsWith('+')) {
                 setLongitude('-' + electron?.config?.longitude.substring(1));
             } else {
                 setLongitude('-' + electron?.config?.longitude.substring(1));
             }
         }
-        if (electron?.config?.offset) { 
+        if (electron?.config?.offset) {
             setOffsetField(electron?.config?.offset);
         } else {
             setOffsetField(offset);
         }
     }, []);
-    
+
     const setField = (event) => {
         const fieldName = event?.target?.name;
         const value = event?.target?.value || null;
@@ -66,7 +66,8 @@ export default function Location() {
     }
 
     const sendSaveCommand = async () => {
-        let haveLat = false, haveLong = false;
+        let haveLat = false,
+            haveLong = false;
         if (latitude && latitude.length >= 0 && latitude.match(VALID_LAT_LONG_RE)) {
             haveLat = true;
         }
@@ -77,10 +78,41 @@ export default function Location() {
             // send message
             // latitude => :StsDD*MM#
             // longitude => :SgDDD*MM#
-            const commands = [`:St${latitude}#`, ':Gt#', `:Sg${longitude}#`, ':Gg#', ':GG#'];
+            const commands = [{
+                    command: `:St${latitude}#`,
+                    isBoolean: true,
+                    hasResponse: true
+                },
+                {
+                    command: ':Gt#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                },
+                {
+                    command: `:Sg${longitude}#`,
+                    isBoolean: true,
+                    hasResponse: true
+                },
+                {
+                    command: ':Gg#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                }
+            ];
             if (offsetField) {
-                commands.push(`:SG${offsetField}#`);
-                commands.push(':GG#');
+                commands.push({
+                    command: `:SG${offsetField}#`,
+                    isBoolean: true,
+                    hasResponse: true
+                });
+                commands.push({
+                    command: ':GG#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                });
             }
             const results = await daisyChainBooleanCommands(commands);
             setLatitudeLongitudeError(results);
@@ -94,9 +126,9 @@ export default function Location() {
         const results = await daisyChainBooleanCommands(commands);
         setLatitudeLongitudeError(results);
     }
-    
+
     return (
-            <CustomFieldset legendtext="Location">
+        <CustomFieldset legendtext="Location">
                 <CustomInput type="text" labelText="Latitude" size="10"
                     id="latitude" name="latitude" inputValue={latitude}
                     placeholderText="+/-xx*yyy"
@@ -119,9 +151,6 @@ export default function Location() {
                 <br/>
                 <CustomButton id="lat-long" onButtonClick={sendSaveCommand}>Set</CustomButton>
                 <CustomButton id="get-lat-long" onButtonClick={getLatLong}>Get</CustomButton>
-            </CustomFieldset>  
+            </CustomFieldset>
     );
 }
-            
-            
-            

@@ -6,7 +6,7 @@ import {
     getCommandList
 } from 'js/api/request.js';
 import StorageBox from "js/storage/StorageBox.js";
-import { 
+import {
     safeParse,
     safeStringify
 } from 'js/utils/jsonUtils.js';
@@ -37,7 +37,7 @@ function useCommandList() {
                 storageBox.set(ONSTEP_OPTIONS_LIST_NAME, safeStringify(formattedData));
             }).catch(e => console.error(e));
         } else {
-                setData(safeParse(apiData));
+            setData(safeParse(apiData));
         }
     }, []);
     return data;
@@ -45,11 +45,11 @@ function useCommandList() {
 
 export default function AllCommandsList() {
     const [options, setOptions] = useState(null);
-    const data = useCommandList(); 
-    
+    const data = useCommandList();
+
     const selectionFieldChange = (event) => {
-    
-    
+
+
     }
 
     return (
@@ -66,4 +66,3 @@ export default function AllCommandsList() {
             </CustomSelect>
     )
 }
-

@@ -8,19 +8,21 @@ import {
     daisyChainBooleanCommands
 } from 'js/utils/commandUtils.js';
 
-const { useState } = React;
+const {
+    useState
+} = React;
 
 const formatDate = (dateIn = new Date()) => {
     const month = `${dateIn.getMonth() + 1}`;
-    const day = `${dateIn.getDate()}`;    
+    const day = `${dateIn.getDate()}`;
     const year = `${dateIn.getFullYear()}`;
     return `${month.padStart(2, '0')}/${day.padStart(2, '0')}/${year.substring(2)}`;
 };
 
 const formatTime = (dateIn = new Date()) => {
     const hours = `${dateIn.getHours()}`;
-    const minutes = `${dateIn.getMinutes()}`;    
-    const seconds = `${dateIn.getSeconds()}`;    
+    const minutes = `${dateIn.getMinutes()}`;
+    const seconds = `${dateIn.getSeconds()}`;
     return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
 };
 
@@ -59,15 +61,15 @@ export default function DateTime() {
             setDateTimeErrorField('Invalid date and / or time entered!');
         }
     }
-    
+
     const getDateTime = async () => {
         const commands = [':GC#', ':GL#'];
         const results = await daisyChainBooleanCommands(commands);
         setDateTimeErrorField(results);
     }
-    
+
     return (
-            <CustomFieldset legendtext="Time and Date">
+        <CustomFieldset legendtext="Time and Date">
                 <CustomInput type="text" labelText="Enter Date" size="12"
                     id="date-field" name="date_field" inputValue={dateField}
                     placeholderText="MM/DD/YY"
@@ -86,5 +88,3 @@ export default function DateTime() {
              </CustomFieldset>
     );
 }
-
-

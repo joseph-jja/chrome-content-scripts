@@ -9,17 +9,19 @@ import {
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
-const { useState } = React;
+const {
+    useState
+} = React;
 
 export default function CustomCommand() {
     const [commandField, setCommandField] = useState(null);
     const [commandFieldError, setCommandFieldError] = useState(null);
-        
+
     const setCommandFromForm = (event) => {
         const value = event?.target?.value;
         setCommandField(value);
     }
-    
+
     const sendCommandToServer = async () => {
         if (commandField) {
             setCommandFieldError('');
@@ -29,7 +31,7 @@ export default function CustomCommand() {
             setCommandFieldError('Invalid command entered!');
         }
     }
-        
+
     return (
         <Container class="wrapper">
             <CustomInput type="text" labelText="Enter command" size="12"

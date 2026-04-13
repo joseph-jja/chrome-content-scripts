@@ -13,8 +13,10 @@ const {
 
 export default function Status() {
     const storageBox = useSyncExternalStore(StorageBox.subscribe, StorageBox.getSnapshot);
-    console.log({ storageBox });
-    
+    console.log({
+        storageBox
+    });
+
     return (
         <>
             Status: {storageBox.entries().map((item) => (

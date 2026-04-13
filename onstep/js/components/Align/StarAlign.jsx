@@ -14,7 +14,7 @@ import {
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 import StorageBox from "js/storage/StorageBox.js";
 import {
-   ASTRONOMY_API
+    ASTRONOMY_API
 } from 'js/storage/StorageBox.js';
 import {
     safelyParse
@@ -27,8 +27,8 @@ const {
 
 const STAR_ALIGN = [];
 const coords = [];
-for ( let i = 1; i <= 9; i++) {
-   STAR_ALIGN.push(`:A${i}#`);
+for (let i = 1; i <= 9; i++) {
+    STAR_ALIGN.push(`:A${i}#`);
 }
 
 export default function ToggleTracking() {
@@ -37,14 +37,14 @@ export default function ToggleTracking() {
     const [altitude, setAltitude] = useState('');
     const [rightAscention, setRightAscention] = useState('');
     const [declination, setDeclination] = useState('');
-               
+
     const setAzimuthField = (event) => {
         const fieldName = event?.target?.name;
         if (!fieldName) {
             return;
         }
         const value = event?.target?.value || null;
-        setAzimuth( value );
+        setAzimuth(value);
     };
 
     const setAltitudeField = (event) => {
@@ -53,9 +53,9 @@ export default function ToggleTracking() {
             return;
         }
         const value = event?.target?.value || null;
-        setAltitude( value );
+        setAltitude(value);
     };
-    
+
     const searchLocation = (event) => {
         const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
         if (!altitude || !azimuth) {
@@ -69,9 +69,9 @@ export default function ToggleTracking() {
             return;
         }
         const now = new Date();
-        const { 
-           ra,
-           dec
+        const {
+            ra,
+            dec
         } = window.altAzToRaDec(altitude, azimuth, latitude, longitude, now);
         setRightAscention('RA: ' + ra);
         setDeclination('DEC: ' + dec);
@@ -115,7 +115,7 @@ export default function ToggleTracking() {
             }
         }
     };
-    
+
     // 	:AW# - save align
     // 	:Ax# - align x stars
     //  :A+# - accept

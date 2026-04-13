@@ -9,9 +9,11 @@ import {
 } from 'js/utils/commandUtils.js';
 import StorageBox from "js/storage/StorageBox.js";
 
-const { useState } = React;
+const {
+    useState
+} = React;
 
-const DOBSONIAN_COLLIMATION_ALTITUDE = 	':Sa+00:00:00#';
+const DOBSONIAN_COLLIMATION_ALTITUDE = ':Sa+00:00:00#';
 const DOBSONIAN_COLLIMATION_AZMIUTH = ':Szs00:00:00#';
 
 // TODO figure out how this would work cross platform
@@ -49,7 +51,8 @@ export default function CollimationPosition() {
     }
 
     const setCoordinates = async (event) => {
-        let haveAlt = false, haveAz = false;
+        let haveAlt = false,
+            haveAz = false;
         if (azHome && azHome.length >= 0) {
             haveAz = true;
         }
@@ -63,14 +66,14 @@ export default function CollimationPosition() {
             setHomeSyncError(results);
         }
     };
-    
+
     const getCoordinates = async (event) => {
         const commands = [':GZ#', ':GA#'];
         const results = await daisyChainBooleanCommands(commands);
         setHomeSyncError(results);
     };
 
-    return ( 
+    return (
         <CustomFieldset legendtext="Move To Position">
             <CustomInput type="text" labelText="Set Azimuth" size="12"
                 id="azHome" name="azHome" inputValue={azHome}

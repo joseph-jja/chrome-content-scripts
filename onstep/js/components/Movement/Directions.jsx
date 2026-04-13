@@ -9,14 +9,16 @@ import {
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
-const { useState } = React;
+const {
+    useState
+} = React;
 
 // TODO figure out how this would work cross platform
 export default function Directions() {
     const [direction, setDirection] = useState(null);
     const [directionError, setDirectionError] = useState(null);
     const [stopError, setStopError] = useState(null);
-    
+
     const setMovementValue = async (event) => {
         const targetObj = event?.target?.id;
         let cmd;
@@ -45,7 +47,7 @@ export default function Directions() {
             }
         }
     };
-    
+
     const setStopMovementValue = async (event) => {
         const targetObj = event?.target?.id;
         let cmd;
@@ -75,7 +77,7 @@ export default function Directions() {
         }
     };
 
-    return ( 
+    return (
         <Container class="wrapper">
             <CustomFieldset legendtext="Start Movement">
                 <table>
