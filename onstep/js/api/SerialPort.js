@@ -58,7 +58,7 @@ export default class SerialPort extends DeviceConnection {
             // no response necessary
             if (!hasResponse) {
                 // return how much data was written out
-                return resolve(writtenByteCount);
+                return resolve('no reply');
             }
 
             try {
