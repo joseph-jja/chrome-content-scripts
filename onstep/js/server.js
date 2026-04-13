@@ -162,17 +162,26 @@ server.get('/setup', (req, res) => {
 });
 
 server.get('/command', (req, res) => {
-    const command = req.query?.command;
-    // values NOT in this array then 
-    const returnsData = !checkCommandsWithNoReply(command);
+
+    // client needs to tell us some things
+    const command = decodeURIComponent(req.query?.command || '');
+    const isBoolean = !!(req.query?.isBoolean || false);
+    const hasResponse = !!(req.query?.hasResponse || false);
+    const terminatorCharacter = req.query?.terminatorCharacter;
+    const maxReadLength = req.query?.maxReadLength;
+    
     if (Connection?.isConnected() && command) {
-        const decodedCommand = decodeURIComponent(command);
-        if (decodedCommand.startsWith(':') && decodedCommand.endsWith('#')) {
-            const expectResponse = (typeof returnsData === 'boolean' ? returnsData : true);
-            console.log('Should be returning data? ', returnsData, expectResponse);
-            Connection.sendCommand(decodedCommand, expectResponse).then(resp => {
+
+        if (command.startsWith(':') && command.endsWith('#')) {
+        
+            console.log('Should be returning data? ', hasResponse, isBoolean, terminatorCharacter);
+            
+            Connection.sendRecieveCommand(command, hasResponse,
+                isBoolean, terminatorCharacter, maxReadLength).then(resp => {
+                
                 console.log('Command sent ', decodedCommand, ' response: ' + resp);
                 res.send('Command response: ' + resp);
+                
             }).catch(e => {
                 console.log('Failed to send command');
                 res.send('Command failed: ' + e);
