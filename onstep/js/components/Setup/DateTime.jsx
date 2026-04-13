@@ -55,7 +55,28 @@ export default function DateTime() {
             // and send to server
             // 	:SCMM/DD/YY#
             // 	:SLHH:MM:SS#
-            const results = await daisyChainBooleanCommands([`:SC${dateField}#`, ':GC#', `:SL${timeField}#`, ':GL#']);
+            const results = await daisyChainBooleanCommands([{
+                    command: `:SC${dateField}#`,
+                    isBoolean: true,
+                    hasResponse: true
+                },
+                {
+                    command: ':GC#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                }, {
+                    command: `:SL${timeField}#`,
+                    isBoolean: true,
+                    hasResponse: true
+                },
+                {
+                    command: ':GL#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                }
+            ]);
             setDateTimeErrorField(results);
         } else {
             setDateTimeErrorField('Invalid date and / or time entered!');
@@ -63,7 +84,17 @@ export default function DateTime() {
     }
 
     const getDateTime = async () => {
-        const commands = [':GC#', ':GL#'];
+        const commands = [{
+            command: ':GC#',
+            isBoolean: false,
+            hasResponse: true,
+            terminatorCharacter: '#'
+        }, {
+            command: ':GL#',
+            isBoolean: false,
+            hasResponse: true,
+            terminatorCharacter: '#'
+        }];
         const results = await daisyChainBooleanCommands(commands);
         setDateTimeErrorField(results);
     }

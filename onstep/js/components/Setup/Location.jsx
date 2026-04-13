@@ -122,7 +122,22 @@ export default function Location() {
     }
 
     const getLatLong = async () => {
-        const commands = [':Gt#', ':Gg#', ':GG#'];
+        const commands = [{
+            command: ':Gt#',
+            isBoolean: false,
+            hasResponse: true,
+            terminatorCharacter: '#'
+        }, {
+            command: ':Gg#',
+            isBoolean: false,
+            hasResponse: true,
+            terminatorCharacter: '#'
+        }, {
+            command: ':GG#',
+            isBoolean: false,
+            hasResponse: true,
+            terminatorCharacter: '#'
+        }];
         const results = await daisyChainBooleanCommands(commands);
         setLatitudeLongitudeError(results);
     }
