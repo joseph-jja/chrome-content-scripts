@@ -39,7 +39,10 @@ export default function Directions() {
             setDirection(targetObj);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd));
+            const [err, results] = await PromiseWrapper(sendCommand({
+                command: cmd,
+                hasResponse: false
+            }));
             if (err || results !== 0) {
                 setDirectionError(err || results);
             } else {
@@ -68,7 +71,10 @@ export default function Directions() {
             setDirection(targetObj);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd));
+            const [err, results] = await PromiseWrapper(sendCommand({
+                command: cmd,
+                hasResponse: false
+            }));
             if (err || results !== 0) {
                 setStopError(err || results);
             } else {

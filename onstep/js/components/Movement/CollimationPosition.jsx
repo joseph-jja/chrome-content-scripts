@@ -26,10 +26,31 @@ export default function CollimationPosition() {
     const [collimateError, setCollimateError] = useState(null);
 
     const setCollimationPosition = async (event) => {
-        const cmds = [
-            DOBSONIAN_COLLIMATION_ALTITUDE,
-            DOBSONIAN_COLLIMATION_AZMIUTH,
-            ':MA#', ':GA#', ':GZ#'
+        const cmds = [{
+                command: DOBSONIAN_COLLIMATION_ALTITUDE,
+                isBoolean: true,
+                hasResponse: true
+            },
+            {
+                command: DOBSONIAN_COLLIMATION_AZMIUTH,
+                isBoolean: true,
+                hasResponse: true
+            },
+            {
+                command: ':MA#',
+                isBoolean: false,
+                hasResponse: true
+            }, {
+                command: ':GZ#',
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'
+            }, {
+                command: ':GA#',
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'
+            }
         ];
         const results = await daisyChainBooleanCommands(cmds);
         setCollimateError(results);
@@ -61,7 +82,25 @@ export default function CollimationPosition() {
         }
         if (haveAlt && haveAz) {
             // send message
-            const commands = [`:Sz${azHome}#`, ':GZ#', `:Sa${altHome}#`, ':GA#'];
+            const commands = [{
+                command: `:Sz${azHome}#`,
+                isBoolean: true,
+                hasResponse: true
+            }, {
+                command: ':GZ#',
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'
+            }, {
+                command: `:Sa${altHome}#,
+                    isBoolean: true,
+                    hasResponse: true`
+            }, {
+                command: ':GA#',
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'
+            }];
             const results = await daisyChainBooleanCommands(commands);
             setHomeSyncError(results);
         }
