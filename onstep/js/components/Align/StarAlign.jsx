@@ -107,7 +107,9 @@ export default function ToggleTracking() {
         }
         const cmd = targetObj.options[targetObj.selectedIndex].value.trim();
         if (cmd && cmd.length > 0) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd));
+            const [err, results] = await PromiseWrapper(sendCommand({
+                command: cmd
+            }));
             if (err || results !== 0) {
                 setAlignmentError(err || results);
             } else {
