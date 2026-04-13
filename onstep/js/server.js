@@ -169,19 +169,19 @@ server.get('/command', (req, res) => {
     const hasResponse = !!(req.query?.hasResponse || false);
     const terminatorCharacter = req.query?.terminatorCharacter;
     const maxReadLength = req.query?.maxReadLength;
-    
+
     if (Connection?.isConnected() && command) {
 
         if (command.startsWith(':') && command.endsWith('#')) {
-        
+
             console.log('Should be returning data? ', hasResponse, isBoolean, terminatorCharacter);
-            
+
             Connection.sendRecieveCommand(command, hasResponse,
                 isBoolean, terminatorCharacter, maxReadLength).then(resp => {
-                
+
                 console.log('Command sent ', decodedCommand, ' response: ' + resp);
                 res.send('Command response: ' + resp);
-                
+
             }).catch(e => {
                 console.log('Failed to send command');
                 res.send('Command failed: ' + e);

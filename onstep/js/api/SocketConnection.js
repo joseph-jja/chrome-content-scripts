@@ -10,10 +10,10 @@ export default class SocketConnection extends DeviceConnection {
     #terminatorCharacter = undefined;
     #maxReadLength = undefined;
     #isBinary = false;
-    
+
     #readLimitMaxCount = 10;
     #readCount = 0;
-        
+
     constructor() {
         super();
         this.data = [];
@@ -43,7 +43,7 @@ export default class SocketConnection extends DeviceConnection {
                 this.data.push(results);
 
                 const cdata = this.data.join('').trim();
-                
+
                 if (this.#isBinary && cdata.length > 0) {
                     this.emit('readEnd');
                 } else if (this.#terminatorCharacter) {
@@ -54,7 +54,7 @@ export default class SocketConnection extends DeviceConnection {
                     }
                 } else if (this.#maxReadLength &&
                     Number.isInteger(this.#maxReadLength)) {
-                    
+
                     if (cdata.length >= this.#maxReadLength) {
                         this.emit('readEnd');
                     }
@@ -76,11 +76,11 @@ export default class SocketConnection extends DeviceConnection {
             if (!this.device) {
                 return reject('Not connected!');
             }
-            
+
             this.#isBinary = isBinary;
 
             this.#terminatorCharacter = terminatorCharacter;
-            
+
             this.#maxReadLength = maxReadLength;
 
             if (hasResponse) {
@@ -89,7 +89,7 @@ export default class SocketConnection extends DeviceConnection {
                     return resolve(this.data.join(''));
                 });
             }
-            
+
             this.device.write(command);
             if (!hasResponse) {
                 return resolve('no reply');
