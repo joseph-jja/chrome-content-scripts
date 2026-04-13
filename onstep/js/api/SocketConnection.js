@@ -7,10 +7,16 @@ import checkZeroResponse from '#server/data/zeroOneReply.js';
 
 export default class SocketConnection extends DeviceConnection {
 
+    #terminatorCharacter = undefined;
+    #maxReadLength = undefined;
+    #isBinary = false;
+    
+    #readLimitMaxCount = 10;
+    #readCount = 0;
+        
     constructor() {
         super();
         this.data = [];
-        this.endsWithHash = false;
     }
 
     connect(options) {
@@ -36,17 +42,27 @@ export default class SocketConnection extends DeviceConnection {
                 const results = msg.toString()
                 this.data.push(results);
 
-                // TODO test this more
-                if (this.endsWithHash) {
-                    const cdata = this.data.join('').trim();
-                    //console.log(cdata, "\n");
-                    //console.log (cdata.charAt(cdata.length - 1));
-                    if (cdata.charAt(cdata.length - 1) === '#') {
+                const cdata = this.data.join('').trim();
+                
+                if (this.#isBinary && cdata.length > 0) {
+                    this.emit('readEnd');
+                } else if (this.#terminatorCharacter) {
+
+                    if (cdata.includes(this.#terminatorCharacter)) {
                         //console.log("emitting");
                         this.emit('readEnd');
                     }
-                } else if (this.data?.length > 0) {
-                    this.emit('readEnd');
+                } else if (this.#maxReadLength &&
+                    Number.isInteger(this.#maxReadLength)) {
+                    
+                    if (cdata.length >= this.#maxReadLength) {
+                        this.emit('readEnd');
+                    }
+                } else {
+                    if (this.#readCount > this.#readLimitMaxCount) {
+                        this.emit('readEnd');
+                    }
+                    this.#readCount++;
                 }
             });
         });
@@ -60,17 +76,22 @@ export default class SocketConnection extends DeviceConnection {
             if (!this.device) {
                 return reject('Not connected!');
             }
+            
+            this.#isBinary = isBinary;
 
-            if (returnsData && !checkZeroResponse(command)) {
-                this.endsWithHash = true;
+            this.#terminatorCharacter = terminatorCharacter;
+            
+            this.#maxReadLength = maxReadLength;
+
+            if (hasResponse) {
+                this.#readCount = 0;
+                this.once('readEnd', () => {
+                    return resolve(this.data.join(''));
+                });
             }
-
-            this.once('readEnd', () => {
-                return resolve(this.data.join(''));
-            });
+            
             this.device.write(command);
-            if (!returnsData) {
-                this.removeAllListeners('readEnd');
+            if (!hasResponse) {
                 return resolve('no reply');
             }
         });
