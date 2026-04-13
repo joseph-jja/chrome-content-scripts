@@ -51,7 +51,18 @@ export default function Rates() {
             setTrackingRate(targetObj);
         }
         if (cmd) {
-            const [err, results] = await daisyChainBooleanCommands([cmd, ':GT#']);
+            const [err, results] = await daisyChainBooleanCommands([{
+                    command: cmd,
+                    isBoolean: false,
+                    hasResponse: false
+                },
+                {
+                    command: ':GT#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                }
+            ]);
             if (err || results !== 0) {
                 setTrackingRateError(err || results);
                 StorageBox.setItem('trackingRate', results);

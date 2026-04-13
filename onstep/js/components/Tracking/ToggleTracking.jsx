@@ -47,7 +47,18 @@ export default function ToggleTracking() {
             StorageBox.setItem('tracking', targetId);
         }
         if (cmd) {
-            const [err, results] = await daisyChainBooleanCommands([cmd, ':GT#']);
+            const [err, results] = await daisyChainBooleanCommands([{
+                    command: cmd,
+                    isBoolean: true,
+                    hasResponse: true
+                },
+                {
+                    command: ':GT#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                }
+            ]);
             if (err || results !== 0) {
                 setTrackingError(err || results);
                 setTrackingToggle('tracking-disable');
