@@ -17,7 +17,7 @@ import {
     ASTRONOMY_API
 } from 'js/storage/StorageBox.js';
 import {
-    safelyParse
+    safeParse
 } from 'js/utils/jsonUtils.js';
 
 const {
@@ -76,7 +76,7 @@ export default function ToggleTracking() {
         setRightAscention('RA: ' + ra);
         setDeclination('DEC: ' + dec);
         getStarList(authCode, ra, dec).then(results => {
-            const jsonResults = safelyParse(results)?.data;
+            const jsonResults = safeParse(results)?.data;
             if (jsonResults) {
                 const starList = jsonResults.filter(item => {
                     return (item?.type?.name?.toLowerCase() === 'star');
