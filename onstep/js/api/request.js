@@ -23,7 +23,9 @@ export function setupConnection(commandOption) {
     return request(url);
 }
 
-export function sendCommand(command = '') {
+export function sendCommand(command = '', isBoolean,
+    hasResponse, terminatorCharacter, maxReadLength) {
+
     const url = `/command/?command=${encodeURIComponent(command)}`;
     return request(url);
 }
