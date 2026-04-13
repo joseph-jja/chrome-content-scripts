@@ -39,10 +39,15 @@ const menu = Menu.buildFromTemplate([{
     }]
 }, {
     label: 'Edit',
-    submenu: [
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' }
+    submenu: [{
+            role: 'cut'
+        },
+        {
+            role: 'copy'
+        },
+        {
+            role: 'paste'
+        }
     ]
 }]);
 Menu.setApplicationMenu(menu);
@@ -66,7 +71,7 @@ try {
             CONFIG_DATA[item] = jsonConfigData[item];
         }
     });
-} catch(e) {
+} catch (e) {
     console.error('No config found. Some functionality will be disabled!');
     console.error(e?.message);
 }
@@ -198,11 +203,11 @@ server.get('/listofstars', (req, res) => {
             'Content-Type': 'application/json'
         });
         res.json({
-           'error': 'No configuration found for astronomy api' 
+            'error': 'No configuration found for astronomy api'
         });
         return;
     }
-    
+
     const ra = req.query?.ra;
     const dec = req.query?.dec;
     if (!ra || !dec) {
@@ -210,13 +215,13 @@ server.get('/listofstars', (req, res) => {
             'Content-Type': 'application/json'
         });
         res.json({
-           'error': 'No right ascension or declination passed' 
+            'error': 'No right ascension or declination passed'
         });
         return;
     }
-        
+
     const params = `ra=${ra}&dec=${dec}&limit=25`;
-    
+
     const options = {
         method: 'GET',
         headers: {

@@ -38,13 +38,13 @@ export default class SocketConnection extends DeviceConnection {
 
                 // TODO test this more
                 if (this.endsWithHash) {
-		        const cdata = this.data.join('').trim();
-			    //console.log(cdata, "\n");
-		    //console.log (cdata.charAt(cdata.length - 1));
-		    if (cdata.charAt(cdata.length - 1) === '#') {
-			//console.log("emitting");
+                    const cdata = this.data.join('').trim();
+                    //console.log(cdata, "\n");
+                    //console.log (cdata.charAt(cdata.length - 1));
+                    if (cdata.charAt(cdata.length - 1) === '#') {
+                        //console.log("emitting");
                         this.emit('readEnd');
-		    }
+                    }
                 } else if (this.data?.length > 0) {
                     this.emit('readEnd');
                 }
@@ -52,7 +52,9 @@ export default class SocketConnection extends DeviceConnection {
         });
     }
 
-    sendCommand(command, returnsData = true) {
+    sendCommand(command, hasResponse = true,
+        isBinary = false, terminatorCharacter, maxReadLength) {
+
         return new Promise((resolve, reject) => {
             this.data = [];
             if (!this.device) {

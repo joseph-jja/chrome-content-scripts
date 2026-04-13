@@ -3,8 +3,12 @@ import checkZeroResponse from '#server/data/zeroOneReply.js';
 import checkAsterickResponse from '#server/data/checkAsterickResponse.js';
 
 // so node modules can only use require
-import { createRequire } from 'module';
-import { resolve as pathResolve } from 'node:path';
+import {
+    createRequire
+} from 'module';
+import {
+    resolve as pathResolve
+} from 'node:path';
 const require = createRequire(import.meta.url);
 
 const basedir = process.cwd();
@@ -41,24 +45,27 @@ export default class SerialPort extends DeviceConnection {
         });
     }
 
-    sendCommand(command, returnsData = true) {
+    sendRecieveCommand(command, hasResponse = true,
+        isBinary = false, terminatorCharacter, maxReadLength) {
+
         return new Promise((resolve, reject) => {
 
-            const returnsZeroOrOne = returnsData ? checkZeroResponse(command) : false;
-            const hasEndChar = returnsData && !returnsZeroOrOne ? true : false;
-            const endChar = hasEndChar ? ( checkAsterickResponse(command) ? '*' : '#' ) : false;
-            
-            // we can write data at any time;
-            const writeReturnCode = this.device.write(command);
-            if (+writeReturnCode >= 0) {
-                if (!returnsData) {
-                    return resolve('no reply');
-                }
-                const readData = this.device.read(returnsZeroOrOne, endChar);
-                resolve(readData);
-                
-            } else {
-                reject('ERROR: writing data returned ' + writeReturnCode);
+            const writtenByteCount = this.device.write(command);
+            if (writtenByteCount <= 0) {
+                return reject(writtenByteCount);
+            }
+
+            // no response necessary
+            if (!hasResponse) {
+                // return how much data was written out
+                return resolve(writtenByteCount);
+            }
+
+            try {
+                const data = this.device.read(isBinary, terminatorCharacter, maxReadLength);
+                return resolve(data);
+            } catch (e) {
+                return reject(e);
             }
         });
     }

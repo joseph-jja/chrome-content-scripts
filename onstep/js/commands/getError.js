@@ -28,7 +28,7 @@ Code	Symbol	Meaning
 25	CE_1	Explicit true/success
 */
 const COMMANDS_WITH_DECIMAL_REPLY = [
-  ':GE#'
+    ':GE#'
 ];
 
 const checkCommandsWithDecimalReply = command => {
@@ -39,9 +39,3 @@ const checkCommandsWithDecimalReply = command => {
 };
 
 export default checkCommandsWithDecimalReply;
-
-
-
-
-
-

@@ -1,10 +1,10 @@
 const COMMANDS_WITH_ASTERIC_END_REPLY = [
-  ':Gr#',
-  ':Gd#',
-  ':GZ#',
-  ':GA#',
-  ':GD#',
-  ':GR#'
+    ':Gr#',
+    ':Gd#',
+    ':GZ#',
+    ':GA#',
+    ':GD#',
+    ':GR#'
 ];
 
 

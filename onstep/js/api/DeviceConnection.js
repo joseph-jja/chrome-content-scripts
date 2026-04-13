@@ -22,7 +22,8 @@ export default class DeviceConnection extends EventEmitter {
         throw new Error('Child must implement');
     }
 
-    sendCommand(command, returnsData = true) {
+    sendRecieveCommand(command, hasResponse = true,
+        isBinary = false, terminatorCharacter, maxReadLength) {
         throw new Error('Child must implement');
     }
 }

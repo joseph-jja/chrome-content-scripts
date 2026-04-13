@@ -20,7 +20,7 @@ try {
     Object.keys(jsonConfigData).forEach(item => {
         CONFIG_KEYS[item] = jsonConfigData[item];
     });
-} catch(e) {
+} catch (e) {
     console.error('No config found. Some functionality will be disabled!');
     console.error(e?.message);
 }
