@@ -248,10 +248,11 @@ Napi::Value Read(const Napi::CallbackInfo& info) {
                     // Binary commands: return immediately on '0' or '1'
                     if (incomingByte == '0' || incomingByte == '1') {
                         foundEnd = true;
-                    } // Text mode: stop at '#' or specified delimiter
+                    } 
                 } else if (hasReadLengthSet && i >= readLen) {
                     foundEnd = true;
                 } else if (hasEnding && incomingByte == endingChar) {
+                    // Text mode: stop at '#' or specified delimiter
                     foundEnd = true;
                 }
             }
