@@ -6,7 +6,29 @@ const basedir = process.cwd();
 
 const serialcom = require(basedir + '/build/Release/serialcom.node');
 
-const openResponseCode = serialcom.open('/dev/ttyUSB0', 'B9600');
+const openPort = () => {
+    const ports = ['/dev/ttyUSB0', '/dev/ttyACM0'];
+    let returnCode = -1;
+    ports.forEach(port => {
+        try {
+            rc = serialcom.open(port, 'B9600');
+            if (rc > 0) {
+                returnCode = rc;
+            } else {
+                console.error('Could not open port: ', port);
+            }
+        } catch(e) {
+            console.error(`${e.message}`);
+        }
+    });
+    return returnCode;
+};
+
+const openResponseCode = openPort();
+if (openResponseCode <= 0) {
+    console.error('Could not find port to open!');
+    process.exit(openResponseCode);
+}
 
 const writeResponseCode = serialcom.write(':GVT#');
 const readResponseCode = serialcom.read(false, '#');
