@@ -3,6 +3,10 @@
 ### To build and run this, follow these steps
 * git clone this repo
 * install nodejs if you do not have it installed already, nodejs 18 or later is better
+* cd chrome-content-scripts/onstep/serialcom
+* npm ci
+* npm run build
+* cd .. (should be in chrome-content-scripts/onstep)
 * npm ci
 * npm run webpack
 * npm run start
