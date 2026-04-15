@@ -1,61 +1,66 @@
-import { access } from 'node:fs/promises';
+import {
+    access
+} from 'node:fs/promises';
 import SerialPort from '#server/api/SerialPort.js';
 
 const Connection = new SerialPort();
 
-const TTY_DEVICE = [ '/dev/ttyACM0', '/dev/ttyUSB0' ];
+const TTY_DEVICE = ['/dev/ttyACM0', '/dev/ttyUSB0'];
 
 const getDevice = async () => {
     const devices = TTY_DEVICE.filter(async device => {
-        try { 
+        try {
             const exists = await access(device);
             if (exists) {
                 return true;
             }
-        } catch(_e) {
+        } catch (_e) {
             return false;
         }
         return false;
     });
+    return devices[0];
 };
 
-Connection.connect({ usbDevice: TTY_DEVICE }).then(async resp => {
+const device = await getDevice();
+console.log(device);
+if (!device) {
+    console.log('Error no device found!');
+    process.exit(-1);
+}
 
-    const device = await getDevice();
-    if (!device) {
-        console.log('Error no device found!');
-    }
-    
+Connection.connect({
+    usbDevice: device
+}).then(async resp => {
+
     //console.log('Success to connect', resp, Connection.usbPort, Connection.isConnected); 
     console.log('Success ', resp, Connection.isConnected());
     if (Connection.isConnected()) {
         console.log('We have a usb port and fd', Connection.device);
-    }      
-    
-    try {
-        const res = await Connection.sendCommand(':GC#');
-        console.log(res);
-    } catch(e) {
-        console.log('Command error', e);
     }
-    
+
     try {
-        const res = await Connection.sendCommand(':Qe#', false);
+        const res = await Connection.sendRecieveCommand(':GC#', true, false, '#');
         console.log(res);
-    } catch(e) {
+    } catch (e) {
         console.log('Command error', e);
     }
 
     try {
-        const res = await Connection.sendCommand(':Ga#');
+        const res = await Connection.sendRecieveCommand(':Qe#', false);
         console.log(res);
-    } catch(e) {
+    } catch (e) {
         console.log('Command error', e);
     }
-    
+
+    try {
+        const res = await Connection.sendRecieveCommand(':Ga#', true, false, '#');
+        console.log(res);
+    } catch (e) {
+        console.log('Command error', e);
+    }
+
     await Connection.disconnect();
-}).catch(e => {        
+}).catch(e => {
     console.log('Failed to connect');
 });
-
-

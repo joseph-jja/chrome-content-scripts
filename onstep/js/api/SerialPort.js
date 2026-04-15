@@ -62,8 +62,26 @@ export default class SerialPort extends DeviceConnection {
             }
 
             try {
-                const data = this.device.read(isBinary, terminatorCharacter, maxReadLength);
-                return resolve(data);
+
+                if (isBinary) {
+                    const data = this.device.read(true);
+                    return resolve(data);
+                } else if (terminatorCharacter) {
+                    if (maxReadLength) {
+                        const data = this.device.read(false, terminatorCharacter, maxReadLength);
+                        return resolve(data);
+                    } else {
+                        const data = this.device.read(false, terminatorCharacter);
+                        return resolve(data);
+                    }
+                } else
+                if (maxReadLength) {
+                    const data = this.device.read(false, undefined, maxReadLength);
+                    return resolve(data);
+                } else {
+                    const data = this.device.read(false);
+                    return resolve(data);
+                }
             } catch (e) {
                 return reject(e);
             }
