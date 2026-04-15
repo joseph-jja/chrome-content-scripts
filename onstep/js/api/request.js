@@ -26,7 +26,7 @@ export function setupConnection(commandOption) {
 export function sendCommand(command = '', isBoolean,
     hasResponse, terminatorCharacter, maxReadLength) {
 
-    const url = `/command/?command=${encodeURIComponent(command)}&isBoolean=${isBoolean}&hasResponse=${hasResponse}&terminatorCharacter=${terminatorCharacter}&maxReadLength=${maxReadLength}`;
+    const url = `/command/?command=${encodeURIComponent(command)}&isBoolean=${isBoolean}&hasResponse=${hasResponse}&terminatorCharacter=${encodeURIComponent(terminatorCharacter)}&maxReadLength=${maxReadLength}`;
     return request(url);
 }
 

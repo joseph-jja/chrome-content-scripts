@@ -20,13 +20,13 @@ export default class SerialPort extends DeviceConnection {
 
     constructor() {
         super();
-        this.baudRate = 9600;
     }
 
     connect(options) {
         return new Promise((resolve, reject) => {
             const {
-                usbDevice
+                usbDevice,
+                baudRate = 'B9600'
             } = options;
             if (!usbDevice) {
                 return reject('Invalid tty device!');
@@ -34,7 +34,7 @@ export default class SerialPort extends DeviceConnection {
 
             // sync code
             this.device = serialcom;
-            const openResponseCode = this.device.open(usbDevice, 'B9600');
+            const openResponseCode = this.device.open(usbDevice, baudRate);
             if (+openResponseCode === 0) {
                 this.connected = true;
                 return resolve('Success: ' + openResponseCode);

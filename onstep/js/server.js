@@ -165,8 +165,8 @@ server.get('/command', (req, res) => {
 
     // client needs to tell us some things
     const command = decodeURIComponent(req.query?.command || '');
-    const isBoolean = !!(req.query?.isBoolean || false);
-    const hasResponse = !!(req.query?.hasResponse || false);
+    const isBoolean = !!(req.query?.isBoolean);
+    const hasResponse = !!(req.query?.hasResponse);
     const terminatorCharacter = req.query?.terminatorCharacter;
     const maxReadLength = req.query?.maxReadLength;
 
@@ -176,8 +176,11 @@ server.get('/command', (req, res) => {
 
             console.log('Should be returning data? ', hasResponse, isBoolean, terminatorCharacter);
 
+            const terminatorChar = terminatorCharacter ?
+                decodeURIComponent(terminatorCharacter) : undefined;
+
             Connection.sendRecieveCommand(command, hasResponse,
-                isBoolean, terminatorCharacter, maxReadLength).then(resp => {
+                isBoolean, terminatorChar, maxReadLength).then(resp => {
 
                 console.log('Command sent ', decodedCommand, ' response: ' + resp);
                 res.send('Command response: ' + resp);
