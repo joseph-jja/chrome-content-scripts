@@ -179,7 +179,11 @@ server.get('/command', (req, res) => {
             const terminatorChar = terminatorCharacter ?
                 decodeURIComponent(terminatorCharacter) : undefined;
 
-            //console.log('Should be returning data? ', hasResponse, 'boolean? ', isBoolean, 'Termination character? ', terminatorChar, 'Maximum read length? ', maxReadLength);
+            const forceResponseResponse = hasResponse ||
+                isBoolean || terminatorChar ||
+                Number.isInteger(maxReadLength);
+
+            console.log('Should be returning data? ', forceResponseResponse, 'boolean? ', isBoolean, 'Termination character? ', terminatorChar, 'Maximum read length? ', maxReadLength);
 
             Connection.sendRecieveCommand(command, hasResponse,
                 isBoolean, terminatorChar, maxReadLength).then(resp => {

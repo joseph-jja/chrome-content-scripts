@@ -54,13 +54,13 @@ export default function Location() {
         }
         const fieldValue = value.replace(':', '*').replace('.', '*');
         if (fieldName === 'latitude') {
-            setLatitude(value);
+            setLatitude(fieldValue);
             StorageBox.setItem('latitude', fieldValue);
         } else if (fieldName === 'longitude') {
-            setLongitude(value);
+            setLongitude(fieldValue);
             StorageBox.setItem('longitude', fieldValue);
         } else if (fieldName === 'offset') {
-            setOffsetField(value);
+            setOffsetField(fieldValue);
             StorageBox.setItem('offset', fieldValue);
         }
     }
