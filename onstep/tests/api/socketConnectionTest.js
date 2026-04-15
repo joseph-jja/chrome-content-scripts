@@ -17,21 +17,21 @@ Connection.connect({
     }
 
     try {
-        const res = await Connection.sendCommand(':FA#');
+        const res = await Connection.sendRecieveCommand(':FA#');
         console.log("Got 1", res);
     } catch (e) {
         console.log('Command error 1', e);
     }
 
     try {
-        const res = await Connection.sendCommand(':Fa#', false);
+        const res = await Connection.sendRecieveCommand(':Fa#', false);
         console.log("Got 2", res);
     } catch (e) {
         console.log('Command error 2', e);
     }
 
     try {
-        const res = await Connection.sendCommand(':Gt#', true);
+        const res = await Connection.sendRecieveCommand(':Gt#', true);
         console.log("Got 3", res);
     } catch (e) {
         console.log('Command error 3', e);

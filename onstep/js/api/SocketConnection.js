@@ -68,7 +68,7 @@ export default class SocketConnection extends DeviceConnection {
         });
     }
 
-    sendCommand(command, hasResponse = true,
+    sendRecieveCommand(command, hasResponse = true,
         isBinary = false, terminatorCharacter, maxReadLength) {
 
         return new Promise((resolve, reject) => {
