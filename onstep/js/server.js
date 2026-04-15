@@ -15,7 +15,9 @@ import {
     LISTEN_PORT,
     ASTRONOMY_API
 } from '#server/config.js';
-
+import {
+    safeParse
+} from '#server/utils/jsonUtils.js';
 import checkCommandsWithNoReply from '#server/data/noReplayCommands.js';
 
 const basedir = process.cwd();
@@ -165,8 +167,8 @@ server.get('/command', (req, res) => {
 
     // client needs to tell us some things
     const command = decodeURIComponent(req.query?.command || '');
-    const isBoolean = !!(req.query?.isBoolean);
-    const hasResponse = !!(req.query?.hasResponse);
+    const isBoolean = safeParse(req.query?.isBoolean);
+    const hasResponse = safeParse(req.query?.hasResponse);
     const terminatorCharacter = req.query?.terminatorCharacter;
     const maxReadLength = req.query?.maxReadLength;
 
@@ -174,15 +176,15 @@ server.get('/command', (req, res) => {
 
         if (command.startsWith(':') && command.endsWith('#')) {
 
-            console.log('Should be returning data? ', hasResponse, isBoolean, terminatorCharacter);
-
             const terminatorChar = terminatorCharacter ?
                 decodeURIComponent(terminatorCharacter) : undefined;
+
+            //console.log('Should be returning data? ', hasResponse, 'boolean? ', isBoolean, 'Termination character? ', terminatorChar, 'Maximum read length? ', maxReadLength);
 
             Connection.sendRecieveCommand(command, hasResponse,
                 isBoolean, terminatorChar, maxReadLength).then(resp => {
 
-                console.log('Command sent ', decodedCommand, ' response: ' + resp);
+                console.log('Command sent ', command, ' response: ' + resp);
                 res.send('Command response: ' + resp);
 
             }).catch(e => {
