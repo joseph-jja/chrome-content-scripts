@@ -26,7 +26,7 @@ export async function daisyChainBooleanCommands(commands = []) {
             terminatorCharacter,
             maxReadLength
         } = commands[i];
-        const [err, result] = await PromiseWrapper(sendCommand(command = '', isBoolean,
+        const [err, result] = await PromiseWrapper(sendCommand(command, isBoolean,
             hasResponse, terminatorCharacter, maxReadLength));
         if (err) {
             success = false;
