@@ -7,6 +7,9 @@ import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
     sendCommand
 } from 'js/api/request.js';
+import {
+    safeParse
+} from 'js/utils/jsonUtils.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 
 const {
@@ -26,17 +29,34 @@ export default function CustomCommand() {
         setCommandField(value);
     }
 
+    const setBooleanFromForm = (event) => {
+        const value = safeParse(event?.target?.checked);
+        setBooleanReply(value);
+    }
+    
+    const setHasReplyFromForm = (event) => {
+        const value = safeParse(event?.target?.checked);
+        setHasReply(value);
+    }
+
+    const setTermFromForm = (event) => {
+        const value = event?.target?.value;
+        setTerminatorCharacter(value);
+    }
+
+    const setStopReadLimitFromForm = (event) => {
+        const value = safeParse(event?.target?.value);
+        setStopReadLimit(value);
+    }
+
     const sendCommandToServer = async () => {
         if (commandField) {
             setCommandFieldError('');
-            const [err, results] = await PromiseWrapper(sendCommand({
-                command: commandField,
-                isBoolean: booleanReply,
-                hasResponse: hasReply,
-                terminatorCharacter: terminatorCharacter,
-                maxReadLength: stopReadLimit
-
-            }));
+            const [err, results] = await PromiseWrapper(sendCommand(commandField,
+                booleanReply,
+                hasReply,
+                terminatorCharacter,
+                stopReadLimit));
             setCommandFieldError(err || results);
         } else {
             setCommandFieldError('Invalid command entered!');
@@ -52,19 +72,19 @@ export default function CustomCommand() {
             &nbsp;&nbsp;&nbsp;&nbsp;
             <CustomInput type="checkbox" labelText="Boolean Reply" 
                 id="boolean-field" name="boolean_field" inputValue={booleanReply}
-                onInputChange={setBooleanReply}/>
+                onInputChange={setBooleanFromForm}/>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <CustomInput type="checkbox" labelText="Has Reply" 
                 id="has-reply-field" name="has_reply_field" inputValue={hasReply}
-                onInputChange={setHasReply}/>
+                onInputChange={setHasReplyFromForm}/>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <CustomInput type="text" labelText="Stop Character" size="3"
                 id="terminator-field" name="terminator_field" inputValue={terminatorCharacter}
-                onInputChange={setTerminatorCharacter}/>
+                onInputChange={setTermFromForm}/>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <CustomInput type="text" labelText="Stop Read Limit" size="5"
                 id="stop-limit-field" name="stop_limit_field" inputValue={stopReadLimit}
-                onInputChange={setStopReadLimit}/>
+                onInputChange={setStopReadLimitFromForm}/>
             <ErrorMessage>{commandFieldError}</ErrorMessage>
             <br/>
             <CustomButton id="command-button" 
