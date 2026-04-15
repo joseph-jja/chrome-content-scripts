@@ -48,6 +48,8 @@ export default class SerialPort extends DeviceConnection {
     sendRecieveCommand(command, hasResponse = true,
         isBinary = false, terminatorCharacter, maxReadLength) {
 
+        //console.log('What did we get? ', hasResponse, 'boolean? ', isBinary ? 'yes' : 'no', 'Termination character? ', terminatorCharacter, 'Maximum read length? ', maxReadLength);
+
         return new Promise((resolve, reject) => {
 
             const writtenByteCount = this.device.write(command);
