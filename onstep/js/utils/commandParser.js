@@ -11,6 +11,7 @@ const basedir = process.cwd();
 
 const COMMAND_FILE = `${basedir}/js/data/commands.json`;
 
+// NO USED
 export async function loadCommandDataFile() {
 
     const commandFile = await fs.readFile(COMMAND_FILE);
