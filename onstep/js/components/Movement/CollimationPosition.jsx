@@ -107,8 +107,17 @@ export default function CollimationPosition() {
     };
 
     const getCoordinates = async (event) => {
-        const commands = [':GZ#', ':GA#'];
-        const results = await daisyChainBooleanCommands(commands);
+        const results = await daisyChainBooleanCommands([{
+                command: ':GZ#,
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'                
+            }, {
+                command: ':GA#,
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'                
+            }]);
         setHomeSyncError(results);
     };
 
