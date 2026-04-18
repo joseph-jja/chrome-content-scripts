@@ -29,21 +29,21 @@ export default function ToggleTracking() {
             cmd = ':Td#';
             setTrackingToggle(targetId);
             StorageBox.setItem('tracking', targetId);
-        } else if (targetObj === 'enable-refraction-tracking') {
+        } else if (targetId === 'enable-refraction-tracking') {
             cmd = ':Tr#';
-            setTrackingToggle(targetObj);
+            setTrackingToggle(targetId);
             StorageBox.setItem('tracking', targetId);
-        } else if (targetObj === 'disable-refraction-tracking') {
+        } else if (targetId === 'disable-refraction-tracking') {
             cmd = ':Tn#';
-            setTrackingToggle(targetObj);
+            setTrackingToggle(targetId);
             StorageBox.setItem('tracking', targetId);
-        } else if (targetObj === 'enable-dualaxis-tracking') {
+        } else if (targetId === 'enable-dualaxis-tracking') {
             cmd = ':T2#';
-            setTrackingToggle(targetObj);
+            setTrackingToggle(targetId);
             StorageBox.setItem('tracking', targetId);
-        } else if (targetObj === 'disable-dualaxis-tracking') {
+        } else if (targetId === 'disable-dualaxis-tracking') {
             cmd = ':T1#';
-            setTrackingToggle(targetObj);
+            setTrackingToggle(targetId);
             StorageBox.setItem('tracking', targetId);
         }
         if (cmd) {
