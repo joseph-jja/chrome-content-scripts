@@ -18,8 +18,6 @@ const DOBSONIAN_COLLIMATION_AZMIUTH = ':Szs00:00:00#';
 
 // TODO figure out how this would work cross platform
 export default function CollimationPosition() {
-    const [homeSync, setHomeSync] = useState(null);
-    const [homeSyncError, setHomeSyncError] = useState(null);
     const [azHome, setAzHome] = useState(null);
     const [altHome, setAltHome] = useState(null);
     const [collimate, setCollimate] = useState(null);
@@ -102,7 +100,7 @@ export default function CollimationPosition() {
                 terminatorCharacter: '#'
             }];
             const results = await daisyChainBooleanCommands(commands);
-            setHomeSyncError(results);
+            setCollimateError(results);
         }
     };
 
@@ -118,7 +116,7 @@ export default function CollimationPosition() {
                 hasResponse: true,
                 terminatorCharacter: '#'                
             }]);
-        setHomeSyncError(results);
+        setCollimateError(results);
     };
 
     return (
