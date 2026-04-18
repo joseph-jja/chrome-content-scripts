@@ -108,12 +108,12 @@ export default function CollimationPosition() {
 
     const getCoordinates = async (event) => {
         const results = await daisyChainBooleanCommands([{
-                command: ':GZ#,
+                command: ':GZ#',
                 isBoolean: false,
                 hasResponse: true,
                 terminatorCharacter: '#'                
             }, {
-                command: ':GA#,
+                command: ':GA#',
                 isBoolean: false,
                 hasResponse: true,
                 terminatorCharacter: '#'                
