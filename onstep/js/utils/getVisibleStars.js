@@ -53,7 +53,7 @@ function filterCatalog(starCatalog, latitude, longitude) {
     const visibleStars = starCatalog.filter(star => isStarVisible(star, {
         lat: latitude,
         lon: longitude,
-        date:
+        date: now
     }));
 
 }
@@ -65,5 +65,5 @@ export default async function getListOfVisibleStars(latitude, longitude) {
     if (startList) {
         return filterCatalog(starList, latitude, longitude);
     }
-    return throw new Error('Error parsing catalog data');
+    throw new Error('Error parsing catalog data');
 }
