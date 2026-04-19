@@ -9,7 +9,8 @@ import CustomOption from 'js/components/base/CustomOption.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
 import {
     sendCommand,
-    getStarList
+    getStarList,
+    getKnownStarList
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
 import StorageBox from "js/storage/StorageBox.js";
@@ -37,6 +38,8 @@ export default function ToggleTracking() {
     const [altitude, setAltitude] = useState('');
     const [rightAscention, setRightAscention] = useState('');
     const [declination, setDeclination] = useState('');
+    const [knownStarList, setKnownStarList] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
 
     const setAzimuthField = (event) => {
         const fieldName = event?.target?.name;
@@ -55,6 +58,20 @@ export default function ToggleTracking() {
         const value = event?.target?.value || null;
         setAltitude(value);
     };
+
+    const listStars = async () => {
+        const latitude = StorageBox.getItem('latitude') || window?.electron?.config?.latitude;
+        const longitude = StorageBox.getItem('longitude') || window?.electron?.config?.longitude;
+        if (!latitude || !longitude) {
+            return;
+        }
+        const [err, results] = PromiseWrapper(getKnownStarList(latitude, longitude));
+        if (results) {
+            setKnownStarList(results);
+            return;
+        }
+        setErrorMsg(err);
+    }
 
     const searchLocation = (event) => {
         const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
@@ -150,7 +167,8 @@ export default function ToggleTracking() {
               <br/> 
               <span>{declination}</span> 
               <br/> 
-              <CustomButton id="Search Coordinates" onButtonClick={searchLocation}>Search</CustomButton>
+              <CustomButton id="search-coordinates" onButtonClick={searchLocation}>Search</CustomButton>
+              <CustomButton id="list-stars" onButtonClick={listStars}>Get Known List</CustomButton>
             <ErrorMessage>{alignmentError}</ErrorMessage>                
         </Container>
     );
