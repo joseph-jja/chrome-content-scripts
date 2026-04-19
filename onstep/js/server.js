@@ -19,7 +19,7 @@ import {
     safeParse
 } from '#server/utils/jsonUtils.js';
 import checkCommandsWithNoReply from '#server/data/noReplayCommands.js';
-import getListOfVisibleStars from 'js/utils/getVisibleStars.js';
+import getListOfVisibleStars from '#server/utils/getVisibleStars.js';
 
 const basedir = process.cwd();
 
