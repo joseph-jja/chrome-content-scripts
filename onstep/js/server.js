@@ -19,6 +19,7 @@ import {
     safeParse
 } from '#server/utils/jsonUtils.js';
 import checkCommandsWithNoReply from '#server/data/noReplayCommands.js';
+import getListOfVisibleStars from 'js/utils/getVisibleStars.js';
 
 const basedir = process.cwd();
 
@@ -212,6 +213,28 @@ server.get('/disconnect', (req, res) => {
 
 server.get('/commandsList', (req, res) => {
     fs.createReadStream(`${basedir}/js/data/commands.json`).pipe(res);
+});
+
+server.get('/listofknownstars', (req, res) => {
+    const latitude = req.query?.latitude;
+    const longitude = req.query?.longitude;
+
+    if (!latitude || !longitude) {
+        res.writeHead(403, {
+            'Content-Type': 'application/json'
+        });
+        res.json({
+            'error': 'No latitude or longitude and cannot list stars!'
+        });
+        return;
+    }
+    getListOfVisibleStars(latitude, longitude).then(results => {
+        res.writeHead(200);
+        res.end(results);
+    }).catch(err => {
+        res.writeHead(500);
+        res.end(e);
+    });
 });
 
 server.get('/listofstars', (req, res) => {
