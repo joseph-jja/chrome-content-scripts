@@ -233,7 +233,7 @@ server.get('/listofknownstars', (req, res) => {
         res.end(results);
     }).catch(err => {
         res.writeHead(500);
-        res.end(e);
+        res.end(err?.message);
     });
 });
 
