@@ -63,6 +63,7 @@ export default function ToggleTracking() {
         const latitude = StorageBox.getItem('latitude') || window?.electron?.config?.latitude;
         const longitude = StorageBox.getItem('longitude') || window?.electron?.config?.longitude;
         if (!latitude || !longitude) {
+            setErrorMsg('Missing latitude or longitude');
             return;
         }
         const [err, results] = PromiseWrapper(getKnownStarList(latitude, longitude));
