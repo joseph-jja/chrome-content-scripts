@@ -50,7 +50,6 @@ export default function CollimationPosition() {
                 terminatorCharacter: '#'
             }
         ];
-        const results = await daisyChainBooleanCommands(cmds);
         setCollimateError(results);
     };
 
@@ -100,6 +99,15 @@ export default function CollimationPosition() {
                 terminatorCharacter: '#'
             }];
             const results = await daisyChainBooleanCommands(commands);
+            if (results && Array.isArray(results)) {
+                const [az, alt] = results;
+                if (az) {
+                    setAzHome(az);
+                }
+                if (alt) {
+                    setAltHome(alt);
+                }
+            }
             setCollimateError(results);
         }
     };
