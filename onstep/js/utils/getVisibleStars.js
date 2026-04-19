@@ -5,7 +5,7 @@ import {
 
 import {
     safeParse
-} from 'js/utils/jsonUtils.js';
+} from '#server/utils/jsonUtils.js';
 
 const basedir = process.cwd();
 
