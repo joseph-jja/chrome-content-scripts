@@ -79,7 +79,7 @@ export default function Rates() {
         }
         const cmd = targetObj.options[targetObj.selectedIndex].value.trim();
         if (cmd && cmd.length > 0) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd));
+            const [err, results] = await PromiseWrapper(sendCommand(cmd, true, true));
             if (err || results !== 0) {
                 setTrackingRateError(err || results);
             } else {
