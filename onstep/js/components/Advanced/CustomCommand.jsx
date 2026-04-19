@@ -33,7 +33,7 @@ export default function CustomCommand() {
         const value = safeParse(event?.target?.checked);
         setBooleanReply(value);
     }
-    
+
     const setHasReplyFromForm = (event) => {
         const value = safeParse(event?.target?.checked);
         setHasReply(value);
