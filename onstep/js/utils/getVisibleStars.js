@@ -62,7 +62,7 @@ export default async function getListOfVisibleStars(latitude, longitude) {
 
     const results = await readFile(`${basedir}/js/data/starlist.json`);
     const starList = safeParse(results);
-    if (startList) {
+    if (starList) {
         return filterCatalog(starList, latitude, longitude);
     }
     throw new Error('Error parsing catalog data');
