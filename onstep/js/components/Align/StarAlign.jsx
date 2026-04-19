@@ -38,7 +38,7 @@ export default function ToggleTracking() {
     const [altitude, setAltitude] = useState('');
     const [rightAscention, setRightAscention] = useState('');
     const [declination, setDeclination] = useState('');
-    const [knownStarList, setKnownStarList] = useState('');
+    const [knownStarList, setKnownStarList] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
 
     const setAzimuthField = (event) => {
@@ -66,9 +66,9 @@ export default function ToggleTracking() {
             setErrorMsg('Missing latitude or longitude');
             return;
         }
-        const [err, results] = PromiseWrapper(getKnownStarList(latitude, longitude));
+        const [err, results] = await PromiseWrapper(getKnownStarList(latitude, longitude));
         if (results) {
-            setKnownStarList(results);
+            setKnownStarList(safeParse(results));
             return;
         }
         setErrorMsg(err);
@@ -142,8 +142,8 @@ export default function ToggleTracking() {
     return (
         <Container class="wrapper">
 
-            <CustomSelect id="pick-star" name="pick_star"
-                labelText="Pick Number of Stars"
+            <CustomSelect id="pick-numberof-stars" name="pick_numberof_stars"
+                labelText="Select Number of Stars"
                 onSelectChange={setAlignNumberValue}>
                 {STAR_ALIGN?.map((item) => (
                     <CustomOption value={item}>
@@ -168,6 +168,15 @@ export default function ToggleTracking() {
               <br/> 
               <span>{declination}</span> 
               <br/> 
+              <CustomSelect id="pick-star" name="pick_star"
+                labelText="Select A Star">
+                {knownStarList?.map((item) => (
+                    <CustomOption value={item.name}>
+                         {item.name}
+                    </CustomOption>
+                ))}
+            </CustomSelect>
+            <br/>
               <CustomButton id="search-coordinates" onButtonClick={searchLocation}>Search</CustomButton>
               <CustomButton id="list-stars" onButtonClick={listStars}>Get Known List</CustomButton>
             <ErrorMessage>{alignmentError}</ErrorMessage>                
