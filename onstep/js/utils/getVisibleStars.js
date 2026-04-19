@@ -51,8 +51,8 @@ function filterCatalog(starCatalog, latitude, longitude) {
     const now = new Date();
 
     const visibleStars = starCatalog.filter(star => isStarVisible(star, {
-        lat: latitude,
-        lon: longitude,
+        lat: parseFloat(latitude.replace(':', '.').replace('*', '.')),
+        lon: parseFloat(longitude.replace(':', '.').replace('*', '.')),
         date: now
     }));
 
