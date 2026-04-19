@@ -55,7 +55,7 @@ function filterCatalog(starCatalog, latitude, longitude) {
         lon: parseFloat(longitude.replace(':', '.').replace('*', '.')),
         date: now
     }));
-
+    return visibleStars
 }
 
 export default async function getListOfVisibleStars(latitude, longitude) {
