@@ -18,6 +18,11 @@ export function getStarList(authToken, ra, dec) {
     return request(url);
 }
 
+export function getKnownStarList(latitude, longitude) {
+    const url = `/listofknownstars?latitude=${latitude}&longitude=${longitude}`;
+    return request(url);
+}
+
 export function setupConnection(commandOption) {
     const url = `/setup/?command=${encodeURIComponent(commandOption)}`;
     return request(url);
