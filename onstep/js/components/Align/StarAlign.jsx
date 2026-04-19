@@ -145,6 +145,7 @@ export default function ToggleTracking() {
             <CustomSelect id="pick-numberof-stars" name="pick_numberof_stars"
                 labelText="Select Number of Stars"
                 onSelectChange={setAlignNumberValue}>
+                <CustomOption></CustomOption>
                 {STAR_ALIGN?.map((item) => (
                     <CustomOption value={item}>
                         Rate {item}
@@ -170,6 +171,7 @@ export default function ToggleTracking() {
               <br/> 
               <CustomSelect id="pick-star" name="pick_star"
                 labelText="Select A Star">
+                <CustomOption></CustomOption>
                 {knownStarList?.map((item) => (
                     <CustomOption value={item.name}>
                          {item.name}
