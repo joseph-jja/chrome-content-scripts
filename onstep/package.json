@@ -24,7 +24,7 @@
     "react-dom": "19.2.0"
   },
   "devDependencies": {
-    "electron": "39.1.0",
+    "electron": "41.2.1",
     "@babel/core": "7.28.5",
     "@babel/preset-env": "7.28.5",
     "@babel/preset-react": "7.28.5",
