@@ -16,7 +16,8 @@ import {
     ASTRONOMY_API
 } from '#server/config.js';
 import {
-    safeParse
+    safeParse,
+    safeStringify
 } from '#server/utils/jsonUtils.js';
 import checkCommandsWithNoReply from '#server/data/noReplayCommands.js';
 import getListOfVisibleStars from '#server/utils/getVisibleStars.js';
@@ -229,9 +230,11 @@ server.get('/listofknownstars', (req, res) => {
         return;
     }
     getListOfVisibleStars(latitude, longitude).then(results => {
+        //console.log('got ', results);
         res.writeHead(200);
-        res.end(results);
+        res.end(safeStringify(results));
     }).catch(err => {
+        console.error('Error:', err);
         res.writeHead(500);
         res.end(err?.message);
     });
