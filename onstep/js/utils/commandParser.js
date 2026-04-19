@@ -1,3 +1,4 @@
+// SERVER ONLY
 import fs from 'node:fs/promises';
 import process from 'node:process';
 
