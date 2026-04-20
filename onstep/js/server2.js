@@ -27,7 +27,7 @@ import getStarView from '#server/routes/getStarView.js'
 const basedir = process.cwd();
 
 const server = express();
-
+sendCommand(command, isBoolean, hasResponse, terminatorCharacter, maxReadLength)
 const menu = Menu.buildFromTemplate([{
     label: app.name,
     submenu: [{
@@ -180,7 +180,7 @@ server.get('/disconnect', (req, res) => {
 });
 
 server.get('/commandsList', (req, res) => {
-    fs.createReadStream(`${basedir}/js/data/commands.json`).pipe(res);
+    fs.createReadStream(`${basesendCommand(command, isBoolean, hasResponse, terminatorCharacter, maxReadLength)dir}/js/data/commands.json`).pipe(res);
 });
 
 server.get('/listofknownstars', (req, res) => {
@@ -208,65 +208,16 @@ server.get('/listofknownstars', (req, res) => {
 });
 
 server.get('/listofstars', (req, res) => {
+    // query params
     const authToken = req.query?.authToken;
-    if (!authToken) {
-        res.writeHead(403, {
-            'Content-Type': 'application/json'
-        });
-        res.json({
-            'error': 'No configuration found for astronomy api'
-        });
-        return;
-    }
-
     const latitude = req.query?.latitude;
     const longitude = req.query?.longitude;
     const ra = req.query?.ra;
     const dec = req.query?.dec;
-    if (!ra || !dec || !latitude || !longitude) {
-        res.writeHead(403, {
-            'Content-Type': 'application/json'
-        });
-        res.json({
-            'error': 'No right ascension or declination or missing latitude or longitude!'
-        });
-        return;
-    }
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = `${now.getMonth() + 1}`.padStart(2, '0');
-    const day = `${now.getDate()}`.padStart(2, '0');
-    const yyyymmdd = `${year}-${month}-${day}`;
-    const payload = {
-        "style": "navy",
-        "observer": {
-            "latitude": parseFloat(latitude),
-            "longitude": parseFloat(longitude),
-            "date": yyyymmdd
-        },
-        "view": {
-            "type": "area",
-            "parameters": {
-                "position": {
-                    "equatorial": {
-                        "rightAscension": parseFloat(ra),
-                        "declination": parseFloat(dec)
-                    }
-                },
-                "zoom": 1
-            }
-        }
-    };
-
-    const options = {
-        method: 'POST',
-        headers: {
-            Authorization: `Basic ${authToken}`
-        },
-        body: safeStringify(payload)
-    };
-
-    fetch(`${ASTRONOMY_API}/api/v2/studio/star-chart`, options).then(async resp => {
+    
+    getStarView(ASTRONOMY_API, authToken,
+        latitude, longitude,
+        ra, dec).then(async resp => {
         const results = await resp.text();
         res.writeHead(200);
         res.end(results);
