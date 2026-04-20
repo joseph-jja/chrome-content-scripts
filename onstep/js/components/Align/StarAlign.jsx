@@ -41,6 +41,25 @@ export default function ToggleTracking() {
     const [knownStarList, setKnownStarList] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
 
+    useEffect(() => {
+
+        const fetchData = async () => {
+            const latitude = StorageBox.getItem('latitude') || window?.electron?.config?.latitude;
+            const longitude = StorageBox.getItem('longitude') || window?.electron?.config?.longitude;
+            if (!latitude || !longitude) {
+                setErrorMsg('Missing latitude or longitude');
+                return;
+            }
+            const [err, results] = await PromiseWrapper(getKnownStarList(latitude, longitude));
+            if (results) {
+                setKnownStarList(safeParse(results)?.sort());
+                return;
+            }
+            setErrorMsg(err);
+        };
+        fetchData();
+    }, []);
+
     const setAzimuthField = (event) => {
         const fieldName = event?.target?.name;
         if (!fieldName) {
@@ -58,21 +77,6 @@ export default function ToggleTracking() {
         const value = event?.target?.value || null;
         setAltitude(value);
     };
-
-    const listStars = async () => {
-        const latitude = StorageBox.getItem('latitude') || window?.electron?.config?.latitude;
-        const longitude = StorageBox.getItem('longitude') || window?.electron?.config?.longitude;
-        if (!latitude || !longitude) {
-            setErrorMsg('Missing latitude or longitude');
-            return;
-        }
-        const [err, results] = await PromiseWrapper(getKnownStarList(latitude, longitude));
-        if (results) {
-            setKnownStarList(safeParse(results));
-            return;
-        }
-        setErrorMsg(err);
-    }
 
     const searchLocation = (event) => {
         const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
@@ -152,7 +156,18 @@ export default function ToggleTracking() {
                     </CustomOption>
                 ))}
             </CustomSelect>
-                          
+
+            <br/>
+            <CustomSelect id="pick-star" name="pick_star"
+                labelText="Select A Star">
+                <CustomOption></CustomOption>
+                {knownStarList?.map((item) => (
+                    <CustomOption value={item.name}>
+                         {item.name} (Mag: {item.mag}, RA: {item.ra}, Dec: {item.dec})
+                    </CustomOption>
+                ))}
+            </CustomSelect>
+            
             <br/>Search Coordinate: 
               <br/>
               <CustomInput type="text" labelText="Azimuth" size="18"
@@ -169,18 +184,8 @@ export default function ToggleTracking() {
               <br/> 
               <span>{declination}</span> 
               <br/> 
-              <CustomSelect id="pick-star" name="pick_star"
-                labelText="Select A Star">
-                <CustomOption></CustomOption>
-                {knownStarList?.map((item) => (
-                    <CustomOption value={item.name}>
-                         {item.name}
-                    </CustomOption>
-                ))}
-            </CustomSelect>
-            <br/>
+              
               <CustomButton id="search-coordinates" onButtonClick={searchLocation}>Search</CustomButton>
-              <CustomButton id="list-stars" onButtonClick={listStars}>Get Known List</CustomButton>
             <ErrorMessage>{alignmentError}</ErrorMessage>                
         </Container>
     );
