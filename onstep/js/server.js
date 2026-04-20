@@ -271,6 +271,7 @@ server.get('/listofstars', (req, res) => {
     const day = `${now.getDate()}`.padStart(2, '0');
     const yyyymmdd = `${year}-${month}-${day}`;
     const payload = {
+        "style": "navy",
         "observer": {
             "latitude": parseFloat(latitude),
             "longitude": parseFloat(longitude),
@@ -285,7 +286,7 @@ server.get('/listofstars', (req, res) => {
                         "declination": parseFloat(dec)
                     }
                 },
-                "zoom": 3
+                "zoom": 1
             }
         }
     };

@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Container from 'js/components/base/Container.jsx';
 import CustomInput from 'js/components/base/CustomInput.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import CustomFieldset from 'js/components/base/CustomFieldset.jsx';
@@ -33,11 +32,12 @@ for (let i = 1; i <= 9; i++) {
 }
 
 export default function ToggleTracking() {
-    const [alignmentError, setAlignmentError] = useState(null);
+    const [alignmentError, setAlignmentError] = useState('');
     const [rightAscention, setRightAscention] = useState('');
     const [declination, setDeclination] = useState('');
     const [knownStarList, setKnownStarList] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
 
     useEffect(() => {
 
@@ -94,8 +94,12 @@ export default function ToggleTracking() {
         getStarList(authCode, rightAscention, declination, latitude, longitude).then(results => {
             const jsonResults = safeParse(results);
             if (jsonResults) {
-                setAlignmentError(safeStringify(jsonResults));
-                console.log(starList);
+                if (jsonResults.data && jsonResults.data.imageUrl) {
+                    setImageUrl(jsonResults.data.imageUrl);
+                } else {
+                    setAlignmentError('Got something');
+                }
+                console.log(jsonResults);
             } else {
                 setAlignmentError('Could not parse json response');
             }
@@ -126,8 +130,7 @@ export default function ToggleTracking() {
     // 	:Ax# - align x stars
     //  :A+# - accept
     return (
-        <Container class="wrapper">
-
+        <CustomFieldset legendtext="Align">
             <CustomSelect id="pick-numberof-stars" name="pick_numberof_stars"
                 labelText="Select Number of Stars"
                 onSelectChange={setAlignNumberValue}>
@@ -157,9 +160,10 @@ export default function ToggleTracking() {
               <br/>
               <span>Dec: {declination}</span> 
               <br/> 
+              {/*{imageUrl && <img src={imageUrl}  alt="Image of a star"/>} 
             
-            <CustomButton id="search-coordinates" onButtonClick={getViewOfStar}>Get View</CustomButton>
-            <ErrorMessage>{alignmentError}</ErrorMessage>                
-        </Container>
+            <CustomButton id="search-coordinates" onButtonClick={getViewOfStar}>Get View</CustomButton>*/}
+            <ErrorMessage>{alignmentError}</ErrorMessage> 
+            </CustomFieldset>
     );
 }
