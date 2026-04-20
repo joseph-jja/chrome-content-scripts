@@ -92,7 +92,8 @@ export default function ToggleTracking() {
             setAlignmentError('No star selected?');
             return;
         }
-       
+
+        /* TODO fix this to get an image of the star
         getStarList(authCode, rightAscention, declination).then(results => {
             const jsonResults = safeParse(results)?.data;
             if (jsonResults) {
@@ -115,7 +116,7 @@ export default function ToggleTracking() {
             }
         }).catch(e => {
             setAlignmentError(e);
-        })
+        })*/
     };
 
     const setAlignNumberValue = async (event) => {
