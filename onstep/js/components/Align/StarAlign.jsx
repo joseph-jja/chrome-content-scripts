@@ -77,10 +77,6 @@ export default function ToggleTracking() {
 
     const getViewOfStar = (event) => {
         const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
-        if (!altitude || !azimuth) {
-            setAlignmentError('Missing altitude or azimuth!');
-            return;
-        }
         const latitude = StorageBox.getItem('latitude') || window?.electron?.config?.latitude;
         const longitude = StorageBox.getItem('longitude') || window?.electron?.config?.longitude;
         if (!latitude || !longitude) {
@@ -93,8 +89,8 @@ export default function ToggleTracking() {
             return;
         }
 
-        /* TODO fix this to get an image of the star
-        getStarList(authCode, rightAscention, declination).then(results => {
+        /* TODO fix this to get an image of the star */
+        getStarList(authCode, rightAscention, declination, latitude, longitude).then(results => {
             const jsonResults = safeParse(results)?.data;
             if (jsonResults) {
                 const starList = jsonResults.filter(item => {
@@ -116,7 +112,7 @@ export default function ToggleTracking() {
             }
         }).catch(e => {
             setAlignmentError(e);
-        })*/
+        })
     };
 
     const setAlignNumberValue = async (event) => {
