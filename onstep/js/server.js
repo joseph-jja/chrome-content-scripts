@@ -265,20 +265,24 @@ server.get('/listofstars', (req, res) => {
         });
         return;
     }
-
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = `${now.getMonth() + 1}`.padStart(2, '0');
+    const day = `${now.getDay()}`.padStart(2, '0');
+    const yyyymmdd = `${year}-${month}-${day}`;
     const payload = {
         "observer": {
             "latitude": parseFloat(latitude),
             "longitude": parseFloat(longitude),
-            "date": '2026-06-16'
+            "date": yyyymmdd
         },
         "view": {
             "type": "area",
             "parameters": {
                 "position": {
                     "equatorial": {
-                        "rightAscension": ra,
-                        "declination": dec
+                        "rightAscension": parseFloat(ra),
+                        "declination": parseFloat(dec)
                     }
                 },
                 "zoom": 3
