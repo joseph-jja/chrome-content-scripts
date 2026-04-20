@@ -52,7 +52,7 @@ export default function ToggleTracking() {
             }
             const [err, results] = await PromiseWrapper(getKnownStarList(latitude, longitude));
             if (results) {
-                setKnownStarList(safeParse(results)?.sort());
+                setKnownStarList(safeParse(results)?.sort((a, b) => a.name < b.name));
                 return;
             }
             setErrorMsg(err);
