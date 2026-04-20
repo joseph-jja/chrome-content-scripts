@@ -75,7 +75,7 @@ export default function ToggleTracking() {
         }
     };
 
-    const searchLocation = (event) => {
+    const getViewOfStar = (event) => {
         const authCode = btoa(`${electron?.config?.ApplicationID}:${electron?.config?.SecretID}`);
         if (!altitude || !azimuth) {
             setAlignmentError('Missing altitude or azimuth!');
@@ -87,14 +87,13 @@ export default function ToggleTracking() {
             setAlignmentError('Missing latitude or longitude!');
             return;
         }
-        const now = new Date();
-        const {
-            ra,
-            dec
-        } = window.altAzToRaDec(altitude, azimuth, latitude, longitude, now);
-        setRightAscention('RA: ' + ra);
-        setDeclination('DEC: ' + dec);
-        getStarList(authCode, ra, dec).then(results => {
+
+        if (!rightAscention || !declination) {
+            setAlignmentError('No star selected?');
+            return;
+        }
+       
+        getStarList(authCode, rightAscention, declination).then(results => {
             const jsonResults = safeParse(results)?.data;
             if (jsonResults) {
                 const starList = jsonResults.filter(item => {
@@ -167,9 +166,13 @@ export default function ToggleTracking() {
             </CustomSelect>
             
             <br/>View Star: 
-              <span>RA: {rightAscention}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>{declination}</span> 
+              <br/>
+              <span>RA: {rightAscention}</span>
+              <br/>
+              <span>Dec: {declination}</span> 
               <br/> 
-              <CustomButton id="search-coordinates" onButtonClick={searchLocation}>Get View</CustomButton>
+            
+            <CustomButton id="search-coordinates" onButtonClick={getViewOfStar}>Get View</CustomButton>
             <ErrorMessage>{alignmentError}</ErrorMessage>                
         </Container>
     );
