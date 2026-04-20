@@ -268,9 +268,9 @@ server.get('/listofstars', (req, res) => {
 
     const payload = {
         "observer": {
-            "latitude": latitude,
-            "longitude": longitude,
-            "date": new Date().toString()
+            "latitude": parseFloat(latitude),
+            "longitude": parseFloat(longitude),
+            "date": '2026-06-16'
         },
         "view": {
             "type": "area",
