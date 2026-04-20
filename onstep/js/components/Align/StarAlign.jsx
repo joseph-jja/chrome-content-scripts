@@ -90,29 +90,18 @@ export default function ToggleTracking() {
         }
 
         /* TODO fix this to get an image of the star */
+       /* TODO fix this to get an image of the star */
         getStarList(authCode, rightAscention, declination, latitude, longitude).then(results => {
-            const jsonResults = safeParse(results)?.data;
+            const jsonResults = safeParse(results);
             if (jsonResults) {
-                const starList = jsonResults.filter(item => {
-                    return (item?.type?.name?.toLowerCase() === 'star');
-                }).filter(item => {
-                    return (item?.position?.equatorial?.declination?.string &&
-                        item?.position?.equatorial?.rightAscension?.string);
-                }).map(item => {
-                    const cname = item?.position?.constellation?.name;
-                    const rahh = item?.position?.equatorial?.rightAscension?.string;
-                    const dechh = item?.position?.equatorial?.declination?.string;
-                    return `${item.name}: (Constellation: ${cname}) RA/Dec: ${rahh}/${dechh}`;
-                });
-                //StorageBox.setItem(`${+ra + +dec}`, starList);
-                setAlignmentError(starList);
+                setAlignmentError(safeStringify(jsonResults));
                 console.log(starList);
             } else {
                 setAlignmentError('Could not parse json response');
             }
         }).catch(e => {
             setAlignmentError(e);
-        })
+        });
     };
 
     const setAlignNumberValue = async (event) => {
