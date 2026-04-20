@@ -220,15 +220,6 @@ server.get('/listofknownstars', (req, res) => {
     const latitude = req.query?.latitude;
     const longitude = req.query?.longitude;
 
-    if (!latitude || !longitude) {
-        res.writeHead(403, {
-            'Content-Type': 'application/json'
-        });
-        res.json({
-            'error': 'No latitude or longitude and cannot list stars!'
-        });
-        return;
-    }
     getListOfVisibleStars(latitude, longitude).then(results => {
         //console.log('got ', results);
         res.writeHead(200);

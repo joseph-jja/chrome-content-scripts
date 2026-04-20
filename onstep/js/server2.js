@@ -187,15 +187,6 @@ server.get('/listofknownstars', (req, res) => {
     const latitude = req.query?.latitude;
     const longitude = req.query?.longitude;
 
-    if (!latitude || !longitude) {
-        res.writeHead(403, {
-            'Content-Type': 'application/json'
-        });
-        res.json({
-            'error': 'No latitude or longitude and cannot list stars!'
-        });
-        return;
-    }
     getListOfVisibleStars(latitude, longitude).then(results => {
         //console.log('got ', results);
         res.writeHead(200);
@@ -216,8 +207,7 @@ server.get('/listofstars', (req, res) => {
     const dec = req.query?.dec;
     
     getStarView(ASTRONOMY_API, authToken,
-        latitude, longitude,
-        ra, dec).then(async resp => {
+        latitude, longitude, ra, dec).then(async resp => {
         const results = await resp.text();
         res.writeHead(200);
         res.end(results);

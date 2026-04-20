@@ -60,10 +60,15 @@ function filterCatalog(starCatalog, latitude, longitude) {
 
 export default async function getListOfVisibleStars(latitude, longitude) {
 
+    if (!latitude || !longitude) {
+        return Promise.reject( 'No latitude or longitude and cannot list stars!');
+    }
+    
     const results = await readFile(`${basedir}/js/data/starlist.json`);
     const starList = safeParse(results);
     if (starList) {
         return filterCatalog(starList, latitude, longitude);
     }
-    throw new Error('Error parsing catalog data');
+    
+    Promise.reject('Error parsing catalog data');
 }
