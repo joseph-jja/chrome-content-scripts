@@ -69,8 +69,8 @@ export default function ToggleTracking() {
         if (star && star.length > 0) {
             const starCoords = knownStarList.find(item => item.name === star);
             if (starCoords) {
-               setRightAscention(starCoords.ra);
-               setDeclination(starCoords.dec);
+                setRightAscention(starCoords.ra);
+                setDeclination(starCoords.dec);
             }
         }
     };
@@ -90,7 +90,7 @@ export default function ToggleTracking() {
         }
 
         /* TODO fix this to get an image of the star */
-       /* TODO fix this to get an image of the star */
+        /* TODO fix this to get an image of the star */
         getStarList(authCode, rightAscention, declination, latitude, longitude).then(results => {
             const jsonResults = safeParse(results);
             if (jsonResults) {
