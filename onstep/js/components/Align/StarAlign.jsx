@@ -68,9 +68,9 @@ export default function ToggleTracking() {
         const star = targetObj.options[targetObj.selectedIndex].value.trim();
         if (star && star.length > 0) {
             const starCoords = knownStarList.find(item => item.name === star);
-            if (starCoords && starCoords.length > 0) {
-               setRightAscention(starCoords[0].ra);
-               setDeclination(starCoords[0].dec);
+            if (starCoords) {
+               setRightAscention(starCoords.ra);
+               setDeclination(starCoords.dec);
             }
         }
     };
