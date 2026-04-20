@@ -252,25 +252,47 @@ server.get('/listofstars', (req, res) => {
         return;
     }
 
+    const latitude = req.query?.latitude;
+    const longitude = req.query?.longitude;
     const ra = req.query?.ra;
     const dec = req.query?.dec;
-    if (!ra || !dec) {
+    if (!ra || !dec || !latitude || !longitude) {
         res.writeHead(403, {
             'Content-Type': 'application/json'
         });
         res.json({
-            'error': 'No right ascension or declination passed'
+            'error': 'No right ascension or declination or missing latitude or longitude!'
         });
         return;
     }
 
-    const params = `ra=${ra}&dec=${dec}&limit=25`;
+    const payload = {
+        "observer": {
+            "latitude": latitude,
+            "longitude": longitude,
+            "date": new Date().toString()
+        },
+        "view": {
+            "type": "area",
+            "parameters": {
+                "position": {
+                    "equatorial": {
+                        "rightAscension": ra,
+                        "declination": dec
+                    }
+                },
+                "zoom": 3 //optional
+            }
+        }
+    };
+
 
     const options = {
-        method: 'GET',
+        method: 'POST',
         headers: {
             Authorization: `Basic ${authToken}`
-        }
+        },
+        body: safeStringify(payload);
     };
 
     fetch(`${ASTRONOMY_API}/api/v2/search?${params}`, options).then(async resp => {
