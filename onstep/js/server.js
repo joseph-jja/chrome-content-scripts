@@ -281,18 +281,17 @@ server.get('/listofstars', (req, res) => {
                         "declination": dec
                     }
                 },
-                "zoom": 3 //optional
+                "zoom": 3
             }
         }
     };
-
 
     const options = {
         method: 'POST',
         headers: {
             Authorization: `Basic ${authToken}`
         },
-        body: safeStringify(payload);
+        body: safeStringify(payload)
     };
 
     fetch(`${ASTRONOMY_API}/api/v2/search?${params}`, options).then(async resp => {
