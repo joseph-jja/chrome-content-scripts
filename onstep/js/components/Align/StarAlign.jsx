@@ -34,8 +34,6 @@ for (let i = 1; i <= 9; i++) {
 
 export default function ToggleTracking() {
     const [alignmentError, setAlignmentError] = useState(null);
-    const [azimuth, setAzimuth] = useState('');
-    const [altitude, setAltitude] = useState('');
     const [rightAscention, setRightAscention] = useState('');
     const [declination, setDeclination] = useState('');
     const [knownStarList, setKnownStarList] = useState([]);
@@ -62,22 +60,16 @@ export default function ToggleTracking() {
         fetchData();
     }, []);
 
-    const setAzimuthField = (event) => {
-        const fieldName = event?.target?.name;
-        if (!fieldName) {
+    const displayStarRADec = (event) => {
+        const targetObj = event?.target;
+        if (!targetObj) {
             return;
         }
-        const value = event?.target?.value || null;
-        setAzimuth(value);
-    };
-
-    const setAltitudeField = (event) => {
-        const fieldName = event?.target?.name;
-        if (!fieldName) {
-            return;
+        const star = targetObj.options[targetObj.selectedIndex].value.trim();
+        if (star && star.length > 0) {
+            const starCoors = knownStarList.find(item => item.name === star);
+            
         }
-        const value = event?.target?.value || null;
-        setAltitude(value);
     };
 
     const searchLocation = (event) => {
@@ -161,7 +153,8 @@ export default function ToggleTracking() {
 
             <br/>
             <CustomSelect id="pick-star" name="pick_star"
-                labelText="Select A Star">
+                labelText="Select A Star"
+                onSelectChange={displayStarRADec}>
                 <CustomOption></CustomOption>
                 {knownStarList?.map((item) => (
                     <CustomOption value={item.name}>
@@ -170,24 +163,10 @@ export default function ToggleTracking() {
                 ))}
             </CustomSelect>
             
-            <br/>Search Coordinate: 
-              <br/>
-              <CustomInput type="text" labelText="Azimuth" size="18"
-                    id="azimuth" name="azimuth" inputValue={azimuth}
-                    placeholderText="+/-hh*mm*ss.s"
-                    onInputChange={setAzimuthField}/>
+            <br/>View Star: 
+              <span>RA: {rightAscention}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>{declination}</span> 
               <br/> 
-              <CustomInput type="text" labelText="Altitude" size="18"
-                    id="altitude" name="altitude" inputValue={altitude}
-                    placeholderText="+/-hh*mm*ss.s"
-                    onInputChange={setAltitudeField}/>
-              <br/> 
-              <span>{rightAscention}</span>
-              <br/> 
-              <span>{declination}</span> 
-              <br/> 
-              
-              <CustomButton id="search-coordinates" onButtonClick={searchLocation}>Search</CustomButton>
+              <CustomButton id="search-coordinates" onButtonClick={searchLocation}>Get View</CustomButton>
             <ErrorMessage>{alignmentError}</ErrorMessage>                
         </Container>
     );
