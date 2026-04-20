@@ -12,43 +12,41 @@ export async function connect(options) {
     if (options.host && options.port) {
         connection = new SocketConnection();
         return connection.connect({
-            host: host,
-            port: port
+            host: options.host,
+            port: options.port
         });
     } else if (options.device) {
         connection = new SerialPort();
         return connection.connect({
-            usbDevice: commandOption
+            usbDevice: options.device
         });
     }
-    return Promise.reject('Invalid connection options');
+    return Promise.reject('Connection failed because of invalid connection options!');
 }
 
 export async function sendCommand(command, isBoolean, hasResponse, terminatorCharacter, maxReadLength) {
 
-    if (connection?.isConnected() && command) {
+    if (connection?.isConnected() && command && command.startsWith(':') && command.endsWith('#')) {
 
-        if (command.startsWith(':') && command.endsWith('#')) {
+        const terminatorChar = terminatorCharacter ?
+            decodeURIComponent(terminatorCharacter) : undefined;
 
-            const terminatorChar = terminatorCharacter ?
-                decodeURIComponent(terminatorCharacter) : undefined;
+        const forceResponseResponse = hasResponse ||
+            isBoolean || terminatorChar ||
+            Number.isInteger(maxReadLength);
 
-            const forceResponseResponse = hasResponse ||
-                isBoolean || terminatorChar ||
-                Number.isInteger(maxReadLength);
+        console.log('Should be returning data? ', forceResponseResponse, 'boolean? ', isBoolean, 'Termination character? ', terminatorChar, 'Maximum read length? ', maxReadLength);
 
-            console.log('Should be returning data? ', forceResponseResponse, 'boolean? ', isBoolean, 'Termination character? ', terminatorChar, 'Maximum read length? ', maxReadLength);
-
-            return connection.sendRecieveCommand(command, hasResponse,
-                isBoolean, terminatorChar, maxReadLength)
-        }
-        return Promise.reject('Invalid command');
+        return connection.sendRecieveCommand(command, hasResponse,
+            isBoolean, terminatorChar, maxReadLength)
     }
+    return Promise.reject('Not connected or invalid command!');
+}
 
-    export function disconnect() {
+export function disconnect() {
 
-        if (connection?.isConnected()) {
-            connection.disconnect();
-            connection = null;
-        }
+    if (connection?.isConnected()) {
+        connection.disconnect();
+        connection = null;
     }
+}
