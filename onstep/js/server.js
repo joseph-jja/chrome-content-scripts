@@ -294,7 +294,7 @@ server.get('/listofstars', (req, res) => {
         body: safeStringify(payload)
     };
 
-    fetch(`${ASTRONOMY_API}/api/v2/search?${params}`, options).then(async resp => {
+    fetch(`${ASTRONOMY_API}/api/v2/studio/star-chart`, options).then(async resp => {
         const results = await resp.text();
         res.writeHead(200);
         res.end(results);
