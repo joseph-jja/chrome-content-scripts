@@ -125,6 +125,16 @@ export default function ToggleTracking() {
             }
         }
     };
+    
+    const acceptAlign = async () => {
+    
+        const [err, results] = await PromiseWrapper(sendCommand(':A+#', true, true));
+        if (err || results !== 0) {
+            setAlignmentError(err || results);
+        } else {
+            setAlignmentError('');
+        }
+    }
 
     // 	:AW# - save align
     // 	:Ax# - align x stars
@@ -160,6 +170,8 @@ export default function ToggleTracking() {
               <br/>
               <span>Dec: {declination}</span> 
               <br/> 
+
+              <CustomButton id="align-star" onButtonClick={acceptAlign}>Accept Align</CustomButton>
               {/*{imageUrl && <img src={imageUrl}  alt="Image of a star"/>} 
             
             <CustomButton id="search-coordinates" onButtonClick={getViewOfStar}>Get View</CustomButton>*/}
