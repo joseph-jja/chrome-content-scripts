@@ -21,7 +21,7 @@ import {
 } from '#server/utils/jsonUtils.js';
 import checkCommandsWithNoReply from '#server/data/noReplayCommands.js';
 import getListOfVisibleStars from '#server/utils/getVisibleStars.js';
-import connection from '#server/routes/connection.js'
+import * as connection from '#server/routes/connection.js'
 import getStarView from '#server/routes/getStarView.js'
 
 const basedir = process.cwd();
