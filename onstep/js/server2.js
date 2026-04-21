@@ -180,7 +180,7 @@ server.get('/disconnect', (req, res) => {
 });
 
 server.get('/commandsList', (req, res) => {
-    fs.createReadStream(`${basesendCommand(command, isBoolean, hasResponse, terminatorCharacter, maxReadLength)dir}/js/data/commands.json`).pipe(res);
+    fs.createReadStream(`${basedir}/js/data/commands.json`).pipe(res);
 });
 
 server.get('/listofknownstars', (req, res) => {
