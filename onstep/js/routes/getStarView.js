@@ -4,10 +4,6 @@ export default async function getStarView(apiEndpoint, authToken, latitude, long
         return Promise.reject('No configuration found for astronomy api');
     }
 
-    const latitude = req.query?.latitude;
-    const longitude = req.query?.longitude;
-    const ra = req.query?.ra;
-    const dec = req.query?.dec;
     if (!ra || !dec || !latitude || !longitude) {
         return Promise.reject('No right ascension or declination or missing latitude or longitude!');
     }
