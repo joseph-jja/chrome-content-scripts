@@ -38,6 +38,8 @@ export default function ToggleTracking() {
     const [knownStarList, setKnownStarList] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
     const [imageUrl, setImageUrl] = useState('');
+    //const [scopeRightAscention, setScopeRightAscention] = useState('');
+    //const [scopeDeclination, setScopeDeclination] = useState('');
 
     useEffect(() => {
 
@@ -163,12 +165,19 @@ export default function ToggleTracking() {
                     </CustomOption>
                 ))}
             </CustomSelect>
-            
-            <br/>View Star: 
+            <br/>
+            <section>Star Position: 
               <br/>
               <span>RA: {rightAscention}</span>
               <br/>
               <span>Dec: {declination}</span> 
+            </section>
+            {/*<section>Scope Position: 
+              <br/>
+              <span>RA: {scopeRightAscention}</span>
+              <br/>
+              <span>Dec: {scopeDeclination}</span> 
+            </section>*/}
               <br/> 
 
               <CustomButton id="align-star" onButtonClick={acceptAlign}>Accept Star Align</CustomButton>

@@ -33,7 +33,7 @@ export async function daisyChainBooleanCommands(commands = []) {
             response.push(err);
             console.error('Error sending command: ', err);
         } else {
-            response.push(result);
+            response.push(result || '');
         }
         sleep(50);
         i++;

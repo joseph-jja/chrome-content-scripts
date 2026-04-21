@@ -8,6 +8,10 @@ import {
     sendCommand
 } from 'js/api/request.js';
 import PromiseWrapper from 'js/utils/PromiseWrapper.js';
+import StorageBox from "js/storage/StorageBox.js";
+import {
+    daisyChainBooleanCommands
+} from 'js/utils/commandUtils.js';
 
 const {
     useState
@@ -39,12 +43,30 @@ export default function Directions() {
             setDirection(targetObj);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd, false, false));
-            if (err || results !== 0) {
-                setDirectionError(err || results);
-            } else {
-                setDirectionError('');
-            }
+            daisyChainBooleanCommands([{
+                command: cmd,
+                isBoolean: false,
+                hasResponse: false
+            }, {
+                command: ':Gr#',
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'
+            }, {
+                command: ':Gd#',
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'
+            }]).then(results => {
+
+                const [cmdResp, ra, dec] = results;
+                StorageBox.setItem('currentRa', ra);
+                StorageBox.setItem('currentDec', dec);
+
+                setDirectionError([cmdResp, ra, dec].join(' '));
+            }).catch(err => {
+                setDirectionError(err);
+            });
         }
     };
 
@@ -68,12 +90,30 @@ export default function Directions() {
             setDirection(targetObj);
         }
         if (cmd) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd, false, false));
-            if (err || results !== 0) {
-                setStopError(err || results);
-            } else {
-                setStopError('');
-            }
+            daisyChainBooleanCommands([{
+                command: cmd,
+                isBoolean: false,
+                hasResponse: false
+            }, {
+                command: ':Gr#',
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'
+            }, {
+                command: ':Gd#',
+                isBoolean: false,
+                hasResponse: true,
+                terminatorCharacter: '#'
+            }]).then(results => {
+
+                const [cmdResp, ra, dec] = results;
+                StorageBox.setItem('currentRa', ra);
+                StorageBox.setItem('currentDec', dec);
+
+                setStopError([cmdResp, ra, dec].join(' '));
+            }).catch(err => {
+                setStopError(err);
+            });
         }
     };
 

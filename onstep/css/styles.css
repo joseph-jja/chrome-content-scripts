@@ -52,6 +52,11 @@ fieldset {
     display: inline-block;
     margin: 0.25em 0.7em;
 }
+section {
+    display: inline-block;
+    margin: 0.25em 0.7em;
+    margin-right: 5em;
+}
 select {
     margin: 0.5em;
 }
