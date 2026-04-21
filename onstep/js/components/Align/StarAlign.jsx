@@ -171,7 +171,7 @@ export default function ToggleTracking() {
               <span>Dec: {declination}</span> 
               <br/> 
 
-              <CustomButton id="align-star" onButtonClick={acceptAlign}>Accept Align</CustomButton>
+              <CustomButton id="align-star" onButtonClick={acceptAlign}>Accept Star Align</CustomButton>
               {/*{imageUrl && <img src={imageUrl}  alt="Image of a star"/>} 
             
             <CustomButton id="search-coordinates" onButtonClick={getViewOfStar}>Get View</CustomButton>*/}
