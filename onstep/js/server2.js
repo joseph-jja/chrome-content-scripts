@@ -27,7 +27,7 @@ import getStarView from '#server/routes/getStarView.js'
 const basedir = process.cwd();
 
 const server = express();
-sendCommand(command, isBoolean, hasResponse, terminatorCharacter, maxReadLength)
+
 const menu = Menu.buildFromTemplate([{
     label: app.name,
     submenu: [{
