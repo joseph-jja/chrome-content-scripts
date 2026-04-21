@@ -20,8 +20,7 @@ const {
 // TODO figure out how this would work cross platform
 export default function Directions() {
     const [direction, setDirection] = useState(null);
-    const [directionError, setDirectionError] = useState(null);
-    const [stopError, setStopError] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
 
     const setMovementValue = async (event) => {
         const targetObj = event?.target?.id;
@@ -60,12 +59,12 @@ export default function Directions() {
             }]).then(results => {
 
                 const [cmdResp, ra, dec] = results;
-                StorageBox.setItem('currentRa', ra);
-                StorageBox.setItem('currentDec', dec);
+                StorageBox.setItem('Current Ra', ra);
+                StorageBox.setItem('Current Dec', dec)
 
-                setDirectionError([cmdResp, ra, dec].join(' '));
+                setErrorMsg([cmdResp, ra, dec].join(' '));
             }).catch(err => {
-                setDirectionError(err);
+                setErrorMsg(err);
             });
         }
     };
@@ -107,12 +106,12 @@ export default function Directions() {
             }]).then(results => {
 
                 const [cmdResp, ra, dec] = results;
-                StorageBox.setItem('currentRa', ra);
-                StorageBox.setItem('currentDec', dec);
+                StorageBox.setItem('Current Ra', ra);
+                StorageBox.setItem('Current Dec', dec);
 
-                setStopError([cmdResp, ra, dec].join(' '));
+                setErrorMsg([cmdResp, ra, dec].join(' '));
             }).catch(err => {
-                setStopError(err);
+                setErrorMsg(err);
             });
         }
     };
@@ -149,7 +148,6 @@ export default function Directions() {
                         <td>&nbsp;</td>
                     </tr>
                 </table>
-                <ErrorMessage>{directionError}</ErrorMessage>  
             </CustomFieldset> 
             <CustomFieldset legendtext="Stop Movement">
                 <table>
@@ -183,8 +181,8 @@ export default function Directions() {
                         <td>&nbsp;</td>
                     </tr>
                 </table>
-                <ErrorMessage>{stopError}</ErrorMessage>  
             </CustomFieldset>          
-        </Container>
+                <ErrorMessage>{errorMsg}</ErrorMessage>  
+           </Container>
     );
 }
