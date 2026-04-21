@@ -23,16 +23,16 @@ export default function Directions() {
         const targetObj = event?.target?.id;
         let cmd;
         if (targetObj === 'direction-north') {
-            cmd = ':Qn#';
+            cmd = ':Mn#';
             setDirection(targetObj);
         } else if (targetObj === 'direction-south') {
-            cmd = ':Qs#';
+            cmd = ':Ms#';
             setDirection(targetObj);
         } else if (targetObj === 'direction-east') {
-            cmd = ':Qe#';
+            cmd = ':Me#';
             setDirection(targetObj);
         } else if (targetObj === 'direction-west') {
-            cmd = ':Qw#';
+            cmd = ':Mw#';
             setDirection(targetObj);
         } else if (targetObj === 'direction-sync') {
             cmd = ':CM#';

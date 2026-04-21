@@ -21,12 +21,12 @@ import {
 } from '#server/utils/jsonUtils.js';
 import checkCommandsWithNoReply from '#server/data/noReplayCommands.js';
 import getListOfVisibleStars from '#server/utils/getVisibleStars.js';
+import * as connection from '#server/routes/connection.js'
+import getStarView from '#server/routes/getStarView.js'
 
 const basedir = process.cwd();
 
 const server = express();
-
-let Connection;
 
 const menu = Menu.buildFromTemplate([{
     label: app.name,
@@ -37,6 +37,7 @@ const menu = Menu.buildFromTemplate([{
                 title: 'About',
                 message: 'OnStep/OnStepX desktop control app'
             });
+            disconnect
         }
     }, {
         role: 'quit'
@@ -133,36 +134,24 @@ app.on('window-all-closed', () => {
 
 server.get('/setup', (req, res) => {
     const commandOption = req.query?.command;
+    const connectionOptions = {};
     if (commandOption && commandOption.includes(':')) {
         const [host, port] = commandOption.split(':');
-        console.log('Trying to connect');
-        Connection = new SocketConnection();
-        Connection.connect({
-            host: host,
-            port: port
-        }).then(resp => {
-            console.log('Success to connect');
-            res.send('Connected ' + resp);
-        }).catch(e => {
-            console.log('Failed to connect');
-            res.send('Connection failed ' + e);
-        });
-        return;
+        connectionOptions.host = host;
+        connectionOptions.port = port;
+        console.log('Will try to use host: ', host, ' and port: ', port);
     } else if (commandOption.startsWith('/dev/')) {
-        console.log('Trying to connect to tty device');
-        Connection = new SerialPort();
-        Connection.connect({
-            usbDevice: commandOption
-        }).then(resp => {
-            console.log('Success to connect');
-            res.send('Connected ' + resp);
-        }).catch(e => {
-            console.log('Failed to connect');
-            res.send('Connection failed ' + e);
-        });
-        return;
+        connectionOptions.device = commandOption;
+        console.log('Will try to use tty device: ', commandOption);
     }
-    res.send(`Connection failed, invalid host and port values ${commandOption}`);
+
+    connection.connect(connectionOptions).then(resp => {
+        console.log('Success to connect');
+        res.send('Connected ' + resp);
+    }).catch(e => {
+        console.log('Failed to connect');
+        res.send('Connection failed ' + e);
+    });
 });
 
 server.get('/command', (req, res) => {
@@ -174,41 +163,19 @@ server.get('/command', (req, res) => {
     const terminatorCharacter = req.query?.terminatorCharacter;
     const maxReadLength = req.query?.maxReadLength;
 
-    if (Connection?.isConnected() && command) {
+    connection.sendCommand(command, isBoolean,
+        hasResponse, terminatorCharacter, maxReadLength).then(resp => {
 
-        if (command.startsWith(':') && command.endsWith('#')) {
-
-            const terminatorChar = terminatorCharacter ?
-                decodeURIComponent(terminatorCharacter) : undefined;
-
-            const forceResponseResponse = hasResponse ||
-                isBoolean || terminatorChar ||
-                Number.isInteger(maxReadLength);
-
-            console.log('Should be returning data? ', forceResponseResponse, 'boolean? ', isBoolean, 'Termination character? ', terminatorChar, 'Maximum read length? ', maxReadLength);
-
-            Connection.sendRecieveCommand(command, hasResponse,
-                isBoolean, terminatorChar, maxReadLength).then(resp => {
-
-                console.log('Command sent ', command, ' response: ' + resp);
-                res.send('Command response: ' + resp);
-
-            }).catch(e => {
-                console.log('Failed to send command');
-                res.send('Command failed: ' + e);
-            });
-            return;
-        }
-    }
-    //console.log('Not connected, no command or invalid command sent!');
-    res.send('Not connected, no command or invalid command sent!');
+        console.log('Command sent ', command, ' response: ' + resp);
+        res.send('Command response: ' + resp);
+    }).catch(e => {
+        console.log('Failed to send command');
+        res.send('Command failed: ' + e);
+    });
 });
 
 server.get('/disconnect', (req, res) => {
-    if (Connection?.isConnected()) {
-        Connection.disconnect();
-        Connection = null;
-    }
+    connection.disconnect();
     res.send('Disconnected!');
 });
 
@@ -232,65 +199,15 @@ server.get('/listofknownstars', (req, res) => {
 });
 
 server.get('/listofstars', (req, res) => {
+    // query params
     const authToken = req.query?.authToken;
-    if (!authToken) {
-        res.writeHead(403, {
-            'Content-Type': 'application/json'
-        });
-        res.json({
-            'error': 'No configuration found for astronomy api'
-        });
-        return;
-    }
-
     const latitude = req.query?.latitude;
     const longitude = req.query?.longitude;
     const ra = req.query?.ra;
     const dec = req.query?.dec;
-    if (!ra || !dec || !latitude || !longitude) {
-        res.writeHead(403, {
-            'Content-Type': 'application/json'
-        });
-        res.json({
-            'error': 'No right ascension or declination or missing latitude or longitude!'
-        });
-        return;
-    }
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = `${now.getMonth() + 1}`.padStart(2, '0');
-    const day = `${now.getDate()}`.padStart(2, '0');
-    const yyyymmdd = `${year}-${month}-${day}`;
-    const payload = {
-        "style": "navy",
-        "observer": {
-            "latitude": parseFloat(latitude),
-            "longitude": parseFloat(longitude),
-            "date": yyyymmdd
-        },
-        "view": {
-            "type": "area",
-            "parameters": {
-                "position": {
-                    "equatorial": {
-                        "rightAscension": parseFloat(ra),
-                        "declination": parseFloat(dec)
-                    }
-                },
-                "zoom": 1
-            }
-        }
-    };
-
-    const options = {
-        method: 'POST',
-        headers: {
-            Authorization: `Basic ${authToken}`
-        },
-        body: safeStringify(payload)
-    };
-
-    fetch(`${ASTRONOMY_API}/api/v2/studio/star-chart`, options).then(async resp => {
+    
+    getStarView(ASTRONOMY_API, authToken,
+        latitude, longitude, ra, dec).then(async resp => {
         const results = await resp.text();
         res.writeHead(200);
         res.end(results);
