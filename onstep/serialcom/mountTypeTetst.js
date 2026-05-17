@@ -33,18 +33,18 @@ console.log('Open response code ', openResponseCode);
 const writeResponseCode = serialcom.write(':GW#');
 const readResponseCode = serialcom.read(false, '#');
 
-console.log('Read response code ', readResponseCode, 'Write response code ', writeResponseCode);
+console.log('Read response code:', readResponseCode, '\tWrite response code:', writeResponseCode);
 
 const ACK = 0x06;
 const ACKString = Buffer.from([ACK], 'hex');
 console.log('ACK ', ACKString);
 const wrc = serialcom.write(ACKString);
 const results = serialcom.read(true, '', 1);
-console.log('ACK response code ', results, 'Write response code ', wrc);
+console.log('ACK response code:', results, '\tWrite response code:', wrc);
 
 const writeResponseCode3 = serialcom.write(':SXEM,3#')
 const readResponseCode3 = serialcom.read(true, '', 1);
-console.log('Read response code ', readResponseCode3, 'Write response code ', writeResponseCode3);
+console.log('Read response code:', readResponseCode3, '\tWrite response code:', writeResponseCode3);
 
 const closeResponseCode = serialcom.close();
 
