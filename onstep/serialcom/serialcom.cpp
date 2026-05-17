@@ -340,7 +340,17 @@ Napi::Number Write(const Napi::CallbackInfo& info) {
         return Napi::Number::New(env, -4.0);
     }
     printf("Wrote %d bytes: '%s'\n", n, data.c_str());
-   
+
+    // used to debug or verify ACK command sent correctly
+    // and the command is sent correctly 
+    /*
+    printf("HEX DEBUG: ");
+    for (unsigned char c : data) {
+        printf("%02x ", c);
+    }
+    printf("\n");
+    */
+    
     double rc = n;
 
     return Napi::Number::New(env, rc);
