@@ -36,9 +36,10 @@ console.log(openResponseCode, writeResponseCode, readResponseCode);
 
 const ACK = 0x06;
 const ACKString = Buffer.from([ACK], 'hex');
-console.log(ACKString);
+console.log('ACK', ACKString);
 const wrc = serialcom.write(ACKString);
 const results = serialcom.read(true, '', 1);
+console.log('ACK Response ', results);
 
 const writeResponseCode2 = serialcom.write(':GVN#');
 const readResponseCode2 = serialcom.read(false, '#');
