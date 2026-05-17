@@ -28,22 +28,23 @@ if (!port) {
 }
 
 const openResponseCode = serialcom.open(port, 'B9600');
+console.log('Open response code ', openResponseCode);
 
 const writeResponseCode = serialcom.write(':GW#');
 const readResponseCode = serialcom.read(false, '#');
 
-console.log(openResponseCode, writeResponseCode, readResponseCode);
+console.log('Read response code ', readResponseCode, 'Write response code ', writeResponseCode);
 
 const ACK = 0x06;
 const ACKString = Buffer.from([ACK], 'hex');
-console.log('ACK', ACKString);
+console.log('ACK ', ACKString);
 const wrc = serialcom.write(ACKString);
 const results = serialcom.read(true, '', 1);
-console.log('ACK Response ', results);
+console.log('ACK response code ', results, 'Write response code ', wrc);
 
 const writeResponseCode3 = serialcom.write(':SXEM,3#')
 const readResponseCode3 = serialcom.read(true, '', 1);
-console.log(writeResponseCode3, readResponseCode3);
+console.log('Read response code ', readResponseCode3, 'Write response code ', writeResponseCode3);
 
 const closeResponseCode = serialcom.close();
 
