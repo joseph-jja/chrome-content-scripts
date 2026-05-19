@@ -35,6 +35,11 @@ const readResponseCode = serialcom.read(false, '#');
 
 console.log('Read response code:', readResponseCode, '\tWrite response code:', writeResponseCode);
 
+const writeResponseCode2 = serialcom.write(':GU#');
+const readResponseCode2 = serialcom.read(false, '#');
+
+console.log('Read response code:', readResponseCode2, '\tWrite response code:', writeResponseCode2);
+
 const ACK = 0x06;
 const ACKString = Buffer.from([ACK], 'hex');
 console.log('ACK ', ACKString);
