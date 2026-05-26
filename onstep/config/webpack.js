@@ -1,7 +1,5 @@
 import path from "path";
 
-const baseDir = process.cwd()import path from "path";
-
 const baseDir = process.cwd()
 
 //const eslintConfig = fs.readFileSync( path.resolve( "./config/eslint.json" ) ).toString();
