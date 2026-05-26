@@ -1,0 +1,51 @@
+/* CSS file placeholder. */
+h1 {
+   font-size: 1.5em;
+}
+label {
+  display: inline-block;
+  width: 4.5em;
+}
+label.right {
+  margin-left: 2em;
+}
+input {
+  display: inline-block;
+  margin-left: 1.25em;
+}
+input[type="file"] {
+  border: 1px solid black;
+  width: 60%;
+}
+fieldset {
+  border: 1px solid #000;
+  margin: 5px 0px;
+  border-radius: 5px;
+}
+fieldset.listings button,fieldset.listings label, fieldset.listings select {
+  display: inline-block;
+  width: 48%;
+}
+div.right {
+  width: 40%;
+  float: right;
+  top: 0px;
+}
+#connectID {
+  margin-left: 5em;
+}
+#clearBuffer {
+}
+#resultData, #loggerData, #receivedFile {
+  width: 98%;
+  height: 16em;
+  overflow: scroll;
+}
+#uploadDataToggle {
+    margin-top: 0.5em;
+}
+#uploadDataToggle span {
+    padding: 0.35em;
+    border: 1px solid black;
+    border-radius: 5px;
+}

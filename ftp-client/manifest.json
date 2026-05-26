@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+    "name": "ftp-client",
+    "short_name": "ftp-client",
+    "description": "",
+    "version": "0.3.1",
+    "minimum_chrome_version": "70",
+    "update_url": "https://raw.githubusercontent.com/joseph-jja/ftp-client/master/update.xml",
+
+    "icons": {
+        "16": "assets/icon_16.png",
+        "128": "assets/icon_128.png"
+    },
+    "app": {
+        "background": {
+            "scripts": ["background.js"]
+        }
+    },
+    "permissions": [{
+        "fileSystem": ["write", "retainEntries", "directory"]
+    }],
+    "sockets": {
+        "tcp": {
+            "connect": "*:*"
+        }
+    }
+}

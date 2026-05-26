@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ftp-client</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1 id="greeting">ftp client - <span id="app-version"> </span></h1>
+  <form>
+    <fieldset>
+      <label>FTP Host:</label>
+      <input type="text" name="ftpHost" id="ftpHost" value="ftp.acc.umu.se">
+      <label class="right">FTP Port:</label>
+      <input type="text" name="ftpPort" id="ftpPort" value="21">
+    </fieldset>
+    <fieldset>
+      <label>Username:</label>
+      <input type="text" name="username" id="username" value="anonymous">
+      <label class="right">Password:</label>
+      <input type="password" name="password" id="password" value="j@m.com">
+      <button id="connectID"type="button">Connect</button>
+    </fieldset>
+    <fieldset>
+      <button id="clearBuffer" type="button">Clear Console</button>
+      <input type="file" id="sendFileID" value="Upload File">
+      select file to upload
+    </fieldset>
+    <fieldset>
+      <label>Command:</label>
+      <input type="text" name="command" id="command">
+      <button id="sendCommand"type="button">Send</button>
+      <div class="right">
+      download file = get &lt;filename&gt;
+      <br>list dir = ls
+      <br>change dir = cd &lt;dirname&gt;
+      <br>delete file = del &lt;filename&gt;
+      </div>
+      <br>Type HELP
+    </fieldset>
+    <fieldset>
+      <div id="uploadDataToggle">
+          <span>Connection Data</span>
+          <span>Received Data</span>
+          <span>Logger Data</span>
+       </div>
+      <pre id="resultData"></pre>
+      <div id="receivedData">
+        <textarea id="receivedFile"></textarea>
+        <button id="saveDataButton" type="button">Save Data</button>
+      </div>
+      <pre id="loggerData"></pre>
+    </fieldset>
+  </form>
+  <script src="util/logger.js"></script>
+  <script src="util/buffer-converter.js"></script>
+  <script src="util/publish-subscribe.js"></script>
+  <script src="util/response-parser.js"></script>
+  <script src="net/TcpSockets.js"></script>
+  <script src="ftp/FtpMediator.js"></script>
+  <script src="util/filesystem-access.js"></script>
+  <!-- not using status codes right now -->
+  <script src="ftp/response-codes.js"></script>
+  <script src="ftp/command-sets.js"></script>
+  <script src="ftp/client.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
