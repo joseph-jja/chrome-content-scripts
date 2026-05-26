@@ -24,11 +24,7 @@
     "react-dom": "19.2.0"
   },
   "devDependencies": {
-    "@babel/core": "7.28.5",
-    "@babel/preset-env": "7.28.5",
-    "@babel/preset-react": "7.28.5",
     "@swc/core": "1.15.40",
-    "babel-loader": "10.0.0",
     "css-loader": "7.1.2",
     "electron": "41.2.1",
     "js-beautify": "1.15.4",
