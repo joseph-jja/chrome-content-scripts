@@ -30,8 +30,8 @@ export default function Connection() {
     useEffect(() => {
         if (electron?.config?.device) {
             setSerialPort(electron?.config?.device);
-        } else if (electron?.config?.hostPost) {
-            setHostPort(electron?.config?.hostPost);
+        } else if (electron?.config?.hostPort) {
+            setHostPort(electron?.config?.hostPort);
         }
     }, []);
 
