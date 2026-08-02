@@ -21,6 +21,33 @@
 * Values are exposed in electron.config
 * ApplicationID and SecretID are used for an API that can help on the align screen
 * Other fields include: latitude, longitude, offset (timezone offset), device, hostPort
+* There is also a startUpCommands option that is an array of commands to run when the app starts
+  - A single startup command requires at least an OnStep command starting with : and ending with the # and must be valid
+  - If the command returns a value then hasResponse needs to be set to true
+  - If the command only returns 0 or 1 then isBoolean should be set to true, else unset or false
+  - If there is a different termination character in the response than # then terminatorCharacter should be set to that value
+  - maxReadLength rarely needs to be set
+* example
+  ```
+  {
+      latitude: 60.50,
+      longitude: 130.40,
+      offset: 5,
+      serialPort: '/dev/ttyUSB0',
+      startUpCommands: [{
+          command: ':GVT#',
+          isBoolean: false,
+          hasResponse: true,
+          terminatorCharacter: '#'
+      }, {
+          command: ':GVD#',
+          isBoolean: false,
+          hasResponse: true,
+          terminatorCharacter: '#',
+          maxReadLength: 100
+      }]
+  }
+  ```
 
 ### The align tab does not work yet, it is being worked out
 
