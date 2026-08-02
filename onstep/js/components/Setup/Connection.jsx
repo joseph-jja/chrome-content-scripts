@@ -26,6 +26,7 @@ export default function Connection() {
     const [hostPort, setHostPort] = useState(StorageBox.getItem('hostPort'));
     const [serialPort, setSerialPort] = useState(StorageBox.getItem('serialPort'));
     const [serialOrHostPortError, setSerialOrHostPortError] = useState('');
+    const [extraStartupCommands, setExtraStartupCommands] = useState([]);
 
     useEffect(() => {
         if (electron?.config?.device) {
@@ -33,6 +34,23 @@ export default function Connection() {
         } else if (electron?.config?.hostPort) {
             setHostPort(electron?.config?.hostPort);
         }
+    }, []);
+
+    useEffect(() => {     
+      if (electron?.config?.startUpCommands && Array.isArray(electron?.config?.startUpCommands)) {
+          // TODO process startup commands
+          const startupCommands = electron?.config?.startUpCommands.filter(command => {
+                // filter out commands that are not valid
+              /* {
+                    command: ':GVN#',
+                    isBoolean: false,
+                    hasResponse: true,
+                    terminatorCharacter: '#'
+                }
+              */
+          });
+          //setExtraStartupCommands(startupCommands);
+      }
     }, []);
 
     const setSerialPortField = (event) => {
