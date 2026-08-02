@@ -45,6 +45,7 @@ export default function Connection() {
               if (!command?.command) {
                   return false;
               }
+              return true;
           }).map(command => {              
               /* {
                     command: ':GVN#',
@@ -58,6 +59,7 @@ export default function Connection() {
               if (typeof command?.isBoolean === undefined) {
                  result.isBoolean = false;
               }
+              return result;
           });
           //setExtraStartupCommands(startupCommands);
       }
