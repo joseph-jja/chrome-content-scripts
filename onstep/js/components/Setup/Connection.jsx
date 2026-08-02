@@ -45,8 +45,11 @@ export default function Connection() {
               if (!command?.command) {
                   return false;
               }
+              if (!command.command.match(COMMAND_SYNTAX)) {
+                  return false;
+              }
               return true;
-          }).map(command => {              
+          }).map(commandObj => {              
               /* {
                     command: ':GVN#',
                     isBoolean: false,
@@ -54,14 +57,29 @@ export default function Connection() {
                     terminatorCharacter: '#'
                 }
               */
-              const result = {};
-              result.command = command.command;
-              if (typeof command?.isBoolean === undefined) {
-                 result.isBoolean = false;
+              const {
+                  command,
+                  isBoolean = false,
+                  hasResponse = false,
+                  terminatorCharacter,
+                  maxReadLength
+              } = commandObj;
+              const result = {
+                  command,
+                  isBoolean,
+                  hasResponse
+              };
+              if (terminatorCharacter) {
+                  result.terminatorCharacter = terminatorCharacter;
+              }
+              if (maxReadLength) {
+                  result.maxReadLength = maxReadLength;
               }
               return result;
           });
-          //setExtraStartupCommands(startupCommands);
+          if (startupCommands.length > 0) {
+              setExtraStartupCommands(startupCommands);
+          }
       }
     }, []);
 
@@ -75,7 +93,7 @@ export default function Connection() {
     const remoteConnect = (connectString) => {
         setupConnection(connectString).then(data => {
             setSerialOrHostPortError(data);
-            daisyChainBooleanCommands([{
+            const commandList = [{
                     command: ':GVP#',
                     isBoolean: false,
                     hasResponse: true,
@@ -99,7 +117,13 @@ export default function Connection() {
                     hasResponse: true,
                     terminatorCharacter: '#'
                 }
-            ]).then(results => {
+            ]
+            if (extraStartupCommands.length > 0) {
+                extraStartupCommands.forEach(item => {
+                    commandList.push(item);
+                });
+            }
+            daisyChainBooleanCommands(commandList).then(results => {
 
                 const content = [data].concat(results);
                 setSerialOrHostPortError(content);
