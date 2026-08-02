@@ -39,8 +39,13 @@ export default function Connection() {
     useEffect(() => {     
       if (electron?.config?.startUpCommands && Array.isArray(electron?.config?.startUpCommands)) {
           // TODO process startup commands
+          const COMMAND_SYNTAX = /:[a-z|A-Z|0-9]*#/;
           const startupCommands = electron?.config?.startUpCommands.filter(command => {
-                // filter out commands that are not valid
+              // filter out commands that are not valid
+              if (!command?.command) {
+                  return false;
+              }
+          }).map(command => {              
               /* {
                     command: ':GVN#',
                     isBoolean: false,
@@ -48,6 +53,11 @@ export default function Connection() {
                     terminatorCharacter: '#'
                 }
               */
+              const result = {};
+              result.command = command.command;
+              if (typeof command?.isBoolean === undefined) {
+                 result.isBoolean = false;
+              }
           });
           //setExtraStartupCommands(startupCommands);
       }
