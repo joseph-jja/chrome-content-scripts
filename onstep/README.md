@@ -14,5 +14,13 @@
 * npm run start
 
 ### First you connect to the system and then you can start sending some commands
+* you can connect via WiFi using http://192.168.0.1:9999 or if you have configured different IP and use different port
+* Or you can connect via /dev/ttyACM0 or other device, Mac uses different device and this is not tested on windoww
+
+### You can also create a js/config.json file
+* Values are exposed in electron.config
+* ApplicationID and SecretID are used for an APi that can help on the align screen
 
 ### The align tab does not work yet, it is being worked out
+
+
