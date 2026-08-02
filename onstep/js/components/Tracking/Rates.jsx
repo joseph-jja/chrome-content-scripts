@@ -70,7 +70,7 @@ export default function Rates() {
         }
     };
 
-    const setField = (event) => {
+    const setField = async (event) => {
         const fieldName = event?.target?.name;
         const value = event?.target?.value || null;
         if (!fieldName || !value) {
