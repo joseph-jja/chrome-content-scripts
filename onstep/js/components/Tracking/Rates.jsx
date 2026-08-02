@@ -3,9 +3,8 @@ import React from 'react';
 import Container from 'js/components/base/Container.jsx';
 import CustomButton from 'js/components/base/CustomButton.jsx';
 import ErrorMessage from 'js/components/base/ErrorMessage.jsx';
-import CustomSelect from 'js/components/base/CustomSelect.jsx';
 import CustomFieldset from 'js/components/base/CustomFieldset.jsx';
-import CustomOption from 'js/components/base/CustomOption.jsx';
+import CustomInput from 'js/components/base/CustomInput.jsx';
 import {
     daisyChainBooleanCommands
 } from 'js/utils/commandUtils.js';
@@ -15,15 +14,14 @@ const {
     useState
 } = React;
 
-const TRACKING_RATE_BACKLASH = [];
-for (let i = 2; i <= 50; i++) {
-    TRACKING_RATE_BACKLASH.push(`${i}`.padStart(3, '0'));
-}
-
 // TODO figure out how this would work cross platform
 export default function Rates() {
     const [trackingRate, setTrackingRate] = useState(null);
     const [trackingRateError, setTrackingRateError] = useState(null);
+    const [raBacklash, setRaBacklash] = useState(null);
+    const [decBacklash, setDecBacklash] = useState(null);
+    const [raBacklashError, setRaBacklashError] = useState(null);
+    const [decBacklashError, setDecBacklashError] = useState(null);
 
     const setTrackingRateValue = async (event) => {
         const targetObj = event?.target?.id;
@@ -72,22 +70,36 @@ export default function Rates() {
         }
     };
 
-    const setBacklashRateValue = async (event) => {
-        const targetObj = event?.target;
-        if (!targetObj) {
+    const setField = (event) => {
+        const fieldName = event?.target?.name;
+        const value = event?.target?.value || null;
+        if (!fieldName || !value) {
+            setBacklashError('Invalid field and or no value');
             return;
         }
-        const cmd = targetObj.options[targetObj.selectedIndex].value.trim();
-        if (cmd && cmd.length > 0) {
-            const [err, results] = await PromiseWrapper(sendCommand(cmd, true, true));
-            if (err || results !== 0) {
-                setTrackingRateError(err || results);
+        let fieldSet;
+        if (fieldName === 'dec_alt_backlash') {
+            setDecBacklash(fieldValue);
+            fieldSet = `:$BD${decBacklash}#`;
+        } else if (fieldName === 'ra_alt_backlash') {
+            setRaBacklash(fieldValue);
+            fieldSet = `:$BR${raBacklash}#`;
+        }
+        if (fieleSet) {
+            const isDec = fieldSet.startsWith(':$BD');
+            const [err, results] = await daisyChainBooleanCommands([{
+                    command: fieldSet,
+                    isBoolean: true,
+                    hasResponse: true
+                }]);
+            if (isDec) {
+                setDecBacklashError(err || results || '');
             } else {
-                setTrackingRateError('');
+                setRaBacklashError(err || results || '');
             }
         }
-    };
-
+    }
+    
     return (
         <>
             <Container class="wrapper">
@@ -115,29 +127,20 @@ export default function Rates() {
             <br/>
             <Container class="wrapper">
                 <CustomFieldset legendtext="Backlash in ArcSec">
-                    <CustomSelect id="ra-azm-backlash" name="ra_azm_backlash"
-                        labelText="Set RA / Azm Amount" size="1"
-                        onSelectChange={setBacklashRateValue}>
-                        <CustomOption></CustomOption>
-                        {TRACKING_RATE_BACKLASH?.map((item) => (
-                            <CustomOption value={':$BR' + item + '#'}>
-                                Rate {parseInt(item)}
-                            </CustomOption>
-                        ))}
-                    </CustomSelect>
+                    <CustomInput type="text" labelText="Set RA / Azm Amount" size="6"
+                        id="ra_azm_backlash" name="ra_azm_backlash"
+                        inputValue={raBacklash}
+                        placeholderText="0"
+                        onInputChange={setField}/>
+                    <ErrorMessage>{setRaBacklashError}</ErrorMessage>
                     <br/>
-                    <CustomSelect id="dec-alt-backlash" name="dec_alt_backlash"
-                        labelText="Set Dec / Alt Amount" size="1"
-                        onSelectChange={setBacklashRateValue}>
-                        <CustomOption></CustomOption>
-                        {TRACKING_RATE_BACKLASH?.map((item) => (
-                            <CustomOption value={':$BD' + item + '#'}>
-                                Rate {parseInt(item)}
-                            </CustomOption>
-                        ))}
-                    </CustomSelect>            
+                    <CustomInput type="text" labelText="Set Dec / Alt Amount" size="6"
+                        id="dec_alt_backlash" name="dec_alt_backlash"
+                        inputValue={decBacklash}
+                        placeholderText="0"
+                        onInputChange={setField}/>
                 </CustomFieldset>
-                <ErrorMessage>{trackingRateError}</ErrorMessage>                
+                <ErrorMessage>{setDecBacklashError}</ErrorMessage>                
             </Container>
         </>
     );
