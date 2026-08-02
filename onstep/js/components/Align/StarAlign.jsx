@@ -147,9 +147,9 @@ export default function ToggleTracking() {
                 labelText="Select Number of Stars"
                 onSelectChange={setAlignNumberValue}>
                 <CustomOption></CustomOption>
-                {STAR_ALIGN?.map((item) => (
+                {STAR_ALIGN?.map((item, index) => (
                     <CustomOption value={item}>
-                        Rate {item}
+                        {index + 1}
                     </CustomOption>
                 ))}
             </CustomSelect>
