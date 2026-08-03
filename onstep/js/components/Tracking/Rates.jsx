@@ -78,10 +78,10 @@ export default function Rates() {
             return;
         }
         let fieldSet;
-        if (fieldName === 'dec_alt_backlash') {
+        if (fieldName === 'declination') {
             setDecBacklash(fieldValue);
             fieldSet = `:$BD${decBacklash}#`;
-        } else if (fieldName === 'ra_alt_backlash') {
+        } else if (fieldName === 'right-ascention') {
             setRaBacklash(fieldValue);
             fieldSet = `:$BR${raBacklash}#`;
         }
@@ -114,6 +114,7 @@ export default function Rates() {
                         onButtonClick={setTrackingRateValue}>Increase</CustomButton>
                     <CustomButton id="tracking-decrease" 
                         onButtonClick={setTrackingRateValue}>Decrease</CustomButton>
+                    
                 </CustomFieldset>
                 <CustomFieldset legendtext="Tracking Rate">
                     <CustomButton id="tracking-solar" 
@@ -132,6 +133,8 @@ export default function Rates() {
                         inputValue={raBacklash}
                         placeholderText="0"
                         onInputChange={setField}/>
+                    <CustomButton id="right-ascention" 
+                        onButtonClick={setField}>Set RA Backlash</CustomButton>
                     <ErrorMessage>{setRaBacklashError}</ErrorMessage>
                     <br/>
                     <CustomInput type="text" labelText="Set Dec / Alt Amount" size="6"
@@ -139,8 +142,10 @@ export default function Rates() {
                         inputValue={decBacklash}
                         placeholderText="0"
                         onInputChange={setField}/>
+                    <CustomButton id="declination" 
+                        onButtonClick={setField}>Set RA Backlash</CustomButton>
+                    <ErrorMessage>{setDecBacklashError}</ErrorMessage>                
                 </CustomFieldset>
-                <ErrorMessage>{setDecBacklashError}</ErrorMessage>                
             </Container>
         </>
     );
