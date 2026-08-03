@@ -22,6 +22,10 @@ export default function Rates() {
     const [decBacklash, setDecBacklash] = useState(null);
     const [raBacklashError, setRaBacklashError] = useState(null);
     const [decBacklashError, setDecBacklashError] = useState(null);
+    const [raRate, setRaRate] = useState(null);
+    const [decRate, setDecRate] = useState(null);
+    const [raRateError, setRaRateError] = useState(null);
+    const [decRateError, setDecRateError] = useState(null);
 
     const setTrackingRateValue = async (event) => {
         const targetObj = event?.target?.id;
@@ -84,12 +88,34 @@ export default function Rates() {
         } else if (fieldName === 'right-ascention') {
             setRaBacklash(fieldValue);
             fieldSet = `:$BR${raBacklash}#`;
+        } else if (fieldName === 'right-ascention-rate') {
+            setRaRate(fieldValue);
+            fieldSet = `:SXTR,${raRate}#`;
+        } else if (fieldName === 'declination-rate') {
+            setDecRate(fieldValue);
+            fieldSet = `:SXTD,${decRate}#`;
         }
         if (fieleSet) {
             const isDec = fieldSet.startsWith(':$BD');
             const [err, results] = await daisyChainBooleanCommands([{
                     command: fieldSet,
                     isBoolean: true,
+                    hasResponse: true
+                }, {
+                    command: ':%BD#',
+                    isBoolean: false, 
+                    hasResponse: true
+                }, {
+                    command: ':%BR#',
+                    isBoolean: false, 
+                    hasResponse: true
+                }, {
+                    command: 'GXTR',
+                    isBoolean: false, 
+                    hasResponse: true
+                }, {
+                    command: 'GXTD',
+                    isBoolean: false, 
                     hasResponse: true
                 }]);
             if (isDec) {
@@ -145,6 +171,25 @@ export default function Rates() {
                     <CustomButton id="declination" 
                         onButtonClick={setField}>Set Dec Backlash</CustomButton>
                     <ErrorMessage>{setDecBacklashError}</ErrorMessage>                
+                </CustomFieldset>
+                <CustomFieldset legendtext="Set Custom Tracking Rate">
+                    <CustomInput type="text" labelText="Set RA / Azm Rate" size="6"
+                        id="ra_azm_rate" name="ra_azm_rate"
+                        inputValue={raRate}
+                        placeholderText="0"
+                        onInputChange={setField}/>
+                    <CustomButton id="right-ascention-rate" 
+                        onButtonClick={setField}>Set RA Tracking Rate</CustomButton>
+                    <ErrorMessage>{raRateError}</ErrorMessage>
+                    <br/>
+                    <CustomInput type="text" labelText="Set Dec / Alt Rate" size="6"
+                        id="dec_alt_rate" name="dec_alt_rate"
+                        inputValue={decRate}
+                        placeholderText="0"
+                        onInputChange={setField}/>
+                    <CustomButton id="declination-rate" 
+                        onButtonClick={setField}>Set Dec Tracking Rate</CustomButton>
+                    <ErrorMessage>{decRateError}</ErrorMessage>                
                 </CustomFieldset>
             </Container>
         </>
