@@ -143,7 +143,7 @@ export default function Rates() {
                         placeholderText="0"
                         onInputChange={setField}/>
                     <CustomButton id="declination" 
-                        onButtonClick={setField}>Set RA Backlash</CustomButton>
+                        onButtonClick={setField}>Set Dec Backlash</CustomButton>
                     <ErrorMessage>{setDecBacklashError}</ErrorMessage>                
                 </CustomFieldset>
             </Container>
