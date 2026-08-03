@@ -8,7 +8,7 @@ import checkZeroResponse from '#server/data/zeroOneReply.js';
 // how long to try reading
 const MAX_READ_COUNT = 60;
 const READ_SLEEP_DELAY = 10;
-const TOTAL_READ_TRY_TIME = MAX_READ_COUNT * READ_SLEEP_DELAY;
+const TOTAL_READ_TRY_TIME = MAX_READ_COUNT * READ_SLEEP_DELAY * 1000;
 
 export default class SocketConnection extends DeviceConnection {
 
