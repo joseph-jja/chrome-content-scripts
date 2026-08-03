@@ -94,14 +94,14 @@ export default function Rates() {
         const commands = [];
         if (raBacklash) {
             commands.push({
-              `:$BR$${raBacklash}#`,
+              `:$BR${raBacklash}#`,
                 isBoolean: true,
                 hasResponse: true
             });
         }
         if (decBacklash) {
             commands.push({
-                `:$BD$${decBacklash}#`,
+                `:$BD${decBacklash}#`,
                 isBoolean: true,
                 hasResponse: true
             });
