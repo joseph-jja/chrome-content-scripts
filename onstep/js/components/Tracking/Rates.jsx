@@ -20,12 +20,10 @@ export default function Rates() {
     const [trackingRateError, setTrackingRateError] = useState(null);
     const [raBacklash, setRaBacklash] = useState(null);
     const [decBacklash, setDecBacklash] = useState(null);
-    const [raBacklashError, setRaBacklashError] = useState(null);
-    const [decBacklashError, setDecBacklashError] = useState(null);
+    const [backlashError, setBacklashError] = useState(null);
     const [raRate, setRaRate] = useState(null);
     const [decRate, setDecRate] = useState(null);
-    const [raRateError, setRaRateError] = useState(null);
-    const [decRateError, setDecRateError] = useState(null);
+    const [rateError, setRateError] = useState(null);
 
     const setTrackingRateValue = async (event) => {
         const targetObj = event?.target?.id;
@@ -96,7 +94,7 @@ export default function Rates() {
             fieldSet = `:SXTD,${decRate}#`;
         }
         if (fieleSet) {
-            const isDec = fieldSet.startsWith(':$BD');
+            isBacklashError = fieldSet.startsWith(':$B');
             const [err, results] = await daisyChainBooleanCommands([{
                     command: fieldSet,
                     isBoolean: true,
@@ -118,10 +116,10 @@ export default function Rates() {
                     isBoolean: false, 
                     hasResponse: true
                 }]);
-            if (isDec) {
-                setDecBacklashError(err || results || '');
+            if (isBacklashError) {
+                setBacklashError(err || results || '');
             } else {
-                setRaBacklashError(err || results || '');
+                setRateError(err || results || '');
             }
         }
     }
@@ -161,7 +159,6 @@ export default function Rates() {
                         onInputChange={setField}/>
                     <CustomButton id="right-ascention" 
                         onButtonClick={setField}>Set RA Backlash</CustomButton>
-                    <ErrorMessage>{setRaBacklashError}</ErrorMessage>
                     <br/>
                     <CustomInput type="text" labelText="Set Dec / Alt Amount" size="6"
                         id="dec_alt_backlash" name="dec_alt_backlash"
@@ -170,7 +167,7 @@ export default function Rates() {
                         onInputChange={setField}/>
                     <CustomButton id="declination" 
                         onButtonClick={setField}>Set Dec Backlash</CustomButton>
-                    <ErrorMessage>{setDecBacklashError}</ErrorMessage>                
+                    <ErrorMessage>{backlashError}</ErrorMessage>                
                 </CustomFieldset>
                 <CustomFieldset legendtext="Tracking Rate Offset">
                     <CustomInput type="text" labelText="Set RA / Azm Rate" size="6"
@@ -180,7 +177,6 @@ export default function Rates() {
                         onInputChange={setField}/>
                     <CustomButton id="right-ascention-rate" 
                         onButtonClick={setField}>Set RA Tracking Rate</CustomButton>
-                    <ErrorMessage>{raRateError}</ErrorMessage>
                     <br/>
                     <CustomInput type="text" labelText="Set Dec / Alt Rate" size="6"
                         id="dec_alt_rate" name="dec_alt_rate"
@@ -189,7 +185,7 @@ export default function Rates() {
                         onInputChange={setField}/>
                     <CustomButton id="declination-rate" 
                         onButtonClick={setField}>Set Dec Tracking Rate</CustomButton>
-                    <ErrorMessage>{decRateError}</ErrorMessage>                
+                    <ErrorMessage>{rateError}</ErrorMessage>                
                 </CustomFieldset>
             </Container>
         </>
