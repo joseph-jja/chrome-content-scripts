@@ -172,7 +172,7 @@ export default function Rates() {
                         onButtonClick={setField}>Set Dec Backlash</CustomButton>
                     <ErrorMessage>{setDecBacklashError}</ErrorMessage>                
                 </CustomFieldset>
-                <CustomFieldset legendtext="Set Custom Tracking Rate">
+                <CustomFieldset legendtext="Tracking Rate Offset">
                     <CustomInput type="text" labelText="Set RA / Azm Rate" size="6"
                         id="ra_azm_rate" name="ra_azm_rate"
                         inputValue={raRate}
