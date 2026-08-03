@@ -185,16 +185,14 @@ export default function Rates() {
                         inputValue={raBacklash}
                         placeholderText="0"
                         onInputChange={setField}/>
-                    <CustomButton id="right-ascention" 
-                        onButtonClick={setField}>Set RA Backlash</CustomButton>
                     <br/>
                     <CustomInput type="text" labelText="Set Dec / Alt Amount" size="6"
                         id="dec_alt_backlash" name="dec_alt_backlash"
                         inputValue={decBacklash}
                         placeholderText="0"
                         onInputChange={setField}/>
-                    <CustomButton id="declination" 
-                        onButtonClick={updateBacklash}>Set Dec Backlash</CustomButton>
+                    <CustomButton id="backlash" 
+                        onButtonClick={updateBacklash}>Update</CustomButton>
                     <ErrorMessage>{backlashError}</ErrorMessage>                
                 </CustomFieldset>
                 <CustomFieldset legendtext="Tracking Rate Offset">
@@ -203,16 +201,14 @@ export default function Rates() {
                         inputValue={raRate}
                         placeholderText="0.0"
                         onInputChange={setField}/>
-                    <CustomButton id="right-ascention-rate" 
-                        onButtonClick={setField}>Set RA Tracking Rate</CustomButton>
                     <br/>
                     <CustomInput type="text" labelText="Set Dec / Alt Rate" size="6"
                         id="dec_alt_rate" name="dec_alt_rate"
                         inputValue={decRate}
                         placeholderText="0.0"
                         onInputChange={setField}/>
-                    <CustomButton id="declination-rate" 
-                        onButtonClick={updateTrackingRates}>Set Dec Tracking Rate</CustomButton>
+                    <CustomButton id="tracking-rates" 
+                        onButtonClick={updateTrackingRates}>Update</CustomButton>
                     <ErrorMessage>{rateError}</ErrorMessage>                
                 </CustomFieldset>
             </Container>
