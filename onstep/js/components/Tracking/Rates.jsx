@@ -72,58 +72,85 @@ export default function Rates() {
         }
     };
 
-    const setField = async (event) => {
+    const setField = (event) => {
         const fieldName = event?.target?.name;
         const value = event?.target?.value || null;
         if (!fieldName || !value) {
-            setBacklashError('Invalid field and or no value');
-            setRateError('Invalid field and or no value');
             return;
         }
-        let fieldSet;
-        if (fieldName === 'declination') {
+        
+        if (fieldName === 'dec_alt_backlash') {
             setDecBacklash(fieldValue);
-            fieldSet = `:$BD${decBacklash}#`;
-        } else if (fieldName === 'right-ascention') {
+        } else if (fieldName === 'ra_azm_backlash') {
             setRaBacklash(fieldValue);
-            fieldSet = `:$BR${raBacklash}#`;
-        } else if (fieldName === 'right-ascention-rate') {
+        } else if (fieldName === 'ra_azm_rate') {
             setRaRate(fieldValue);
-            fieldSet = `:SXTR,${raRate}#`;
-        } else if (fieldName === 'declination-rate') {
+        } else if (fieldName === 'dec_alt_rate') {
             setDecRate(fieldValue);
-            fieldSet = `:SXTD,${decRate}#`;
         }
-        if (fieleSet) {
-            let isBacklashError = fieldSet.startsWith(':$B');
-            const [err, results] = await daisyChainBooleanCommands([{
-                    command: fieldSet,
-                    isBoolean: true,
-                    hasResponse: true
-                }, {
-                    command: ':%BD#',
-                    isBoolean: false, 
-                    hasResponse: true
-                }, {
-                    command: ':%BR#',
-                    isBoolean: false, 
-                    hasResponse: true
-                }, {
-                    command: 'GXTR',
-                    isBoolean: false, 
-                    hasResponse: true
-                }, {
-                    command: 'GXTD',
-                    isBoolean: false, 
-                    hasResponse: true
-                }]);
-            if (isBacklashError) {
-                setBacklashError(err || results || '');
-            } else {
-                setRateError(err || results || '');
-            }
+    };
+        
+    const updateBacklash = async (event) => {
+        const commands = [];
+        if (raBacklash) {
+            commands.push({
+              `:$BR$${raBacklash}#`,
+                isBoolean: true,
+                hasResponse: true
+            });
         }
-    }
+        if (decBacklash) {
+            commands.push({
+                `:$BD$${decBacklash}#`,
+                isBoolean: true,
+                hasResponse: true
+            });
+        }
+
+        commands.push({
+            command: ':%BD#',
+            isBoolean: false, 
+            hasResponse: true
+        });
+        commands.push({
+            command: ':%BR#',
+            isBoolean: false, 
+            hasResponse: true
+        });
+        const [err, results] = await daisyChainBooleanCommands(commands);
+        setBacklashError(err || results || '');  
+    };
+
+    const updateTrackingRates = async (event) => {
+        const commands = [];
+        if (raRate) {
+            commands.push({
+              `:SXTR,{raBacklash}#`,
+                isBoolean: true,
+                hasResponse: true
+            });
+        }
+        if (decRate) {
+            commands.push({
+                `:SXTD,{decBacklash}#`,
+                isBoolean: true,
+                hasResponse: true
+            });
+        }
+
+        commands.push({
+            command: ':GXTR#',
+            isBoolean: false, 
+            hasResponse: true
+        });
+        commands.push({
+            command: ':GXTD#',
+            isBoolean: false, 
+            hasResponse: true
+        });
+        const [err, results] = await daisyChainBooleanCommands(commands);
+        setRateError(err || results || '');
+    };
     
     return (
         <>
@@ -167,7 +194,7 @@ export default function Rates() {
                         placeholderText="0"
                         onInputChange={setField}/>
                     <CustomButton id="declination" 
-                        onButtonClick={setField}>Set Dec Backlash</CustomButton>
+                        onButtonClick={updateBacklash}>Set Dec Backlash</CustomButton>
                     <ErrorMessage>{backlashError}</ErrorMessage>                
                 </CustomFieldset>
                 <CustomFieldset legendtext="Tracking Rate Offset">
@@ -185,7 +212,7 @@ export default function Rates() {
                         placeholderText="0.0"
                         onInputChange={setField}/>
                     <CustomButton id="declination-rate" 
-                        onButtonClick={setField}>Set Dec Tracking Rate</CustomButton>
+                        onButtonClick={updateTrackingRates}>Set Dec Tracking Rate</CustomButton>
                     <ErrorMessage>{rateError}</ErrorMessage>                
                 </CustomFieldset>
             </Container>
