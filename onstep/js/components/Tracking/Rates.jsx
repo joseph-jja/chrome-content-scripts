@@ -77,6 +77,7 @@ export default function Rates() {
         const value = event?.target?.value || null;
         if (!fieldName || !value) {
             setBacklashError('Invalid field and or no value');
+            setRateError('Invalid field and or no value');
             return;
         }
         let fieldSet;
