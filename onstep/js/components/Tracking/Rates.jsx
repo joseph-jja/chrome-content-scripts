@@ -94,7 +94,7 @@ export default function Rates() {
             fieldSet = `:SXTD,${decRate}#`;
         }
         if (fieleSet) {
-            isBacklashError = fieldSet.startsWith(':$B');
+            let isBacklashError = fieldSet.startsWith(':$B');
             const [err, results] = await daisyChainBooleanCommands([{
                     command: fieldSet,
                     isBoolean: true,
