@@ -94,14 +94,14 @@ export default function Rates() {
         const commands = [];
         if (raBacklash) {
             commands.push({
-              ':$BR' + raBacklash + '#',
+                command: `:$BR${raBacklash}#`,
                 isBoolean: true,
                 hasResponse: true
             });
         }
         if (decBacklash) {
             commands.push({
-              ':$BD' + decBacklash + '#',
+                command: `:$BD${decBacklash}#`,
                 isBoolean: true,
                 hasResponse: true
             });
@@ -125,14 +125,14 @@ export default function Rates() {
         const commands = [];
         if (raRate) {
             commands.push({
-              `:SXTR,{raBacklash}#`,
+                command: `:SXTR,{raBacklash}#`,
                 isBoolean: true,
                 hasResponse: true
             });
         }
         if (decRate) {
             commands.push({
-                `:SXTD,{decBacklash}#`,
+                command: `:SXTD,{decBacklash}#`,
                 isBoolean: true,
                 hasResponse: true
             });
