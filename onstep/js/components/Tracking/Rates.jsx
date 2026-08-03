@@ -173,7 +173,7 @@ export default function Rates() {
                     <CustomInput type="text" labelText="Set RA / Azm Rate" size="6"
                         id="ra_azm_rate" name="ra_azm_rate"
                         inputValue={raRate}
-                        placeholderText="0"
+                        placeholderText="0.0"
                         onInputChange={setField}/>
                     <CustomButton id="right-ascention-rate" 
                         onButtonClick={setField}>Set RA Tracking Rate</CustomButton>
@@ -181,7 +181,7 @@ export default function Rates() {
                     <CustomInput type="text" labelText="Set Dec / Alt Rate" size="6"
                         id="dec_alt_rate" name="dec_alt_rate"
                         inputValue={decRate}
-                        placeholderText="0"
+                        placeholderText="0.0"
                         onInputChange={setField}/>
                     <CustomButton id="declination-rate" 
                         onButtonClick={setField}>Set Dec Tracking Rate</CustomButton>
