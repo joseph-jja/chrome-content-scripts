@@ -21,6 +21,7 @@ export default function Rates() {
     const [raBacklash, setRaBacklash] = useState(null);
     const [decBacklash, setDecBacklash] = useState(null);
     const [backlashError, setBacklashError] = useState(null);
+    const [customTrackingRate, setCustomTrackingRate] = useState(null);
     const [raRate, setRaRate] = useState(null);
     const [decRate, setDecRate] = useState(null);
     const [rateError, setRateError] = useState(null);
@@ -123,6 +124,13 @@ export default function Rates() {
 
     const updateTrackingRates = async (event) => {
         const commands = [];
+        if (customTrackingRate) {
+            commands.push({
+                command: `:ST{customTrackingRate}#`,
+                isBoolean: true,
+                hasResponse: true
+            });
+        }
         if (raRate) {
             commands.push({
                 command: `:SXTR,{raBacklash}#`,
@@ -137,8 +145,11 @@ export default function Rates() {
                 hasResponse: true
             });
         }
-
         commands.push({
+            command: ':GT#',
+            isBoolean: false, 
+            hasResponse: true
+        }, {
             command: ':GXTR#',
             isBoolean: false, 
             hasResponse: true
@@ -196,6 +207,12 @@ export default function Rates() {
                     <ErrorMessage>{backlashError}</ErrorMessage>                
                 </CustomFieldset>
                 <CustomFieldset legendtext="Tracking Rate Offset">
+                    <CustomInput type="text" labelText="Set Rate" size="6"
+                        id="tracking_rate" name="tracking_rate"
+                        inputValue={customTrackingRate}
+                        placeholderText="0.0"
+                        onInputChange={setField}/>
+                    <br/>
                     <CustomInput type="text" labelText="Set RA / Azm Rate" size="6"
                         id="ra_azm_rate" name="ra_azm_rate"
                         inputValue={raRate}
