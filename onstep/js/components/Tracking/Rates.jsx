@@ -196,7 +196,7 @@ export default function Rates() {
                         inputValue={raBacklash}
                         placeholderText="0"
                         onInputChange={setField}/>
-                    <br/>
+                    <br/><br/>
                     <CustomInput type="text" labelText="Set Dec / Alt Amount" size="6"
                         id="dec_alt_backlash" name="dec_alt_backlash"
                         inputValue={decBacklash}
@@ -212,13 +212,13 @@ export default function Rates() {
                         inputValue={customTrackingRate}
                         placeholderText="0.0"
                         onInputChange={setField}/>
-                    <br/>
+                    <br/><br/>
                     <CustomInput type="text" labelText="Set RA / Azm Rate" size="6"
                         id="ra_azm_rate" name="ra_azm_rate"
                         inputValue={raRate}
                         placeholderText="0.0"
                         onInputChange={setField}/>
-                    <br/>
+                    <br/><br/>
                     <CustomInput type="text" labelText="Set Dec / Alt Rate" size="6"
                         id="dec_alt_rate" name="dec_alt_rate"
                         inputValue={decRate}
