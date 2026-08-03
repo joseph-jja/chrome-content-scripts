@@ -5,6 +5,11 @@ import {
 import DeviceConnection from '#server/api/DeviceConnection.js';
 import checkZeroResponse from '#server/data/zeroOneReply.js';
 
+// how long to try reading
+const MAX_READ_COUNT = 60;
+const READ_SLEEP_DELAY = 10;
+const TOTAL_READ_TRY_TIME = MAX_READ_COUNT * READ_SLEEP_DELAY;
+
 export default class SocketConnection extends DeviceConnection {
 
     #terminatorCharacter = undefined;
@@ -85,7 +90,16 @@ export default class SocketConnection extends DeviceConnection {
 
             if (hasResponse) {
                 this.#readCount = 0;
-                this.once('readEnd', () => {
+                let timerId = -1;
+                const handler = () => {
+                    if (timerId > -1) {
+                        clearTimeout(timerId);
+                    }
+                    return resolve(this.data.join(''));
+                };
+                this.once('readEnd', handler);
+                timerId = setTimeout(() => {
+                    thos.off('readEnd', handler);
                     return resolve(this.data.join(''));
                 });
             }
