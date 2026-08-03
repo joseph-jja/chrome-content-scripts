@@ -80,13 +80,13 @@ export default function Rates() {
         }
         
         if (fieldName === 'dec_alt_backlash') {
-            setDecBacklash(fieldValue);
+            setDecBacklash(value);
         } else if (fieldName === 'ra_azm_backlash') {
-            setRaBacklash(fieldValue);
+            setRaBacklash(value);
         } else if (fieldName === 'ra_azm_rate') {
-            setRaRate(fieldValue);
+            setRaRate(value);
         } else if (fieldName === 'dec_alt_rate') {
-            setDecRate(fieldValue);
+            setDecRate(value);
         }
     };
         
