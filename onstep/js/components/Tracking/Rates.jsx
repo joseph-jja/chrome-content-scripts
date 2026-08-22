@@ -126,21 +126,21 @@ export default function Rates() {
         const commands = [];
         if (customTrackingRate) {
             commands.push({
-                command: `:ST{customTrackingRate}#`,
+                command: `:ST${customTrackingRate}#`,
                 isBoolean: true,
                 hasResponse: true
             });
         }
         if (raRate) {
             commands.push({
-                command: `:SXTR,{raBacklash}#`,
+                command: `:SXTR,${raBacklash}#`,
                 isBoolean: true,
                 hasResponse: true
             });
         }
         if (decRate) {
             commands.push({
-                command: `:SXTD,{decBacklash}#`,
+                command: `:SXTD,${decBacklash}#`,
                 isBoolean: true,
                 hasResponse: true
             });

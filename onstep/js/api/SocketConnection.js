@@ -99,7 +99,7 @@ export default class SocketConnection extends DeviceConnection {
                 };
                 this.once('readEnd', handler);
                 timerId = setTimeout(() => {
-                    thos.off('readEnd', handler);
+                    this.off('readEnd', handler);
                     return resolve(this.data.join(''));
                 });
             }
