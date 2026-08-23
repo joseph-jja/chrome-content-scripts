@@ -19,9 +19,18 @@ export default class SocketConnection extends DeviceConnection {
     #readLimitMaxCount = 10;
     #readCount = 0;
 
+    #readTimeLimit = 2000;
+
     constructor() {
         super();
         this.data = [];
+    }
+
+    setReadTimeLimit(limit) {
+        if (!isNaN(limit) || limit <= 0) { 
+            return;
+        }
+        this#readTimeLimit = limit;
     }
 
     connect(options) {
@@ -40,40 +49,39 @@ export default class SocketConnection extends DeviceConnection {
             });
 
             this.device.on('error', (err) => {
-                return reject(err);
+                this.emit('readEnd', err);
             });
 
             this.device.on('data', msg => {
-                const results = msg.toString()
+                const results = msg.toString();
+                const readLimitExceeded = this.#readCount > this.#readLimitMaxCount;
+                this.#readCount++;
+                if (results.trim().length < 0) {
+                    console.log('No data!');
+                    if (readLimitExceeded) {
+                        this.emit('readEnd', new Error('Read count limit exceeded!'));
+                    }
+                    return;
+                }
+                
                 this.data.push(results);
 
                 const cdata = this.data.join('').trim();
 
                 if (this.#isBinary && cdata.length > 0) {
                     this.emit('readEnd');
-                } else if (this.#terminatorCharacter) {
-
-                    if (cdata.includes(this.#terminatorCharacter)) {
-                        //console.log("emitting");
-                        this.emit('readEnd');
-                    }
-                } else if (this.#maxReadLength &&
-                    Number.isInteger(this.#maxReadLength)) {
-
-                    if (cdata.length >= this.#maxReadLength) {
-                        this.emit('readEnd');
-                    }
-                } else {
-                    if (this.#readCount > this.#readLimitMaxCount) {
-                        this.emit('readEnd');
-                    }
-                    this.#readCount++;
+                } else if (this.#terminatorCharacter && cdata.includes(this.#terminatorCharacter)) {
+                    this.emit('readEnd');
+                } else if (this.#maxReadLength && Number.isInteger(this.#maxReadLength) && cdata.length >= this.#maxReadLength) {
+                    this.emit('readEnd');
+                } else if () {
+                    this.emit('readEnd', new Error('Read count limit exceeded!'));
                 }
             });
         });
     }
 
-    sendRecieveCommand(command, hasResponse = true,
+    sendRecieveCommand(command, hasResponse = false,
         isBinary = false, terminatorCharacter, maxReadLength) {
 
         return new Promise((resolve, reject) => {
@@ -88,12 +96,17 @@ export default class SocketConnection extends DeviceConnection {
 
             this.#maxReadLength = maxReadLength;
 
+            console.log(`Command: ${command} Binary: ${this.#isBinary} Has Response: ${hasResponse} Termination Character: ${this.#terminatorCharacter}.`);
+
             if (hasResponse) {
                 this.#readCount = 0;
                 let timerId = -1;
-                const handler = () => {
+                const handler = (msg) => {
                     if (timerId > -1) {
                         clearTimeout(timerId);
+                    }
+                    if (msg) { 
+                        return reject(msg);
                     }
                     return resolve(this.data.join(''));
                 };
@@ -101,7 +114,7 @@ export default class SocketConnection extends DeviceConnection {
                 timerId = setTimeout(() => {
                     this.off('readEnd', handler);
                     return resolve(this.data.join(''));
-                });
+                }, this#readTimeLimit);
             }
 
             this.device.write(command);
