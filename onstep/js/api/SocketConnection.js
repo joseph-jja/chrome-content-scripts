@@ -74,7 +74,7 @@ export default class SocketConnection extends DeviceConnection {
                     this.emit('readEnd');
                 } else if (this.#maxReadLength && Number.isInteger(this.#maxReadLength) && cdata.length >= this.#maxReadLength) {
                     this.emit('readEnd');
-                } else if () {
+                } else if (readLimitExceeded) {
                     this.emit('readEnd', new Error('Read count limit exceeded!'));
                 }
             });
