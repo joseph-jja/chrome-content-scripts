@@ -3,7 +3,6 @@ import {
 } from 'node:net';
 
 import DeviceConnection from '#server/api/DeviceConnection.js';
-import checkZeroResponse from '#server/data/zeroOneReply.js';
 
 // how long to try reading
 const MAX_READ_COUNT = 60;
@@ -126,7 +125,7 @@ export default class SocketConnection extends DeviceConnection {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.device && this.isConnected()) {
+            if (!this.device || this.isConnected()) {
                 return reject('Not connected!');
             }
             this.device.removeAllListeners('error');
