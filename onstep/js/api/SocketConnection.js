@@ -26,10 +26,10 @@ export default class SocketConnection extends DeviceConnection {
     }
 
     setReadTimeLimit(limit) {
-        if (!isNaN(limit) || limit <= 0) { 
+        if (isNaN(limit) || limit <= 0) { 
             return;
         }
-        this#readTimeLimit = limit;
+        this.#readTimeLimit = limit;
     }
 
     connect(options) {
@@ -55,7 +55,7 @@ export default class SocketConnection extends DeviceConnection {
                 const results = msg.toString();
                 const readLimitExceeded = this.#readCount > this.#readLimitMaxCount;
                 this.#readCount++;
-                if (results.trim().length < 0) {
+                if (results.trim().length === 0) {
                     console.log('No data!');
                     if (readLimitExceeded) {
                         this.emit('readEnd', new Error('Read count limit exceeded!'));
@@ -113,7 +113,7 @@ export default class SocketConnection extends DeviceConnection {
                 timerId = setTimeout(() => {
                     this.off('readEnd', handler);
                     return resolve(this.data.join(''));
-                }, this#readTimeLimit);
+                }, this.#readTimeLimit);
             }
 
             this.device.write(command);
@@ -125,7 +125,7 @@ export default class SocketConnection extends DeviceConnection {
 
     disconnect() {
         return new Promise((resolve, reject) => {
-            if (!this.device || this.isConnected()) {
+            if (!this.device || !this.isConnected()) {
                 return reject('Not connected!');
             }
             this.device.removeAllListeners('error');
