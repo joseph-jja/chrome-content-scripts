@@ -133,14 +133,14 @@ export default function Rates() {
         }
         if (raRate) {
             commands.push({
-                command: `:SXTR,${raBacklash}#`,
+                command: `:SXTR,${raRate}#`,
                 isBoolean: true,
                 hasResponse: true
             });
         }
         if (decRate) {
             commands.push({
-                command: `:SXTD,${decBacklash}#`,
+                command: `:SXTD,${decRate}#`,
                 isBoolean: true,
                 hasResponse: true
             });
